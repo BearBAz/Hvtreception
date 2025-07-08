@@ -401,11 +401,6 @@
                 userId = profile.userId;
                 displayName = profile.displayName;
                 
-                // Auto-fill name if available
-                if (displayName) {
-                    document.getElementById('fullName').value = displayName;
-                }
-
             } catch (err) {
                 console.error('LIFF initialization error:', err);
                 showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'error');
