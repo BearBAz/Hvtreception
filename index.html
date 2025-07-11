@@ -4,57 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>จองห้องประชุม</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="stylesheet"     href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #6366f1;
-            --primary-dark: #4f46e5;
-            --secondary-color: #0ea5e9;
-            --success-color: #10b981;
-            --error-color: #ef4444;
-            --warning-color: #f59e0b;
-            --text-primary: #1f2937;
-            --text-secondary: #6b7280;
-            --text-light: #9ca3af;
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8fafc;
-            --bg-glass: rgba(255, 255, 255, 0.25);
-            --border-color: #e5e7eb;
-            --border-focus: #6366f1;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.3);
+            --text-primary: #2c3e50;
+            --shadow-primary: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --shadow-hover: 0 12px 40px rgba(0, 0, 0, 0.15);
         }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        html {
-            font-size: 16px;
-            -webkit-text-size-adjust: 100%;
-        }
+
         body {
-            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            font-family: 'Sarabun', sans-serif;
+            background: var(--primary-gradient);
+            background-attachment: fixed;
             min-height: 100vh;
-            line-height: 1.6;
-            color: var(--text-primary);
-            padding: 0;
             position: relative;
             overflow-x: hidden;
         }
+
         /* Animated Background */
         body::before {
             content: '';
@@ -66,37 +49,43 @@
             background: 
                 radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
                 radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
-                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.2) 0%, transparent 50%);
-            animation: backgroundShift 20s ease-in-out infinite;
+                radial-gradient(circle at 40% 40%, rgba(120, 200, 255, 0.3) 0%, transparent 50%);
+            animation: backgroundMove 20s ease-in-out infinite;
             z-index: -1;
         }
-        @keyframes backgroundShift {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
+
+        @keyframes backgroundMove {
+            0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.8; transform: scale(1.1) rotate(180deg); }
         }
-        .container {
-            max-width: 400px;
-            margin: 0 auto;
-            background: var(--bg-glass);
+
+        /* Glass Container */
+        .glass-container {
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-xl);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-primary);
             overflow: hidden;
-            position: relative;
-            min-height: 100vh;
+            transition: all 0.3s ease;
         }
-        .header {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(79, 70, 229, 0.9) 100%);
-            backdrop-filter: blur(10px);
+
+        .glass-container:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Header Styling */
+        .header-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
             color: white;
-            padding: clamp(20px, 5vw, 40px) clamp(20px, 5vw, 30px);
+            padding: 2rem 0;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-        .header::before {
+
+        .header-section::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -104,302 +93,437 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            animation: headerGlow 8s ease-in-out infinite;
+            animation: headerRotate 15s linear infinite;
         }
-        @keyframes headerGlow {
-            0%, 100% { transform: rotate(0deg); }
-            50% { transform: rotate(180deg); }
+
+        @keyframes headerRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
+
         .header-content {
             position: relative;
             z-index: 2;
         }
-        .header h1 {
-            font-size: clamp(20px, 5vw, 26px);
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+        .header-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            animation: bounce 2s infinite;
         }
-        .header .subtitle {
-            opacity: 0.9;
-            font-size: clamp(12px, 3vw, 14px);
-            font-weight: 400;
-        }
-        .header .emoji {
-            font-size: clamp(24px, 6vw, 32px);
-            margin-bottom: 10px;
-            display: block;
-            animation: bounce 2s ease-in-out infinite;
-        }
+
         @keyframes bounce {
             0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
             40% { transform: translateY(-10px); }
             60% { transform: translateY(-5px); }
         }
-        .form-container {
-            padding: clamp(20px, 5vw, 30px);
-            background: var(--bg-primary);
+
+        /* Form Styling */
+        .form-section {
+            padding: 2rem;
         }
-        .form-group {
-            margin-bottom: clamp(16px, 4vw, 24px);
-            position: relative;
+
+        .form-group-custom {
+            margin-bottom: 1.5rem;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
+
+        .form-label-custom {
             font-weight: 600;
             color: var(--text-primary);
-            font-size: clamp(13px, 3.5vw, 14px);
-            position: relative;
-        }
-        .required::after {
-            content: ' *';
-            color: var(--error-color);
-        }
-        .form-input {
-            width: 100%;
-            padding: clamp(12px, 3vw, 16px);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            font-size: clamp(14px, 3.5vw, 16px);
-            font-family: inherit;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            -webkit-appearance: none;
-            appearance: none;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--border-focus);
-            background: var(--bg-primary);
-            box-shadow: var(--shadow-md), 0 0 0 3px rgba(99, 102, 241, 0.1);
-            transform: translateY(-1px);
-        }
-        .form-input::placeholder {
-            color: var(--text-light);
-        }
-        /* Custom Date Input Styling */
-        input[type="date"] {
-            position: relative;
-            cursor: pointer;
-        }
-        input[type="date"]::-webkit-calendar-picker-indicator {
-            background: url('data:image/svg+xml;charset=UTF-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236366f1"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/></svg>') no-repeat center;
-            background-size: 20px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-        /* Radio Group Styling */
-        .radio-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: clamp(8px, 2vw, 12px);
-            margin-top: 8px;
-        }
-        .radio-item {
+            margin-bottom: 0.5rem;
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: clamp(12px, 3vw, 16px);
-            border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--bg-primary);
-            font-size: clamp(13px, 3vw, 14px);
-            font-weight: 500;
+            gap: 0.5rem;
         }
-        .radio-item:hover {
-            border-color: var(--border-focus);
-            background: rgba(99, 102, 241, 0.02);
+
+        .required-star {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .form-control-custom {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-control-custom:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 0.2rem rgba(99, 102, 241, 0.25);
+            background: white;
             transform: translateY(-1px);
         }
-        .radio-item input[type="radio"] {
-            margin: 0;
-            accent-color: var(--primary-color);
+
+        /* Radio Group Styling */
+        .radio-group-custom {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
         }
-        .radio-item:has(input[type="radio"]:checked) {
-            border-color: var(--border-focus);
-            background: rgba(99, 102, 241, 0.08);
-            color: var(--primary-color);
-            font-weight: 600;
+
+        .radio-item-custom {
+            flex: 1;
+            position: relative;
         }
-        .date-range {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: clamp(12px, 3vw, 16px);
+
+        .radio-item-custom input[type="radio"] {
+            display: none;
         }
-        .submit-btn {
-            width: 100%;
-            padding: clamp(14px, 3.5vw, 18px);
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
-            color: white;
-            border: none;
-            border-radius: var(--radius-md);
-            font-size: clamp(14px, 3.5vw, 16px);
-            font-weight: 600;
-            font-family: inherit;
+
+        .radio-item-custom label {
+            display: block;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            margin-top: clamp(20px, 5vw, 24px);
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            font-weight: 500;
         }
-        .submit-btn:hover {
+
+        .radio-item-custom label:hover {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .radio-item-custom input[type="radio"]:checked + label {
+            border-color: #6366f1;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
         }
-        .submit-btn:disabled {
-            background: var(--text-light);
+
+        /* Submit Button */
+        .submit-btn-custom {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn-custom::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn-custom:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .submit-btn-custom:disabled {
+            background: #6c757d;
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
         }
-        /* Loading Animation & Message */
-        .status-container {
-            padding: 0 clamp(20px, 5vw, 30px) clamp(20px, 5vw, 30px);
-            background: var(--bg-primary);
+
+        /* Loading Animation */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
         }
-        .loading { display: none; text-align: center; }
-        .loading.show { display: block; }
-        .spinner {
-            width: 40px; height: 40px;
-            border: 3px solid rgba(99, 102, 241, 0.1);
-            border-top-color: var(--primary-color);
+
+        .loading-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .loading-content {
+            text-align: center;
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #6366f1;
             border-radius: 50%;
-            animation: spin 1s linear infinite; margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { color: var(--text-secondary); }
-        .message {
-            padding: clamp(12px, 3vw, 16px);
-            border-radius: var(--radius-md);
-            display: none; font-weight: 500;
-            animation: slideIn 0.3s ease-out;
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .message.success { background: rgba(16, 185, 129, 0.1); color: #065f46; border: 1px solid rgba(16, 185, 129, 0.2); }
-        .message.error { background: rgba(239, 68, 68, 0.1); color: #991b1b; border: 1px solid rgba(239, 68, 68, 0.2); }
-        .message.show { display: block; }
-        
-        /* Responsive */
+
+        /* Alert Styling */
+        .alert-custom {
+            border-radius: 12px;
+            border: none;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success-custom {
+            background: rgba(16, 185, 129, 0.1);
+            color: #065f46;
+            border-left: 4px solid #10b981;
+        }
+
+        .alert-danger-custom {
+            background: rgba(239, 68, 68, 0.1);
+            color: #991b1b;
+            border-left: 4px solid #ef4444;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 400px) {
-    body { padding: 0; }
-    .container {
-        border-radius: 12px;
-        border: none;
-        min-height: 92vh;
-        margin: 4vh auto;
-        backdrop-filter: blur(10px);
-        box-shadow: var(--shadow-lg);
-    }
-    .date-range {
-        grid-template-columns: 1fr;
-        gap: 16px;
-    }
-    .header {
-        padding: 30px 20px;
-    }
-    .form-container, .status-container {
-        padding-left: 20px;
-        padding-right: 20px;
-    }
-}
-        /* Dark Mode */
+            .glass-container {
+                margin: 1rem;
+                border-radius: 15px;
+            }
+
+            .header-section {
+                padding: 1.5rem 0;
+            }
+
+            .form-section {
+                padding: 1.5rem;
+            }
+
+            .radio-group-custom {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .header-icon {
+                font-size: 2.5rem;
+            }
+
+            body {
+                background-attachment: scroll;
+            }
+        }
+
+        /* Dark Mode Support */
         @media (prefers-color-scheme: dark) {
             :root {
-                --text-primary: #f9fafb; --text-secondary: #d1d5db; --text-light: #9ca3af;
-                --bg-primary: #111827; --border-color: #374151;
+                --glass-bg: rgba(26, 32, 44, 0.95);
+                --glass-border: rgba(255, 255, 255, 0.1);
+                --text-primary: #f7fafc;
             }
-            .container { background: rgba(17, 24, 39, 0.85); border-color: rgba(75, 85, 99, 0.3); }
-            .form-container, .status-container { background: var(--bg-primary); }
-            .form-input { background: #1f2937; color: var(--text-primary); border-color: var(--border-color); }
-            .radio-item { background: #1f2937; border-color: var(--border-color); }
-            .radio-item:has(input[type="radio"]:checked) { background: rgba(99, 102, 241, 0.1); }
-            .message.success { background: #064e3b; color: #a7f3d0; border-color: #059669;}
-            .message.error { background: #991b1b; color: #fecaca; border-color: #ef4444; }
+
+            .form-control-custom {
+                background: rgba(45, 55, 72, 0.8);
+                color: #f7fafc;
+                border-color: #4a5568;
+            }
+
+            .radio-item-custom label {
+                background: rgba(45, 55, 72, 0.8);
+                color: #f7fafc;
+                border-color: #4a5568;
+            }
+
+            .alert-success-custom {
+                background: rgba(16, 185, 129, 0.2);
+                color: #68d391;
+            }
+
+            .alert-danger-custom {
+                background: rgba(239, 68, 68, 0.2);
+                color: #fc8181;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="header-content">
-                <span class="emoji">🗓️</span>
-                <h1>จองห้องประชุม</h1>
-                <p class="subtitle">ศูนย์ฝึกปฎิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
-            </div>
-        </div>
-
-        <div id="mainContent">
-            <form id="bookingForm" class="form-container">
-                <div class="form-group">
-                    <label for="fullName" class="required">ชื่อ-นามสกุล (ผู้จอง)</label>
-                    <input type="text" id="fullName" name="fullName" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="department" class="required">สังกัด/ชื่อหน่วยงาน</label>
-                    <input type="text" id="department" name="department" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="phone" class="required">เบอร์โทรศัพท์</label>
-                    <input type="tel" id="phone" name="phone" class="form-input" required>
-                </div>
-                <div class="form-group">
-                    <label for="courseName" class="required">ชื่อหลักสูตร/หัวข้อประชุม</label>
-                    <input type="text" id="courseName" name="courseName" class="form-input" required>
-                </div>
-                <div class="date-range">
-                    <div class="form-group">
-                        <label for="startDate" class="required">วันที่เริ่มต้น</label>
-                        <input type="date" id="startDate" name="startDate" class="form-input" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate" class="required">วันที่สิ้นสุด</label>
-                        <input type="date" id="endDate" name="endDate" class="form-input" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="required">ต้องการที่พัก</label>
-                    <div class="radio-group">
-                        <label class="radio-item">
-                            <input type="radio" name="accommodation" value="ต้องการ" required> ต้องการ
-                        </label>
-                        <label class="radio-item">
-                            <input type="radio" name="accommodation" value="ไม่ต้องการ"> ไม่ต้องการ
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="attendees" class="required">จำนวนผู้เข้าอบรม</label>
-                    <input type="number" id="attendees" name="attendees" class="form-input" min="1" placeholder="ระบุจำนวนคน" required>
-                </div>
-                
-                <button type="submit" id="submitBtn" class="submit-btn">ส่งข้อมูลการจอง</button>
-            </form>
-            <div class="status-container">
-                <div id="message" class="message"></div>
-            </div>
-        </div>
-
-        <div id="loading" class="loading">
-             <div class="spinner"></div>
-             <p class="loading-text">กำลังส่งข้อมูลการจอง...</p>
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <h5>กำลังส่งข้อมูลการจอง...</h5>
+            <p class="mb-0">กรุณารอสักครู่</p>
         </div>
     </div>
 
+    <div class="container-fluid py-4">
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="glass-container">
+                    <!-- Header Section -->
+                    <div class="header-section">
+                        <div class="header-content">
+                            <div class="header-icon">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <h2 class="mb-2">จองห้องประชุม</h2>
+                            <p class="mb-0 opacity-90">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
+                        </div>
+                    </div>
+
+                    <!-- Form Section -->
+                    <div class="form-section">
+                        <div id="alertContainer"></div>
+                        
+                        <form id="bookingForm">
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-person-fill text-primary"></i>
+                                    ชื่อ-นามสกุล (ผู้จอง)
+                                    <span class="required-star">*</span>
+                                </label>
+                                <input type="text" id="fullName" name="fullName" class="form-control form-control-custom" required>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-building text-primary"></i>
+                                    สังกัด/ชื่อหน่วยงาน
+                                    <span class="required-star">*</span>
+                                </label>
+                                <input type="text" id="department" name="department" class="form-control form-control-custom" required>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-telephone-fill text-primary"></i>
+                                    เบอร์โทรศัพท์
+                                    <span class="required-star">*</span>
+                                </label>
+                                <input type="tel" id="phone" name="phone" class="form-control form-control-custom" required>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-journal-text text-primary"></i>
+                                    ชื่อหลักสูตร/หัวข้อประชุม
+                                    <span class="required-star">*</span>
+                                </label>
+                                <input type="text" id="courseName" name="courseName" class="form-control form-control-custom" required>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom">
+                                            <i class="bi bi-calendar-event text-primary"></i>
+                                            วันที่เริ่มต้น
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="date" id="startDate" name="startDate" class="form-control form-control-custom" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group-custom">
+                                        <label class="form-label-custom">
+                                            <i class="bi bi-calendar-x text-primary"></i>
+                                            วันที่สิ้นสุด
+                                            <span class="required-star">*</span>
+                                        </label>
+                                        <input type="date" id="endDate" name="endDate" class="form-control form-control-custom" required>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-house-door text-primary"></i>
+                                    ต้องการที่พัก
+                                    <span class="required-star">*</span>
+                                </label>
+                                <div class="radio-group-custom">
+                                    <div class="radio-item-custom">
+                                        <input type="radio" id="accommodation-yes" name="accommodation" value="ต้องการ" required>
+                                        <label for="accommodation-yes">
+                                            <i class="bi bi-check-circle-fill me-2"></i>
+                                            ต้องการ
+                                        </label>
+                                    </div>
+                                    <div class="radio-item-custom">
+                                        <input type="radio" id="accommodation-no" name="accommodation" value="ไม่ต้องการ">
+                                        <label for="accommodation-no">
+                                            <i class="bi bi-x-circle-fill me-2"></i>
+                                            ไม่ต้องการ
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="bi bi-people-fill text-primary"></i>
+                                    จำนวนผู้เข้าอบรม
+                                    <span class="required-star">*</span>
+                                </label>
+                                <input type="number" id="attendees" name="attendees" class="form-control form-control-custom" min="1" placeholder="ระบุจำนวนคน" required>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" id="submitBtn" class="btn submit-btn-custom">
+                                    <i class="bi bi-send-fill me-2"></i>
+                                    ส่งข้อมูลการจอง
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
-        // --- ค่าที่ต้องแก้ไข ---
-        const LIFF_ID = "2007138631-Ono58j50"; // ◀️ ใส่ LIFF ID ของคุณ
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcTsZMn07UMyNTYY2nZMdy1BkTMhL9-yxAXmG5cVycOMAPkCGTFOf9nKPK2j_teB_wxg/exec"; // ◀️ ใส่ URL ของ Web App
+        // --- Configuration ---
+        const LIFF_ID = "";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcTsZMn07UMyNTYY2nZMdy1BkTMhL9-yxAXmG5cVycOMAPkCGTFOf9nKPK2j_teB_wxg/exec";
         
-        // --- ตัวแปรสำหรับ Element ---
-        const mainContent = document.getElementById('mainContent');
+        // --- Elements ---
         const bookingForm = document.getElementById('bookingForm');
         const submitBtn = document.getElementById('submitBtn');
-        const messageDiv = document.getElementById('message');
-        const loadingDiv = document.getElementById('loading');
+        const alertContainer = document.getElementById('alertContainer');
+        const loadingOverlay = document.getElementById('loadingOverlay');
         
         let userId = '';
         let displayName = '';
@@ -416,25 +540,52 @@
                 userId = profile.userId;
                 displayName = profile.displayName;
                 
+                // Auto-fill name if available
+                if (displayName) {
+                    document.getElementById('fullName').value = displayName;
+                }
+
             } catch (err) {
                 console.error('LIFF initialization error:', err);
-                showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'error');
+                showAlert('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
             }
         }
 
         // Initialize app
         initializeLiff();
         
-        // Show message function
-        function showMessage(text, type = 'success') {
-            messageDiv.textContent = text;
-            messageDiv.className = `message ${type} show`;
+        // Show alert function
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}-custom alert-custom`;
+            alertDiv.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-${type === 'success' ? 'check-circle-fill' : 'exclamation-triangle-fill'} me-2"></i>
+                    <div>${message}</div>
+                </div>
+            `;
             
-            // Auto hide success messages after 5 seconds
+            alertContainer.innerHTML = '';
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto hide success alerts after 5 seconds
             if (type === 'success') {
                 setTimeout(() => {
-                    messageDiv.classList.remove('show');
+                    alertDiv.remove();
                 }, 5000);
+            }
+        }
+
+        // Show loading
+        function showLoading(show = true) {
+            if (show) {
+                loadingOverlay.classList.add('show');
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>กำลังส่งข้อมูล...';
+            } else {
+                loadingOverlay.classList.remove('show');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="bi bi-send-fill me-2"></i>ส่งข้อมูลการจอง';
             }
         }
 
@@ -443,10 +594,7 @@
             event.preventDefault();
 
             // Show loading
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'กำลังส่งข้อมูล...';
-            mainContent.style.display = 'none';
-            loadingDiv.classList.add('show');
+            showLoading(true);
 
             const formData = new FormData(event.target);
             const data = {
@@ -474,28 +622,71 @@
                 });
 
                 // Hide loading
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
+                showLoading(false);
 
                 // Show success message with SweetAlert
                 await Swal.fire({
-                    title: 'ส่งข้อมูลสำเร็จ! ✅',
+                    title: 'ส่งข้อมูลสำเร็จ! 🎉',
                     html: `
-                        <div style="text-align: left; margin: 20px 0;">
-                            <p><strong>ชื่อผู้จอง:</strong> ${data.fullName}</p>
-                            <p><strong>หน่วยงาน:</strong> ${data.department}</p>
-                            <p><strong>วันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                            <p><strong>จำนวนผู้เข้าอบรม:</strong> ${data.attendees} คน</p>
+                        <div class="text-start mt-3">
+                            <div class="row g-2">
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-2">
+                                            <div class="row">
+                                                <div class="col-4"><strong>ชื่อผู้จอง:</strong></div>
+                                                <div class="col-8">${data.fullName}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-2">
+                                            <div class="row">
+                                                <div class="col-4"><strong>หน่วยงาน:</strong></div>
+                                                <div class="col-8">${data.department}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-2">
+                                            <div class="row">
+                                                <div class="col-4"><strong>วันที่:</strong></div>
+                                                <div class="col-8">${data.startDate} ถึง ${data.endDate}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="card border-0 bg-light">
+                                        <div class="card-body py-2">
+                                            <div class="row">
+                                                <div class="col-4"><strong>จำนวนคน:</strong></div>
+                                                <div class="col-8">${data.attendees} คน</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <p style="color: #059669; font-weight: 500;">ระบบได้บันทึกข้อมูลการจองของคุณแล้ว</p>
+                        <div class="alert alert-success mt-3 mb-0">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            ระบบได้บันทึกข้อมูลการจองของคุณแล้ว
+                        </div>
                     `,
                     icon: 'success',
-                    timer: 5000,
+                    timer: 8000,
                     timerProgressBar: true,
                     showConfirmButton: true,
                     confirmButtonText: 'ตกลง',
-                    confirmButtonColor: '#4338ca',
-                    allowOutsideClick: false
+                    confirmButtonColor: '#6366f1',
+                    allowOutsideClick: false,
+                    customClass: {
+                        popup: 'swal-popup-custom'
+                    }
                 });
 
                 // Close LIFF window
@@ -507,21 +698,19 @@
                 console.error('Submit error:', error);
 
                 // Hide loading
-                loadingDiv.classList.remove('show');
-                mainContent.style.display = 'block';
+                showLoading(false);
 
                 // Show error message with SweetAlert
                 await Swal.fire({
-                    title: 'เกิดข้อผิดพลาด!',
+                    title: 'เกิดข้อผิดพลาด! ⚠️',
                     text: 'ไม่สามารถส่งข้อมูลได้ กรุณาลองใหม่อีกครั้ง',
                     icon: 'error',
                     confirmButtonText: 'ลองอีกครั้ง',
-                    confirmButtonColor: '#dc2626'
+                    confirmButtonColor: '#dc3545',
+                    customClass: {
+                        popup: 'swal-popup-custom'
+                    }
                 });
-
-                // Reset button
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'ส่งข้อมูลการจอง';
             }
         });
 
@@ -530,6 +719,27 @@
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
             document.getElementById('endDate').setAttribute('min', today);
+            
+            // Update end date minimum when start date changes
+            document.getElementById('startDate').addEventListener('change', function() {
+                const startDate = this.value;
+                if (startDate) {
+                    document.getElementById('endDate').setAttribute('min', startDate);
+                }
+            });
+        });
+
+        // Add floating label effect
+        document.querySelectorAll('.form-control-custom').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+            
+            input.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.parentElement.classList.remove('focused');
+                }
+            });
         });
     </script>
 </body>
