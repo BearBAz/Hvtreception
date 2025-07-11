@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>จองห้องประชุม</title>
+    <title>แบบฟอร์มจองห้องประชุม ศฝฟ.</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
@@ -396,7 +396,7 @@
                             <div class="header-icon">
                                 <i class="bi bi-calendar-check"></i>
                             </div>
-                            <h2 class="mb-2">จองห้องประชุม</h2>
+                            <h2 class="mb-2">แบบฟอร์มจองห้องประชุม</h2>
                             <p class="mb-0 opacity-90">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง การไฟฟ้าส่วนภูมิภาค</p>
                         </div>
                     </div>
@@ -409,7 +409,7 @@
                             <div class="form-group-custom">
                                 <label class="form-label-custom">
                                     <i class="bi bi-person-fill text-primary"></i>
-                                    ชื่อ-นามสกุล (ผู้จอง)
+                                    ชื่อ-นามสกุล
                                     <span class="required-star">*</span>
                                 </label>
                                 <input type="text" id="fullName" name="fullName" class="form-control form-control-custom" required>
@@ -468,7 +468,7 @@
                             <div class="form-group-custom">
                                 <label class="form-label-custom">
                                     <i class="bi bi-house-door text-primary"></i>
-                                    ต้องการที่พัก
+                                    คุณต้องการห้องพักหรือไม่
                                     <span class="required-star">*</span>
                                 </label>
                                 <div class="radio-group-custom">
@@ -492,10 +492,10 @@
                             <div class="form-group-custom">
                                 <label class="form-label-custom">
                                     <i class="bi bi-people-fill text-primary"></i>
-                                    จำนวนผู้เข้าอบรม
+                                    จำนวนผู้เข้าประชุม
                                     <span class="required-star">*</span>
                                 </label>
-                                <input type="number" id="attendees" name="attendees" class="form-control form-control-custom" min="1" placeholder="ระบุจำนวนคน" required>
+                                <input type="number" id="attendees" name="attendees" class="form-control form-control-custom" min="1" required>
                             </div>
 
                             <div class="d-grid gap-2">
@@ -511,13 +511,10 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
     <script>
-        // --- Configuration ---
-        const LIFF_ID = "";
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcTsZMn07UMyNTYY2nZMdy1BkTMhL9-yxAXmG5cVycOMAPkCGTFOf9nKPK2j_teB_wxg/exec";
+        const LIFF_ID = "2007123923-K5wdmekE";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0HBryMqLg0cURpAWHKx3fUU20LB2ziAPzqMxx8hVySU7irfb9usBn8teKRezkTUNltA/exec";
         
         // --- Elements ---
         const bookingForm = document.getElementById('bookingForm');
@@ -598,17 +595,17 @@
 
             const formData = new FormData(event.target);
             const data = {
-                userId: userId,
-                displayName: displayName,
+                timestamp: new Date().toISOString()
                 fullName: formData.get('fullName'),
                 department: formData.get('department'),
+                displayName: displayName,
                 phone: formData.get('phone'),
                 courseName: formData.get('courseName'),
                 startDate: formData.get('startDate'),
                 endDate: formData.get('endDate'),
-                accommodation: formData.get('accommodation'),
                 attendees: formData.get('attendees'),
-                timestamp: new Date().toISOString()
+                accommodation: formData.get('accommodation'),
+                userId: userId,
             };
 
             try {
@@ -626,7 +623,7 @@
 
                 // Show success message with SweetAlert
                 await Swal.fire({
-                    title: 'ส่งข้อมูลสำเร็จ! 🎉',
+                    title: 'บันทึกข้อมูลสำเร็จ 🎉',
                     html: `
                         <div class="text-start mt-3">
                             <div class="row g-2">
@@ -634,7 +631,7 @@
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-2">
                                             <div class="row">
-                                                <div class="col-4"><strong>ชื่อผู้จอง:</strong></div>
+                                                <div class="col-4"><strong>ชื่อ-นามสกุล:</strong></div>
                                                 <div class="col-8">${data.fullName}</div>
                                             </div>
                                         </div>
@@ -644,7 +641,7 @@
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-2">
                                             <div class="row">
-                                                <div class="col-4"><strong>หน่วยงาน:</strong></div>
+                                                <div class="col-4"><strong>สังกัด/ชื่อหน่วยงาน:</strong></div>
                                                 <div class="col-8">${data.department}</div>
                                             </div>
                                         </div>
@@ -654,7 +651,7 @@
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-2">
                                             <div class="row">
-                                                <div class="col-4"><strong>วันที่:</strong></div>
+                                                <div class="col-4"><strong>ระหว่างวันที่:</strong></div>
                                                 <div class="col-8">${data.startDate} ถึง ${data.endDate}</div>
                                             </div>
                                         </div>
@@ -664,7 +661,7 @@
                                     <div class="card border-0 bg-light">
                                         <div class="card-body py-2">
                                             <div class="row">
-                                                <div class="col-4"><strong>จำนวนคน:</strong></div>
+                                                <div class="col-4"><strong>จำนวนผู้เข้าร่วมประชุม:</strong></div>
                                                 <div class="col-8">${data.attendees} คน</div>
                                             </div>
                                         </div>
@@ -674,11 +671,11 @@
                         </div>
                         <div class="alert alert-success mt-3 mb-0">
                             <i class="bi bi-check-circle-fill me-2"></i>
-                            ระบบได้บันทึกข้อมูลการจองของคุณแล้ว
+                            ระบบบันทึกข้อมูลการจองของคุณแล้ว
                         </div>
                     `,
                     icon: 'success',
-                    timer: 8000,
+                    timer: 7000,
                     timerProgressBar: true,
                     showConfirmButton: true,
                     confirmButtonText: 'ตกลง',
