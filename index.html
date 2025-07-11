@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>จองห้องประชุม</title>
+    <title>ระบบจองห้องประชุม ศฝฟ.</title>
     <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
@@ -383,7 +383,7 @@
             box-shadow: 0 1px 3px rgba(30, 58, 138, 0.3);
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 400px) {
             .app-container {
                 max-width: 100%;
                 box-shadow: none;
@@ -518,7 +518,7 @@
                                 <input type="text" class="form-control" id="courseName" name="courseName" required>
                             </div>
                             <div class="mb-3">
-                                <label for="attendees" class="form-label required">จำนวนผู้เข้าอบรม</label>
+                                <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                                 <input type="number" class="form-control" id="attendees" name="attendees" min="4" required>
                             </div>
                         </div>
@@ -598,8 +598,8 @@
     
     <script>
         // --- Configuration ---
-        const LIFF_ID = "2007138631-Ono58j50";
-        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzcTsZMn07UMyNTYY2nZMdy1BkTMhL9-yxAXmG5cVycOMAPkCGTFOf9nKPK2j_teB_wxg/exec";
+        const LIFF_ID = "2007123923-K5wdmekE";
+        const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx0HBryMqLg0cURpAWHKx3fUU20LB2ziAPzqMxx8hVySU7irfb9usBn8teKRezkTUNltA/exec";
         
         // --- Elements ---
         const mainContent = document.getElementById('mainContent');
@@ -623,10 +623,6 @@
                 const profile = await liff.getProfile();
                 userId = profile.userId;
                 displayName = profile.displayName;
-                
-                if (displayName) {
-                    document.getElementById('fullName').value = displayName;
-                }
                 
                 updateProgress();
             } catch (err) {
@@ -735,21 +731,21 @@
 
                 // Show success message
                 await Swal.fire({
-                    title: 'บันทึกข้อมูลสำเร็จ',
+                    title: 'บันทึกข้อมูลสำเร็จ 🎉',
                     html: `
                         <div class="text-start mt-3">
-                            <p><i class="fas fa-user me-2"></i><strong>ชื่อผู้จอง:</strong> ${data.fullName}</p>
-                            <p><i class="fas fa-building me-2"></i><strong>สังกัด:</strong> ${data.department}</p>
+                            <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
+                            <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน/:</strong> ${data.department}</p>
                             <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าอบรม:</strong> ${data.attendees} คน</p>
-                            <p><i class="fas fa-bed me-2"></i><strong>ที่พัก:</strong> ${data.accommodation}</p>
+                            <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
+                            <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
                         </div>
                         <div class="alert alert-success mt-3" role="alert">
                             <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
                         </div>
                     `,
                     icon: 'success',
-                    timer: 7000,
+                    timer: 5000,
                     timerProgressBar: true,
                     showConfirmButton: true,
                     confirmButtonText: 'ตกลง',
