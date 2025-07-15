@@ -626,10 +626,33 @@
                 userId = profile.userId;
                 displayName = profile.displayName;
                 
+                await autofillUserData(); 
+                
                 updateProgress();
             } catch (err) {
                 console.error('LIFF initialization error:', err);
                 showMessage('เกิดข้อผิดพลาดในการโหลดข้อมูล LINE', 'danger');
+            }
+        }
+
+        async function autofillUserData() {
+            if (!userId) return;
+
+            const autofillUrl = `${GAS_WEB_APP_URL}?userId=${userId}`;
+
+            try {
+                const response = await fetch(autofillUrl);
+                const userData = await response.json();
+
+                if (userData && userData.fullName) {
+                    document.getElementById('fullName').value = userData.fullName;
+                    document.getElementById('department').value = userData.department;
+                    document.getElementById('phone').value = userData.phone;
+
+                    updateProgress(); 
+                }
+            } catch (error) {
+                console.error('Autofill error:', error);
             }
         }
 
@@ -731,42 +754,39 @@
                 loadingDiv.classList.remove('show');
                 mainContent.style.display = 'block';
 
-                
-                await Swal.fire({
+                // ---- [ปรับปรุงใหม่] ----
+                Swal.fire({
                     title: 'บันทึกข้อมูลสำเร็จ 🎉',
                     html: `
                         <div class="text-start mt-3">
-        
                             <p><i class="fas fa-user me-2"></i><strong>ชื่อ-นามสกุล:</strong> ${data.fullName}</p>
                             <p><i class="fas fa-building me-2"></i><strong>สังกัด/ชื่อหน่วยงาน/:</strong> ${data.department}</p>
                             <p><i class="fas fa-calendar me-2"></i><strong>ระหว่างวันที่:</strong> ${data.startDate} ถึง ${data.endDate}</p>
-          
                             <p><i class="fas fa-users me-2"></i><strong>จำนวนผู้เข้าร่วมประชุม:</strong> ${data.attendees} คน</p>
                             <p><i class="fas fa-bed me-2"></i><strong>ต้องการที่พัก:</strong> ${data.accommodation}</p>
                         </div>
-                     
                         <div class="alert alert-success mt-3" role="alert">
                             <i class="fas fa-check-circle me-2"></i>บันทึกข้อมูลการจองของคุณเรียบร้อยแล้ว
                         </div>
                     `,
-                  
                     icon: 'success',
-                    timer: 5000,
-                    timerProgressBar: true,
                     showConfirmButton: true,
                     confirmButtonText: 'ตกลง',
-             
-                    confirmButtonColor: '#aec5b5',
-                    allowOutsideClick: false,
+                    allowOutsideClick: false, // ไม่ให้ปิดเมื่อคลิกข้างนอก
                     customClass: {
                         popup: 'bounce-in'
                     }
-     
+                }).then((result) => {
+                    // เมื่อผู้ใช้กดปุ่ม "ตกลง"
+                    if (result.isConfirmed) {
+                        // ตรวจสอบว่าเปิดใน LINE หรือไม่
+                        if (liff.isInClient()) {
+                            liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
+                        } else {
+                            window.close(); // สั่งปิดหน้าต่างเบราว์เซอร์
+                        }
+                    }
                 });
-                
-                if (liff.isInClient()) {
-                    liff.closeWindow();
-                }
 
             } catch (error) {
                 console.error('Submit error:', error);
@@ -792,11 +812,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('startDate').setAttribute('min', today);
-            document.getElementById('endDate').setAttribute('min', today);
-            
+
+            // ทำการตรวจสอบวันที่เริ่มต้นเมื่อมีการเปลี่ยนแปลง
+            document.getElementById('startDate').addEventListener('change', function() {
+                const startDateValue = this.value;
+                document.getElementById('endDate').setAttribute('min', startDateValue);
+            });
             
             updateProgress();
-     
         });
 
         
