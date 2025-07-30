@@ -542,7 +542,7 @@
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ต้องการ">
              
-                                            <input type="radio" name="accommodation" value="ต้องการ" required>
+                                            <input type="radio" name="accommodation" value="พัก" required>
                                             <div class="radio-icon">
                     
                                                 <i class="fas fa-bed"></i>
@@ -555,7 +555,7 @@
                                     <div class="col-6">
                                         <div class="radio-card" data-value="ไม่ต้องการ">
                            
-                                            <input type="radio" name="accommodation" value="ไม่ต้องการ">
+                                            <input type="radio" name="accommodation" value="ไม่พัก">
                                             <div class="radio-icon">
                                    
                                                 <i class="fas fa-home"></i>
@@ -777,9 +777,9 @@
                     if (result.isConfirmed) {
                         // ตรวจสอบว่าเปิดใน LINE หรือไม่
                         if (liff.isInClient()) {
-                            liff.closeWindow(); // สั่งปิดหน้าต่าง LIFF
+                            liff.closeWindow(); 
                         } else {
-                            window.close(); // สั่งปิดหน้าต่างเบราว์เซอร์
+                            window.close(); 
                         }
                     }
                 });
