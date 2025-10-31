@@ -1353,7 +1353,7 @@
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
+        if (accommodationChoice && accommodationChoice.value === 'พัก' && !accommodationAvailable) {
             await Swal.fire({
                 title: 'ที่พักไม่เพียงพอ!',
                 text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
