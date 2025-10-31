@@ -1001,7 +1001,7 @@
                             <div class="row g-3 mt-1">
                                 <div class="col-6">
                                     <div class="radio-card" data-value="ต้องการ">
-                                        <input type="radio" name="accommodation" value="พัก" required>
+                                        <input type="radio" name="accommodation" value="ต้องการ" required>
                                         <div class="radio-icon">
                                             <i class="fas fa-bed"></i>
                                         </div>
@@ -1010,7 +1010,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="radio-card" data-value="ไม่ต้องการ">
-                                        <input type="radio" name="accommodation" value="ไม่พัก">
+                                        <input type="radio" name="accommodation" value="ไม่ต้องการ">
                                         <div class="radio-icon">
                                             <i class="fas fa-home"></i>
                                         </div>
@@ -1222,7 +1222,7 @@
             const endDate = document.getElementById('endDate').value;
             const attendees = parseInt(document.getElementById('attendees').value) || 0;
 
-            if (!accommodationChoice || accommodationChoice.value !== 'พัก') {
+            if (!accommodationChoice || accommodationChoice.value !== 'ต้องการ') {
                 accommodationStatusDiv.innerHTML = '';
                 accommodationStatusDiv.style.display = 'none';
                 accommodationAvailable = true;
@@ -1353,7 +1353,7 @@
     bookingForm.addEventListener('submit', async function(event) {
         event.preventDefault();
         const accommodationChoice = document.querySelector('input[name="accommodation"]:checked');
-        if (accommodationChoice && accommodationChoice.value === 'พัก' && !accommodationAvailable) {
+        if (accommodationChoice && accommodationChoice.value === 'ต้องการ' && !accommodationAvailable) {
             await Swal.fire({
                 title: 'ที่พักไม่เพียงพอ!',
                 text: 'ห้องพักไม่เพียงพอสำหรับจำนวนผู้เข้าร่วม กรุณาเปลี่ยนช่วงเวลา ลดจำนวนผู้เข้าร่วม หรือเลือกไม่ต้องการที่พัก',
