@@ -993,7 +993,8 @@
                         <div class="mb-3">
                             <label for="attendees" class="form-label required">จำนวนผู้เข้าร่วมประชุม</label>
                             <input type="number" class="form-control" id="attendees" name="attendees" 
-                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1">
+                                   placeholder="กรุณากรอกจำนวนผู้เข้าร่วม" required min="1"
+                                   oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                         </div>
                         
                         <div class="mb-3">
