@@ -1252,17 +1252,17 @@
                         <div class="accommodation-info">
                             <h6><i class="fas fa-info-circle"></i>ข้อมูลการเข้าพัก</h6>
                             <div class="accommodation-detail">
-                                <span class="accommodation-label">วันเข้าพัก:</span>
-                                <span class="accommodation-value">${checkin.toLocaleDateString('th-TH')}</span>
+                  				<span class="accommodation-label">วันเข้าพัก:</span>
+                                <span class="accommodation-value">${checkin.toLocaleDateString('en-GB')}</span>
                             </div>
-                            <div class="accommodation-detail">
+        					<div class="accommodation-detail">
                                 <span class="accommodation-label">วันออกจากที่พัก:</span>
-                                <span class="accommodation-value">${checkout.toLocaleDateString('th-TH')}</span>
-                            </div>
+                                <span class="accommodation-value">${endDateObj.toLocaleDateString('en-GB')}</span>
+                          </div>
                             <div class="accommodation-detail">
                                 <span class="accommodation-label">จำนวนคืน:</span>
                                 <span class="accommodation-value">${nights} คืน</span>
-                            </div>
+                           </div>
                         </div>`;
                     accommodationStatusDiv.innerHTML = statusHtml;
                 } else {
