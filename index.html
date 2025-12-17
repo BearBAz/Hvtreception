@@ -2044,8 +2044,17 @@ async function checkAccommodation() {
                     }
                 });
 				
-            } else {
+} else {
                 accommodationAvailable = false;
+
+                let errorTitle = "ห้องพักไม่เพียงพอ";
+                let errorDesc = `ต้องการห้องพักจำนวน ${suggestedRooms} ห้อง แต่มีห้องพักว่างเพียง ${available} ห้อง`;
+                
+                if (available === 0) {
+                    errorTitle = "ห้องพักเต็ม";
+                    errorDesc = "ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว";
+                }
+
                 container.innerHTML = `
                 <div class="unavailable-message shadow-sm">
                     <div class="d-flex align-items-center mb-2">
@@ -2053,13 +2062,14 @@ async function checkAccommodation() {
                             <i class="fas fa-times"></i>
                         </div>
                         <div>
-                            <h6 class="text-danger mb-0 fw-bold">ห้องพักเต็ม / ไม่เพียงพอ</h6>
-                            <small class="text-muted">วันที่ ${showCheckin} - ${showCheckout}</small>
+                            <h6 class="text-danger mb-0 fw-bold">${errorTitle}</h6>
+                            <small class="text-muted">ระหว่างวันที่ ${showCheckin} - ${showCheckout}</small>
                         </div>
                     </div>
-                    <p class="mb-0 text-secondary" style="font-size: 0.9rem; margin-left: 3.5rem;">
-                        ขออภัยในช่วงเวลาดังกล่าวไม่มีห้องพักว่าง หรือห้องพักไม่เพียงพอสำหรับการจอง
-                    </p>
+                    <div class="alert alert-danger-custom mt-3 mb-0" style="font-size: 0.9rem;">
+                        <i class="fas fa-exclamation-triangle me-2"></i> ${errorDesc} <br>
+                        <strong>โปรดเลือกช่วงเวลาอื่น หรือลดจำนวนผู้เข้าอบรม</strong>
+                    </div>
                 </div>`;
             }
 
