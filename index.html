@@ -1922,13 +1922,17 @@ async function checkAccommodation() {
             const startDateObj = new Date(startDate);
             const endDateObj = new Date(endDate);
             
-            // ✅ คำนวณวันเข้าพัก-ออก: checkin = startDate-1, checkout = endDate
+            // คำนวณวันเข้าพัก-ออก
+            // จองห้องประชุม 11-12/01
+            // → เข้าพัก 10/01 เวลา 14:00
+            // → ออก 12/01 เวลา 10:00
             const checkin = new Date(startDateObj);
-            checkin.setDate(startDateObj.getDate() - 1);
+            checkin.setDate(startDateObj.getDate() - 1);  // startDate - 1
             
-            const checkout = new Date(endDateObj); // ไม่ต้อง -1
+            const checkout = new Date(endDateObj);  // endDate (ไม่ -1)
 
-            // ✅ คำนวณจำนวนคืนที่พักจริง (checkin ถึงก่อน checkout)
+            // คำนวณจำนวนคืนที่พักจริง
+            // ตัวอย่าง: checkin 10/01, checkout 12/01 = พัก 2 คืน (คืนวันที่ 10 และ 11)
             const diffTime = checkout - checkin;
             const nights = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
