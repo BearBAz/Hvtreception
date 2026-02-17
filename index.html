@@ -1810,11 +1810,11 @@ function resetEmployeeData() {
         try {
             const response = await fetch(autofillUrl);
             const userData = await response.json();
-            if (userData && userData.fullName) {
-                document.getElementById('fullName').value = userData.fullName;
-                document.getElementById('department').value = userData.department;
+            
+            if (userData && userData.phone) {
                 document.getElementById('phone').value = userData.phone;
-                updateProgressSteps();
+                
+                updateProgressSteps(); 
             }
         } catch (error) {
             console.error('Autofill error:', error);
