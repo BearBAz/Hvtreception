@@ -843,86 +843,148 @@
     @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
     /* ═══════════════════════════════════════
+       ALT DATE SUGGESTION BOX
+    ═══════════════════════════════════════ */
+    .alt-date-box {
+        background: var(--surface);
+        border: 1.5px solid rgba(217,119,6,0.25);
+        border-radius: var(--radius-md);
+        margin-top: 0.75rem;
+        overflow: hidden;
+        animation: slideUp 0.32s ease;
+    }
+    .alt-date-head {
+        background: linear-gradient(90deg, #f59e0b, #d97706);
+        padding: 0.7rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+    }
+    .alt-date-head-title {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex: 1;
+    }
+    .alt-date-count {
+        background: rgba(255,255,255,0.22);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 0.15rem 0.55rem;
+        border-radius: 20px;
+    }
+    .alt-date-body { padding: 0.85rem 1rem; }
+    .alt-date-hint {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-bottom: 0.65rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .alt-date-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 0.45rem;
+    }
+    .alt-date-chip {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--warning-soft);
+        border: 1.5px solid rgba(217,119,6,0.18);
+        border-radius: var(--radius);
+        padding: 0.7rem 0.9rem;
+        cursor: pointer;
+        transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+        gap: 0.6rem;
+    }
+    .alt-date-chip:hover {
+        background: #fef0c7;
+        border-color: rgba(217,119,6,0.4);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(217,119,6,0.15);
+    }
+    .alt-date-chip.is-best {
+        background: linear-gradient(90deg, #fef9e7, #fef3c7);
+        border-color: rgba(217,119,6,0.35);
+    }
+    .alt-date-chip-left { flex: 1; }
+    .alt-date-range {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .alt-date-avail {
+        font-size: 0.73rem;
+        color: var(--warning);
+        margin-top: 0.15rem;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .alt-date-best-tag {
+        font-size: 0.65rem;
+        background: var(--warning);
+        color: #fff;
+        font-weight: 800;
+        padding: 0.12rem 0.45rem;
+        border-radius: 8px;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+    .alt-date-apply-btn {
+        background: var(--warning);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 0.38rem 0.75rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        font-family: 'Sarabun', sans-serif;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+    .alt-date-apply-btn:hover { background: #b45309; }
+    .alt-date-none {
+        background: var(--bg);
+        border: 1.5px dashed var(--border);
+        border-radius: var(--radius);
+        padding: 1rem;
+        text-align: center;
+        color: var(--muted);
+        font-size: 0.83rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.4rem;
+    }
+    .searching-dates {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.83rem;
+        color: var(--warning);
+        font-weight: 600;
+        padding: 0.5rem 0;
+    }
+
+    /* ═══════════════════════════════════════
        SWEETALERT OVERRIDES
     ═══════════════════════════════════════ */
     .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 20px !important; }
     .swal2-confirm { background: var(--primary) !important; border-radius: 10px !important; }
-
-    /* ═══════════════════════════════════════
-       SUGGESTED DATES WIDGET
-    ═══════════════════════════════════════ */
-    .suggest-dates-box {
-        background: linear-gradient(135deg, #fff8ec 0%, #fff3e0 100%);
-        border: 1.5px solid rgba(244,168,54,0.35);
-        border-radius: var(--radius-md);
-        padding: 1rem 1rem 0.9rem;
-        margin-top: 0.85rem;
-        animation: slideUp 0.32s cubic-bezier(0.22,1,0.36,1) both;
-    }
-    .suggest-header {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        margin-bottom: 0.7rem;
-    }
-    .suggest-icon-wrap {
-        width: 32px; height: 32px;
-        background: var(--accent);
-        border-radius: 9px;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-    }
-    .suggest-icon-wrap i { color: #fff; font-size: 0.82rem; }
-    .suggest-title { font-size: 0.88rem; font-weight: 700; color: #92400e; }
-    .suggest-subtitle { font-size: 0.73rem; color: #b45309; margin-top: 0.05rem; }
-
-    .suggest-chips {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.45rem;
-        margin-top: 0.15rem;
-    }
-    .suggest-chip {
-        background: #fff;
-        border: 1.5px solid rgba(244,168,54,0.5);
-        border-radius: 20px;
-        padding: 0.38rem 0.85rem;
-        font-size: 0.8rem;
-        font-weight: 700;
-        color: #92400e;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-        white-space: nowrap;
-    }
-    .suggest-chip:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #fff;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(244,168,54,0.35);
-    }
-    .suggest-chip i { font-size: 0.72rem; }
-    .suggest-chip.earlier { border-color: rgba(2,132,199,0.45); color: #0369a1; }
-    .suggest-chip.earlier:hover { background: var(--info); border-color: var(--info); color: #fff; box-shadow: 0 4px 12px rgba(2,132,199,0.35); }
-    .suggest-chip.later { border-color: rgba(5,150,105,0.45); color: #065f46; }
-    .suggest-chip.later:hover { background: var(--success); border-color: var(--success); color: #fff; box-shadow: 0 4px 12px rgba(5,150,105,0.35); }
-    .suggest-loading {
-        display: flex;
-        align-items: center;
-        gap: 0.45rem;
-        font-size: 0.8rem;
-        color: #b45309;
-        padding: 0.3rem 0;
-    }
-    .suggest-none {
-        font-size: 0.8rem;
-        color: #b45309;
-        font-style: italic;
-        padding: 0.2rem 0;
-    }
 
     /* ═══════════════════════════════════════
        DESKTOP LAYOUT
@@ -1382,7 +1444,7 @@
 <script>
     const LIFF_ID = "2007123923-K5wdmekE";
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxZ8GyweVTS9zFKgg7W5jpSEV3i2ocYzCMcZsze9UFSL8XFDe6n-hY9I5B0ZzgE61St1A/exec";
-    
+
     const mainContent = document.getElementById('mainContent');
     const submitBtn = document.getElementById('submitBtn');
     const loadingDiv = document.getElementById('loading');
@@ -1581,9 +1643,9 @@
 
     function updateRoomSelect(rooms) {
         meetingRoomOptions.innerHTML = '';
-        // Clear any previous suggestion box
-        const existingSuggest = document.getElementById('meetingRoomSuggestBox');
-        if (existingSuggest) existingSuggest.remove();
+        // ลบ alt-date box ของห้องประชุม (ถ้ามี)
+        const existingAltBox = document.getElementById('meetingRoomAltDateBox');
+        if (existingAltBox) existingAltBox.remove();
 
         if (rooms.length === 0) {
             roomSelectLabel.textContent = 'กรุณาเลือกวันที่ก่อน';
@@ -1611,6 +1673,16 @@
                     meetingRoomOptions.classList.remove('show');
                     customMeetingRoomSelect.classList.remove('is-open');
                     hiddenMeetingRoomInput.dispatchEvent(new Event('change'));
+                    // ลบ alt-date box ถ้าเลือกห้องได้แล้ว
+                    const altBox = document.getElementById('meetingRoomAltDateBox');
+                    if (altBox) altBox.remove();
+                });
+            } else {
+                // ห้องไม่ว่าง: คลิกแล้วแสดง alt-date
+                li.addEventListener('click', () => {
+                    meetingRoomOptions.classList.remove('show');
+                    customMeetingRoomSelect.classList.remove('is-open');
+                    showMeetingRoomAltDates(room.name);
                 });
             }
             meetingRoomOptions.appendChild(li);
@@ -1624,160 +1696,43 @@
                 roomSelectLabel.textContent  = 'กรุณาเลือกห้องประชุม';
                 roomSelectLabel.className    = 'room-select-text';
                 updateProgressSteps();
-            }
-        }
-
-        // If ALL rooms are unavailable → show suggested dates
-        const allUnavail = rooms.length > 0 && rooms.every(r => !r.isAvailable);
-        if (allUnavail) {
-            const startDate = document.getElementById('startDate').value;
-            const endDate   = document.getElementById('endDate').value;
-            if (startDate && endDate) {
-                const suggestBox = document.createElement('div');
-                suggestBox.id = 'meetingRoomSuggestBox';
-                // Insert after the dropdown's parent
-                customMeetingRoomSelect.closest('.field-group').appendChild(suggestBox);
-                renderMeetingRoomSuggestions(suggestBox, startDate, endDate);
-            }
-        }
-    }
-
-    /* ─── Find nearest available weekday slots for meeting rooms ─── */
-    function isWeekday(date) {
-        const d = date.getDay(); // 0=Sun,6=Sat
-        return d !== 0 && d !== 6;
-    }
-
-    function addDays(dateStr, n) {
-        const d = new Date(dateStr);
-        d.setDate(d.getDate() + n);
-        return d;
-    }
-
-    function toYMD(date) {
-        return date.toISOString().split('T')[0];
-    }
-
-    function formatShortTH(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('th-TH', { day:'numeric', month:'short' });
-    }
-
-    async function renderMeetingRoomSuggestions(container, startDate, endDate) {
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        const duration = Math.round((new Date(endDate) - new Date(startDate)) / (1000*60*60*24));
-
-        container.innerHTML = `
-            <div class="suggest-dates-box">
-                <div class="suggest-header">
-                    <div class="suggest-icon-wrap"><i class="fas fa-calendar-alt"></i></div>
-                    <div>
-                        <div class="suggest-title">ไม่มีห้องประชุมว่างในช่วงนี้</div>
-                        <div class="suggest-subtitle">กำลังค้นหาวันที่ใกล้เคียงที่มีห้องว่าง...</div>
-                    </div>
-                </div>
-                <div class="suggest-loading"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบช่วงเวลาอื่น...</div>
-            </div>`;
-
-        // Search for available slots: check up to 14 days before & after
-        const earlier = [], later = [];
-        const checks = [];
-
-        for (let offset = 1; offset <= 21; offset++) {
-            // Earlier
-            const eStart = addDays(startDate, -offset);
-            const eEnd   = addDays(endDate,   -offset);
-            if (eStart >= today && isWeekday(eStart) && isWeekday(eEnd)) {
-                checks.push({ dir: 'earlier', offset, startStr: toYMD(eStart), endStr: toYMD(eEnd) });
-            }
-            // Later
-            const lStart = addDays(startDate, offset);
-            const lEnd   = addDays(endDate,   offset);
-            if (isWeekday(lStart) && isWeekday(lEnd)) {
-                checks.push({ dir: 'later', offset, startStr: toYMD(lStart), endStr: toYMD(lEnd) });
-            }
-        }
-
-        // Deduplicate and limit
-        const seen = new Set();
-        const uniqueChecks = checks.filter(c => {
-            const key = c.startStr + '_' + c.endStr;
-            if (seen.has(key)) return false;
-            seen.add(key); return true;
-        });
-
-        // Batch fetch — run in parallel, limit to 10 candidates
-        const candidates = uniqueChecks.slice(0, 16);
-        const results = await Promise.allSettled(
-            candidates.map(c =>
-                fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${c.startStr}&endDate=${c.endStr}`)
-                    .then(r => r.json())
-                    .then(data => ({ ...c, rooms: data.rooms || [] }))
-                    .catch(() => null)
-            )
-        );
-
-        const availSlots = { earlier: [], later: [] };
-        results.forEach(r => {
-            if (r.status !== 'fulfilled' || !r.value) return;
-            const { dir, startStr, endStr, rooms } = r.value;
-            const hasAvail = rooms.some(rm => rm.isAvailable);
-            if (hasAvail) {
-                availSlots[dir].push({ startStr, endStr });
-            }
-        });
-
-        // Sort earlier desc (closest first), later asc
-        availSlots.earlier.sort((a,b) => new Date(b.startStr) - new Date(a.startStr));
-        availSlots.later.sort((a,b)   => new Date(a.startStr) - new Date(b.startStr));
-
-        const topEarlier = availSlots.earlier.slice(0, 3);
-        const topLater   = availSlots.later.slice(0, 3);
-        const totalFound = topEarlier.length + topLater.length;
-
-        let chipsHtml = '';
-        topEarlier.forEach(slot => {
-            chipsHtml += `<button type="button" class="suggest-chip earlier"
-                onclick="applyMeetingRoomDate('${slot.startStr}','${slot.endStr}')">
-                <i class="fas fa-arrow-left"></i>
-                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
-            </button>`;
-        });
-        topLater.forEach(slot => {
-            chipsHtml += `<button type="button" class="suggest-chip later"
-                onclick="applyMeetingRoomDate('${slot.startStr}','${slot.endStr}')">
-                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
-                <i class="fas fa-arrow-right"></i>
-            </button>`;
-        });
-
-        container.innerHTML = `
-            <div class="suggest-dates-box">
-                <div class="suggest-header">
-                    <div class="suggest-icon-wrap"><i class="fas fa-calendar-alt"></i></div>
-                    <div>
-                        <div class="suggest-title">ไม่มีห้องประชุมว่างในช่วงนี้</div>
-                        <div class="suggest-subtitle">${totalFound > 0 ? 'แนะนำช่วงเวลาใกล้เคียงที่มีห้องว่าง (จ–ศ เท่านั้น)' : 'ไม่พบช่วงเวลาว่างในช่วง 3 สัปดาห์ใกล้เคียง'}</div>
-                    </div>
-                </div>
-                ${totalFound > 0
-                    ? `<div class="suggest-chips">${chipsHtml}</div>`
-                    : `<div class="suggest-none"><i class="fas fa-info-circle" style="margin-right:4px;"></i>กรุณาเลือกช่วงเวลาอื่นด้วยตนเอง</div>`
+                // แสดง alt-date สำหรับห้องที่เคยเลือก
+                if (selected && document.getElementById('startDate').value && document.getElementById('endDate').value) {
+                    showMeetingRoomAltDates(selected);
                 }
-            </div>`;
+            }
+        }
     }
 
-    function applyMeetingRoomDate(start, end) {
-        document.getElementById('startDate').value = start;
-        document.getElementById('endDate').value   = end;
-        document.getElementById('endDate').setAttribute('min', start);
-        // Remove suggestion box immediately
-        const box = document.getElementById('meetingRoomSuggestBox');
-        if (box) box.remove();
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-        updateProgressSteps();
+    /* ─── แสดง alt-date สำหรับห้องประชุมที่ไม่ว่าง ─── */
+    function showMeetingRoomAltDates(roomName) {
+        const startDate = document.getElementById('startDate').value;
+        const endDate   = document.getElementById('endDate').value;
+        if (!startDate || !endDate || !roomName) return;
+
+        // สร้าง container สำหรับแสดงผล (ใต้ dropdown)
+        let altBox = document.getElementById('meetingRoomAltDateBox');
+        if (!altBox) {
+            altBox = document.createElement('div');
+            altBox.id = 'meetingRoomAltDateBox';
+            altBox.style.marginTop = '0.75rem';
+            // ใส่ใต้ room select group
+            const roomSelectGroup = customMeetingRoomSelect.closest('.field-group') || customMeetingRoomSelect.parentElement;
+            roomSelectGroup.appendChild(altBox);
+        }
+
+        // แสดงข้อความว่าห้องไม่ว่าง
+        altBox.innerHTML = `
+            <div class="unavail-alert-box" style="margin-top:0;">
+                <div class="unavail-icon-wrap"><i class="fas fa-door-closed"></i></div>
+                <div class="unavail-text-wrap">
+                    <div class="t">ห้อง ${roomName} ไม่ว่างในช่วงนี้</div>
+                    <div class="s">กำลังค้นหาวันที่ว่างใกล้เคียง...</div>
+                </div>
+            </div>
+            <div id="meetingRoomAltInner"></div>`;
+
+        findAltDatesForMeetingRoom(startDate, endDate, roomName, document.getElementById('meetingRoomAltInner'));
     }
 
     /* ─── Accommodation check ─── */
@@ -1865,7 +1820,7 @@
                                                    min="1" max="${available}" value="${suggested}" required>
                                         </div>
                                         <div class="room-hints">
-                                            <div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง ${attendees} สำหรับท่าน (สามารถแก้ไขได้)</div>
+                                            <div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง สำหรับ ${attendees} ท่าน (สามารถแก้ไขได้)</div>
                                             <div class="room-hint-item"><i class="fas fa-info-circle"></i> ห้อง standard พัก 2 ท่าน/ห้อง</div>
                                         </div>
                                     </div>
@@ -1899,12 +1854,9 @@
                                 <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} โปรดเลือกช่วงเวลาอื่น</div>
                             </div>
                         </div>
-                        <div id="accSuggestBox"></div>`;
-                    // Trigger accommodation date suggestions
-                    renderAccommodationSuggestions(
-                        document.getElementById('accSuggestBox'),
-                        sStr, eStr, suggested
-                    );
+                        <div id="altDateAccBox"></div>`;
+                    // ค้นหาวันที่ใกล้เคียงสำหรับห้องพัก
+                    findAltDatesForAccommodation(startDate, endDate, suggested, document.getElementById('altDateAccBox'));
                 }
             } catch (error) {
                 accommodationAvailable = true;
@@ -1917,106 +1869,244 @@
         }, 600);
     }
 
-    /* ─── Find nearest available slots for accommodation ─── */
-    async function renderAccommodationSuggestions(container, startDate, endDate, neededRooms) {
-        const today = new Date();
-        today.setHours(0,0,0,0);
+    /* ─── Helper: ตรวจสอบว่าเป็นวันจันทร์-ศุกร์ ─── */
+    function isWeekday(date) {
+        const day = date.getDay(); // 0=อาทิตย์, 6=เสาร์
+        return day !== 0 && day !== 6;
+    }
 
+    /* ─── Helper: หาวันถัดไปที่เป็น Weekday ─── */
+    function nextWeekday(date, direction) {
+        const d = new Date(date);
+        d.setDate(d.getDate() + direction);
+        while (!isWeekday(d)) {
+            d.setDate(d.getDate() + direction);
+        }
+        return d;
+    }
+
+    /* ─── Helper: format date to YYYY-MM-DD ─── */
+    function toYMD(date) {
+        return date.toISOString().split('T')[0];
+    }
+
+    /* ─── Helper: format date Thai short ─── */
+    function fmtTH(dateStr) {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+    }
+
+    /* ─── ค้นหาวันที่ทดแทนสำหรับห้องพัก ─── */
+    async function findAltDatesForAccommodation(origStart, origEnd, neededRooms, container) {
         container.innerHTML = `
-            <div class="suggest-dates-box" style="margin-top:0.85rem;">
-                <div class="suggest-header">
-                    <div class="suggest-icon-wrap"><i class="fas fa-bed"></i></div>
-                    <div>
-                        <div class="suggest-title">ค้นหาวันที่ที่ห้องพักเพียงพอ</div>
-                        <div class="suggest-subtitle">กำลังตรวจสอบช่วงเวลาใกล้เคียง...</div>
-                    </div>
+            <div class="alt-date-box">
+                <div class="alt-date-head">
+                    <div class="alt-date-head-title"><i class="fas fa-search"></i> กำลังค้นหาวันที่ว่าง...</div>
                 </div>
-                <div class="suggest-loading"><i class="fas fa-spinner fa-spin"></i> กำลังค้นหา...</div>
+                <div class="alt-date-body">
+                    <div class="searching-dates"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบวันที่ใกล้เคียง ±1 เดือน...</div>
+                </div>
             </div>`;
 
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const origStartDate = new Date(origStart);
+        const origEndDate   = new Date(origEnd);
+        const duration = Math.round((origEndDate - origStartDate) / (1000*60*60*24)); // จำนวนวันของช่วงที่เลือก
+
+        // สร้างรายการวันที่จะตรวจสอบ: ±1 เดือนจากวันเริ่มต้น, step 1 วัน
+        const searchStart = new Date(origStartDate);
+        searchStart.setMonth(searchStart.getMonth() - 1);
+        const searchEnd = new Date(origStartDate);
+        searchEnd.setMonth(searchEnd.getMonth() + 1);
+
+        // ตรวจสอบทีละวัน (batch เล็กๆ กัน timeout)
         const candidates = [];
-        for (let offset = 1; offset <= 21; offset++) {
-            // Earlier
-            const eStart = addDays(startDate, -offset);
-            const eEnd   = addDays(endDate,   -offset);
-            if (eStart >= today) candidates.push({ dir:'earlier', offset, startStr: toYMD(eStart), endStr: toYMD(eEnd) });
-            // Later
-            const lStart = addDays(startDate, offset);
-            const lEnd   = addDays(endDate,   offset);
-            candidates.push({ dir:'later', offset, startStr: toYMD(lStart), endStr: toYMD(lEnd) });
+        let cursor = new Date(searchStart);
+        while (cursor <= searchEnd) {
+            // ข้ามวันที่ < วันนี้ และข้ามวันที่เหมือนเดิม
+            if (cursor >= today && cursor.getTime() !== origStartDate.getTime()) {
+                if (isWeekday(cursor)) {
+                    candidates.push(new Date(cursor));
+                }
+            }
+            cursor.setDate(cursor.getDate() + 1);
         }
 
-        const seen2 = new Set();
-        const unique2 = candidates.filter(c => {
-            const key = c.startStr + '_' + c.endStr;
-            if (seen2.has(key)) return false;
-            seen2.add(key); return true;
-        }).slice(0, 16);
-
-        const results2 = await Promise.allSettled(
-            unique2.map(c =>
-                fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${c.startStr}&endDate=${c.endStr}`)
-                    .then(r => r.json())
-                    .then(data => ({ ...c, available: data.availableRooms || 0 }))
-                    .catch(() => null)
-            )
-        );
-
-        const availSlots2 = { earlier: [], later: [] };
-        results2.forEach(r => {
-            if (r.status !== 'fulfilled' || !r.value) return;
-            const { dir, startStr, endStr, available } = r.value;
-            if (available >= neededRooms) availSlots2[dir].push({ startStr, endStr, available });
+        // เรียง candidates ตามระยะห่างจาก origStart
+        candidates.sort((a,b) => {
+            return Math.abs(a - origStartDate) - Math.abs(b - origStartDate);
         });
 
-        availSlots2.earlier.sort((a,b) => new Date(b.startStr) - new Date(a.startStr));
-        availSlots2.later.sort((a,b)   => new Date(a.startStr) - new Date(b.startStr));
+        // ตรวจสอบความพร้อมห้องพักสำหรับแต่ละ candidate (max 10 candidates)
+        const results = [];
+        const toCheck = candidates.slice(0, 30); // ตรวจสอบสูงสุด 30 วัน แล้วเอาที่ผ่าน
 
-        const topE2 = availSlots2.earlier.slice(0, 3);
-        const topL2 = availSlots2.later.slice(0, 3);
-        const total2 = topE2.length + topL2.length;
+        for (let cand of toCheck) {
+            if (results.length >= 3) break;
+            const candEnd = new Date(cand);
+            candEnd.setDate(cand.getDate() + duration);
+            // ตรวจว่า candEnd ก็ต้องเป็น weekday ด้วย
+            if (!isWeekday(candEnd)) continue;
 
-        let chips2 = '';
-        topE2.forEach(slot => {
-            chips2 += `<button type="button" class="suggest-chip earlier"
-                onclick="applyAccommodationDate('${slot.startStr}','${slot.endStr}')">
-                <i class="fas fa-arrow-left"></i>
-                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
-                <span style="font-size:0.7rem;opacity:0.8;">(${slot.available}ห้องว่าง)</span>
-            </button>`;
-        });
-        topL2.forEach(slot => {
-            chips2 += `<button type="button" class="suggest-chip later"
-                onclick="applyAccommodationDate('${slot.startStr}','${slot.endStr}')">
-                ${formatShortTH(slot.startStr)} – ${formatShortTH(slot.endStr)}
-                <span style="font-size:0.7rem;opacity:0.8;">(${slot.available}ห้องว่าง)</span>
-                <i class="fas fa-arrow-right"></i>
-            </button>`;
-        });
+            try {
+                const res = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${toYMD(cand)}&endDate=${toYMD(candEnd)}`);
+                const data = await res.json();
+                if (!data.error && data.availableRooms >= neededRooms) {
+                    results.push({
+                        startDate: toYMD(cand),
+                        endDate: toYMD(candEnd),
+                        available: data.availableRooms,
+                        diff: Math.abs(cand - origStartDate)
+                    });
+                }
+            } catch(e) { /* skip */ }
+        }
 
+        renderAltDateBox(container, results, origStart, origEnd, duration, 'accommodation');
+    }
+
+    /* ─── ค้นหาวันที่ทดแทนสำหรับห้องประชุม ─── */
+    async function findAltDatesForMeetingRoom(origStart, origEnd, selectedRoomName, container) {
         container.innerHTML = `
-            <div class="suggest-dates-box" style="margin-top:0.85rem;">
-                <div class="suggest-header">
-                    <div class="suggest-icon-wrap"><i class="fas fa-bed"></i></div>
-                    <div>
-                        <div class="suggest-title">วันที่ใกล้เคียงที่ห้องพักเพียงพอ</div>
-                        <div class="suggest-subtitle">${total2 > 0 ? 'คลิกเพื่อเลือกช่วงเวลานี้' : 'ไม่พบช่วงว่างในช่วง 3 สัปดาห์ใกล้เคียง'}</div>
+            <div class="alt-date-box">
+                <div class="alt-date-head">
+                    <div class="alt-date-head-title"><i class="fas fa-search"></i> กำลังค้นหาวันที่ว่าง...</div>
+                </div>
+                <div class="alt-date-body">
+                    <div class="searching-dates"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบวันที่ว่างสำหรับห้องประชุม ±1 เดือน...</div>
+                </div>
+            </div>`;
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const origStartDate = new Date(origStart);
+        const origEndDate   = new Date(origEnd);
+        const duration = Math.round((origEndDate - origStartDate) / (1000*60*60*24));
+
+        const searchStart = new Date(origStartDate);
+        searchStart.setMonth(searchStart.getMonth() - 1);
+        const searchEnd = new Date(origStartDate);
+        searchEnd.setMonth(searchEnd.getMonth() + 1);
+
+        const candidates = [];
+        let cursor = new Date(searchStart);
+        while (cursor <= searchEnd) {
+            if (cursor >= today && cursor.getTime() !== origStartDate.getTime()) {
+                if (isWeekday(cursor)) {
+                    candidates.push(new Date(cursor));
+                }
+            }
+            cursor.setDate(cursor.getDate() + 1);
+        }
+
+        candidates.sort((a,b) => Math.abs(a - origStartDate) - Math.abs(b - origStartDate));
+
+        const results = [];
+        const toCheck = candidates.slice(0, 30);
+
+        for (let cand of toCheck) {
+            if (results.length >= 3) break;
+            const candEnd = new Date(cand);
+            candEnd.setDate(cand.getDate() + duration);
+            if (!isWeekday(candEnd)) continue;
+
+            try {
+                const res = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${toYMD(cand)}&endDate=${toYMD(candEnd)}`);
+                const data = await res.json();
+                if (!data.error && data.rooms) {
+                    const room = data.rooms.find(r => r.name === selectedRoomName);
+                    if (room && room.isAvailable) {
+                        results.push({
+                            startDate: toYMD(cand),
+                            endDate: toYMD(candEnd),
+                            available: true,
+                            diff: Math.abs(cand - origStartDate)
+                        });
+                    }
+                }
+            } catch(e) { /* skip */ }
+        }
+
+        renderAltDateBox(container, results, origStart, origEnd, duration, 'meetingRoom', selectedRoomName);
+    }
+
+    /* ─── Render กล่องแนะนำวันที่ ─── */
+    function renderAltDateBox(container, results, origStart, origEnd, duration, type, roomName) {
+        if (results.length === 0) {
+            container.innerHTML = `
+                <div class="alt-date-box">
+                    <div class="alt-date-head">
+                        <div class="alt-date-head-title"><i class="fas fa-calendar-times"></i> ไม่พบวันที่ว่างใกล้เคียง</div>
+                    </div>
+                    <div class="alt-date-body">
+                        <div class="alt-date-none">
+                            <i class="fas fa-info-circle"></i>
+                            ไม่มีวันที่ว่างใน ±1 เดือน กรุณาติดต่อเจ้าหน้าที่
+                        </div>
+                    </div>
+                </div>`;
+            return;
+        }
+
+        const typeLabel = type === 'accommodation' ? 'ห้องพัก' : `ห้อง ${roomName}`;
+        const chipsHtml = results.map((r, i) => {
+            const isBest = i === 0;
+            const availText = type === 'accommodation' ? `ว่าง ${r.available} ห้อง` : 'ห้องว่าง';
+            return `
+            <div class="alt-date-chip ${isBest ? 'is-best' : ''}" onclick="applyAltDate('${r.startDate}','${r.endDate}')">
+                <div class="alt-date-chip-left">
+                    <div class="alt-date-range">
+                        <i class="fas fa-calendar-alt" style="color:var(--warning);font-size:0.8rem;"></i>
+                        ${fmtTH(r.startDate)} – ${fmtTH(r.endDate)}
+                        ${isBest ? '<span class="alt-date-best-tag">แนะนำ</span>' : ''}
+                    </div>
+                    <div class="alt-date-avail">
+                        <i class="fas fa-check-circle" style="font-size:0.68rem;"></i>
+                        ${availText}
                     </div>
                 </div>
-                ${total2 > 0
-                    ? `<div class="suggest-chips">${chips2}</div>`
-                    : `<div class="suggest-none"><i class="fas fa-info-circle" style="margin-right:4px;"></i>กรุณาเลือกช่วงเวลาอื่นด้วยตนเอง</div>`
-                }
+                <button class="alt-date-apply-btn" onclick="event.stopPropagation(); applyAltDate('${r.startDate}','${r.endDate}')">
+                    <i class="fas fa-calendar-check"></i> เลือก
+                </button>
+            </div>`;
+        }).join('');
+
+        container.innerHTML = `
+            <div class="alt-date-box">
+                <div class="alt-date-head">
+                    <div class="alt-date-head-title">
+                        <i class="fas fa-lightbulb"></i> วันที่แนะนำใกล้เคียง
+                    </div>
+                    <span class="alt-date-count">${results.length} ตัวเลือก</span>
+                </div>
+                <div class="alt-date-body">
+                    <div class="alt-date-hint">
+                        <i class="fas fa-info-circle"></i>
+                        วันที่ว่างสำหรับ${typeLabel} ใกล้เคียงกับช่วงที่เลือก (จ.–ศ. เท่านั้น)
+                    </div>
+                    <div class="alt-date-grid">
+                        ${chipsHtml}
+                    </div>
+                </div>
             </div>`;
     }
 
-    function applyAccommodationDate(start, end) {
-        document.getElementById('startDate').value = start;
-        document.getElementById('endDate').value   = end;
-        document.getElementById('endDate').setAttribute('min', start);
+    /* ─── Apply วันที่ที่เลือกจาก suggestion ─── */
+    function applyAltDate(startDate, endDate) {
+        document.getElementById('startDate').value = startDate;
+        document.getElementById('endDate').value   = endDate;
+        document.getElementById('endDate').setAttribute('min', startDate);
+        // รีเซ็ตห้องประชุมที่เลือก
+        hiddenMeetingRoomInput.value = '';
+        roomSelectLabel.textContent  = 'กรุณาเลือกห้องประชุม';
+        roomSelectLabel.className    = 'room-select-text';
+        // โหลดข้อมูลใหม่
         checkMeetingRoomAvailability();
         checkAccommodation();
         updateProgressSteps();
+        // Scroll ขึ้นไปที่ date picker
+        document.getElementById('startDate').scrollIntoView({ behavior:'smooth', block:'center' });
     }
 
     /* ─── Event Listeners ─── */
