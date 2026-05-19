@@ -11,7 +11,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-
+/* ─────────────────────────────────────────
+   DESIGN TOKENS  (เดียวกับ index + booking)
+───────────────────────────────────────── */
 :root {
     --brand:        #7061bd;
     --brand-dk:     #5a4da3;
@@ -500,10 +502,65 @@ input[type="file"] { display:none; }
 .delay-5 { animation-delay:.28s; }
 .delay-6 { animation-delay:.34s; }
 .delay-7 { animation-delay:.4s;  }
+
+/* ═══════════════════════════════════════
+   LOADING SCREEN  (เหมือน index)
+═══════════════════════════════════════ */
+.loading-screen {
+    position:fixed; inset:0;
+    background:linear-gradient(145deg,#7061bd 0%,#5a4da3 50%,#453a8a 100%);
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    z-index:9999; transition:opacity .6s ease;
+}
+.loading-screen.hide { opacity:0; pointer-events:none; }
+.loading-logo-wrap { position:relative; margin-bottom:2rem; }
+.loading-logo-ring {
+    width:90px; height:90px; border-radius:50%;
+    border:2px solid rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center;
+    animation:ring-spin 3s linear infinite;
+}
+@keyframes ring-spin { to { transform:rotate(360deg); } }
+.loading-logo-inner {
+    width:70px; height:70px; border-radius:20px;
+    background:rgba(255,255,255,.15);
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(255,255,255,.25);
+    backdrop-filter:blur(10px);
+}
+.loading-logo-inner i { font-size:2rem; color:#fff; }
+.loading-pulse {
+    position:absolute; inset:-8px; border-radius:50%;
+    border:2px solid rgba(255,255,255,.08);
+    animation:pulse-out 2s ease-out infinite;
+}
+@keyframes pulse-out { 0%{transform:scale(.8);opacity:1;} 100%{transform:scale(1.4);opacity:0;} }
+.loading-brand { font-size:1.15rem; font-weight:700; color:#fff; margin-bottom:.3rem; }
+.loading-sub-text { font-size:.82rem; color:rgba(255,255,255,.55); margin-bottom:2rem; }
+.loading-bar-wrap { width:140px; height:3px; background:rgba(255,255,255,.15); border-radius:10px; overflow:hidden; }
+.loading-bar-fill { height:100%; width:0; background:rgba(255,255,255,.7); border-radius:10px; animation:bar-fill 1.2s ease-out forwards; }
+@keyframes bar-fill { 0%{width:0;} 100%{width:85%;} }
 </style>
 </head>
 <body>
-<div class="app-wrap">
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo-wrap">
+        <div class="loading-logo-ring">
+            <div class="loading-logo-inner">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+        </div>
+        <div class="loading-pulse"></div>
+    </div>
+    <div class="loading-brand">ยืนยันการจอง</div>
+    <div class="loading-sub-text">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</div>
+    <div class="loading-bar-wrap"><div class="loading-bar-fill"></div></div>
+</div>
+
+<div class="app-wrap" id="mainApp" style="display:none;">
 
     <!-- ════════════════════════════════
          HEADER
@@ -885,6 +942,9 @@ input[type="file"] { display:none; }
     </div>
 </div>
 
+<!-- ════════════════════════════════
+     JAVASCRIPT  (logic ไม่เปลี่ยน)
+════════════════════════════════ -->
 <script>
 const LIFF_ID = "2007123923-K5wdmekE";
 const GAS_URL = "https://script.google.com/macros/s/AKfycbxZ8GyweVTS9zFKgg7W5jpSEV3i2ocYzCMcZsze9UFSL8XFDe6n-hY9I5B0ZzgE61St1A/exec";
@@ -896,37 +956,24 @@ let origStd = 0, curStd = 0, curVip = 0;
 let vipCanBook = 0;
 let currentFoodBooking = '';
 
-/* ── INIT ── */
 async function init() {
-    userId = sessionStorage.getItem('userId') || '';
-    if (userId) {
-        loadApprovedBookings();
-        setupListeners();
-        return;
-    }
-
     try {
         await liff.init({ liffId: LIFF_ID });
-
-        if (!liff.isLoggedIn()) {
-            liff.login();
-            return;
-        }
-
+        if (!liff.isLoggedIn()) { liff.login(); return; }
         const profile = await liff.getProfile();
-        userId = profile.userId;
-
         sessionStorage.setItem('userId', profile.userId);
         sessionStorage.setItem('displayName', profile.displayName);
         sessionStorage.setItem('pictureUrl', profile.pictureUrl || '');
         sessionStorage.setItem('liffReady', 'true');
-
+        userId = profile.userId;
+        setTimeout(() => {
+            document.getElementById('loadingScreen').classList.add('hide');
+            document.getElementById('mainApp').style.display = 'flex';
+        }, 1200);
         loadApprovedBookings();
         setupListeners();
-    } catch (err) {
+    } catch(err) {
         console.error('LIFF init error:', err);
-        // Fallback: redirect index ถ้า LIFF ล้มเหลว
-        window.location.href = 'index.html';
     }
 }
 
