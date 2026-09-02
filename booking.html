@@ -10,56 +10,57 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
     :root {
-        --primary: #7061bd;
-        --primary-dark: #5a4da0;
-        --primary-light: #8f82cc;
-        --primary-soft: #eeecf9;
-        --primary-xsoft: #f7f6fd;
-        --accent: #f4a836;
-        --accent-soft: #fef4e4;
+        --primary: #0B4DA2;
+        --primary-dark: #06264D;
+        --primary-light: #2F7BE0;
+        --primary-soft: #EAF2FF;
+        --primary-xsoft: #F5F9FF;
+        --accent: #FF7A1A;
+        --accent-dark: #C15A0E;
+        --accent-soft: #FFF1E4;
+        --accent-xsoft: #FFF8F2;
         --danger: #e5484d;
         --danger-soft: #fef0f0;
-        --success: #059669;
-        --success-soft: #ecfdf5;
+        --success: #16A34A;
+        --success-soft: #E7F8ED;
         --warning: #d97706;
         --warning-soft: #fef3c7;
-        --info: #0284c7;
-        --info-soft: #e0f2fe;
-        --bg: #f4f2fb;
+        --info: #0B4DA2;
+        --info-soft: #EAF2FF;
+        --bg: #F1F5FB;
         --surface: #ffffff;
-        --text: #1c1638;
-        --text-2: #4a4569;
-        --muted: #9490b0;
-        --border: #e5e2f0;
-        --border-strong: #ccc8e5;
-        --shadow-xs: 0 1px 3px rgba(112,97,189,0.08);
-        --shadow-sm: 0 2px 8px rgba(112,97,189,0.10);
-        --shadow-md: 0 6px 20px rgba(112,97,189,0.13);
-        --shadow-lg: 0 16px 48px rgba(112,97,189,0.16);
-        --radius-xs: 8px;
-        --radius: 12px;
-        --radius-md: 16px;
-        --radius-lg: 20px;
-        --radius-xl: 28px;
+        --text: #0F1B2D;
+        --text-2: #47566B;
+        --muted: #64748B;
+        --border: #E4EAF3;
+        --border-strong: #CBD5E1;
+        --shadow-xs: 0 1px 3px rgba(6,38,77,0.08);
+        --shadow-sm: 0 4px 14px -6px rgba(6,38,77,0.14);
+        --shadow-md: 0 10px 26px -10px rgba(6,38,77,0.18);
+        --shadow-lg: 0 20px 50px -18px rgba(6,38,77,0.26);
+        --radius-xs: 10px;
+        --radius: 14px;
+        --radius-md: 18px;
+        --radius-lg: 22px;
+        --radius-xl: 30px;
+        --gradient-brand: linear-gradient(150deg, #06264D 0%, #0B4DA2 60%, #2F7BE0 100%);
+        --gradient-accent: linear-gradient(135deg, #FF7A1A, #FF9640);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-        font-family: 'Sarabun', 'IBM Plex Sans Thai', sans-serif;
+        font-family: 'Prompt', 'Noto Sans Thai', sans-serif;
         background: var(--bg);
         color: var(--text);
         line-height: 1.6;
         -webkit-font-smoothing: antialiased;
     }
 
-    /* ═══════════════════════════════════════
-       APP CONTAINER
-    ═══════════════════════════════════════ */
     .app-container {
         max-width: 480px;
         margin: 0 auto;
@@ -68,19 +69,16 @@
         position: relative;
     }
 
-    /* ═══════════════════════════════════════
-       STICKY TOP BAR (Lineman/Agoda style)
-    ═══════════════════════════════════════ */
     .top-bar {
         position: sticky;
         top: 0;
         z-index: 50;
-        background: var(--primary);
+        background: var(--gradient-brand);
         padding: 0.85rem 1.1rem;
         display: flex;
         align-items: center;
         gap: 0.85rem;
-        box-shadow: 0 2px 12px rgba(112,97,189,0.35);
+        box-shadow: 0 2px 12px rgba(6,38,77,0.35);
     }
     .top-bar-back {
         width: 36px; height: 36px;
@@ -104,12 +102,8 @@
         border: 1px solid rgba(255,255,255,0.2);
     }
     .top-bar-icon i { color: #fff; font-size: 1rem; }
-
-    /* ═══════════════════════════════════════
-       HERO BANNER (Booking.com style)
-    ═══════════════════════════════════════ */
     .hero-banner {
-        background: linear-gradient(145deg, #7061bd 0%, #5a4da0 50%, #44388a 100%);
+        background: var(--gradient-brand);
         padding: 1.4rem 1.2rem 3.8rem;
         position: relative;
         overflow: hidden;
@@ -150,10 +144,6 @@
         letter-spacing: -0.3px; margin-bottom: 0.15rem;
     }
     .hero-subtitle { font-size: 0.8rem; color: rgba(255,255,255,0.75); }
-
-    /* ═══════════════════════════════════════
-       PROGRESS STEPS (Agoda style)
-    ═══════════════════════════════════════ */
     .steps-float {
         margin: -2rem 1rem 0;
         background: var(--surface);
@@ -200,10 +190,10 @@
         margin-bottom: 0.4rem;
     }
     .step-item.active .step-num {
-        background: var(--primary);
-        border-color: var(--primary);
+        background: var(--accent);
+        border-color: var(--accent);
         color: #fff;
-        box-shadow: 0 0 0 5px rgba(112,97,189,0.15);
+        box-shadow: 0 0 0 5px rgba(255,122,26,0.2);
         transform: scale(1.1);
     }
     .step-item.completed .step-num {
@@ -218,19 +208,12 @@
         text-align: center;
         white-space: nowrap;
     }
-    .step-item.active .step-lbl { color: var(--primary); }
+    .step-item.active .step-lbl { color: var(--accent); }
     .step-item.completed .step-lbl { color: var(--success); }
-
-    /* ═══════════════════════════════════════
-       SECTION WRAPPER
-    ═══════════════════════════════════════ */
     .page-body {
         padding: 0 1rem 5rem;
     }
 
-    /* ═══════════════════════════════════════
-       CARDS (Booking.com style)
-    ═══════════════════════════════════════ */
     .bk-card {
         background: var(--surface);
         border-radius: var(--radius-lg);
@@ -270,10 +253,6 @@
     }
     .card-header-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.05rem; }
     .card-body-wrap { padding: 1.1rem; }
-
-    /* ═══════════════════════════════════════
-       FORM FIELDS (Lineman style)
-    ═══════════════════════════════════════ */
     .field-group { margin-bottom: 1rem; }
     .field-group:last-child { margin-bottom: 0; }
 
@@ -295,7 +274,7 @@
         border: 1.5px solid var(--border);
         border-radius: var(--radius);
         font-size: 0.92rem;
-        font-family: 'Sarabun', sans-serif;
+        font-family: 'Prompt', sans-serif;
         color: var(--text);
         background: var(--surface);
         transition: border-color 0.2s, box-shadow 0.2s;
@@ -303,12 +282,12 @@
     }
     .field-input:focus, .field-select:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(112,97,189,0.12);
+        box-shadow: 0 0 0 3px rgba(11,77,162,0.14);
         outline: none;
     }
     .field-input::placeholder { color: var(--muted); font-size: 0.88rem; }
     .field-input:disabled, .field-input[readonly] {
-        background: #f9f8fe;
+        background: var(--bg);
         color: var(--muted);
         cursor: not-allowed;
     }
@@ -333,20 +312,14 @@
         gap: 0.3rem;
     }
 
-    /* Verified states */
     .field-input.is-verified { border-color: var(--success); background: #f0fdf8; }
     .field-input.is-error { border-color: var(--danger); }
     .field-icon-right.success-icon { color: var(--success); }
     .field-icon-right.danger-icon { color: var(--danger); }
     .field-icon-right.loading-icon { color: var(--primary); }
-
-    /* Two column grid */
     .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
     .field-row-7-3 { display: grid; grid-template-columns: 7fr 3fr; gap: 0.75rem; }
 
-    /* ═══════════════════════════════════════
-       DATE RANGE PICKER (Agoda inspired)
-    ═══════════════════════════════════════ */
     .date-range-box {
         background: var(--primary-xsoft);
         border: 1.5px solid var(--border);
@@ -380,7 +353,7 @@
         background: transparent;
         font-size: 0.9rem;
         font-weight: 700;
-        font-family: 'Sarabun', sans-serif;
+        font-family: 'Prompt', sans-serif;
         color: var(--text);
         outline: none;
         cursor: pointer;
@@ -400,9 +373,6 @@
         font-weight: 500;
     }
 
-    /* ═══════════════════════════════════════
-       CUSTOM ROOM SELECT (Agoda dropdown)
-    ═══════════════════════════════════════ */
     .room-select-btn {
         width: 100%;
         padding: 0.78rem 1rem;
@@ -419,7 +389,7 @@
     .room-select-btn:hover { border-color: var(--border-strong); }
     .room-select-btn.is-open {
         border-color: var(--primary);
-        box-shadow: 0 0 0 3px rgba(112,97,189,0.12);
+        box-shadow: 0 0 0 3px rgba(11,77,162,0.12);
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
     }
@@ -469,7 +439,6 @@
     .room-option:last-child { margin-bottom: 0; }
     .room-option:hover:not(.is-unavail) { background: var(--primary-soft); }
     .room-option.is-unavail { opacity: 0.4; cursor: not-allowed; }
-
     .room-opt-info { flex: 1; }
     .room-opt-name { font-size: 0.88rem; font-weight: 700; color: var(--text); }
     .room-opt-cap { font-size: 0.74rem; color: var(--muted); margin-top: 0.1rem; }
@@ -495,9 +464,134 @@
         border: 1px solid rgba(229,72,77,0.2);
     }
 
-    /* ═══════════════════════════════════════
-       ACCOMMODATION TOGGLE (Lineman style)
-    ═══════════════════════════════════════ */
+    .segments-wrap { display: flex; flex-direction: column; gap: 0.85rem; }
+    .segment-card {
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-md);
+        padding: 0.9rem 0.9rem 1rem;
+        background: var(--surface);
+        position: relative;
+        animation: dropIn 0.2s ease;
+    }
+    .segment-card-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+    .segment-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.8rem;
+        font-weight: 800;
+        color: var(--primary);
+        background: var(--primary-soft);
+        padding: 0.28rem 0.65rem 0.28rem 0.28rem;
+        border-radius: 20px;
+    }
+    .segment-badge-num {
+        width: 20px; height: 20px; border-radius: 50%;
+        background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        color: #fff; font-size: 0.7rem; font-weight: 800;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .segment-remove-btn {
+        border: none;
+        background: var(--danger-soft);
+        color: var(--danger);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.78rem;
+        transition: background 0.15s, transform 0.15s;
+    }
+    .segment-remove-btn:hover { background: rgba(229,72,77,0.18); transform: scale(1.06); }
+    .add-segment-btn {
+        width: 100%;
+        border: 2px dashed #FFC79A;
+        background: var(--accent-soft);
+        color: var(--accent-dark);
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.8rem;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        cursor: pointer;
+        margin-top: 1rem;
+        margin-bottom: 0.3rem;
+        transition: background 0.15s, border-color 0.15s;
+    }
+    .add-segment-btn:hover { background: #FFE6D0; border-color: var(--accent); }
+    .segment-summary-hint {
+        font-size: 0.76rem;
+        color: var(--muted);
+        margin-top: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .booking-summary-card {
+        background: var(--gradient-brand);
+        border-radius: var(--radius-md);
+        padding: 1.1rem 1.15rem 1rem;
+        margin: 0 0 1rem;
+        color: #fff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+    .booking-summary-card::before {
+        content: '';
+        position: absolute; left: -30px; bottom: -30px; width: 120px; height: 120px;
+        background: radial-gradient(circle, rgba(47,123,224,.45), transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .summary-title {
+        font-size: 0.85rem;
+        font-weight: 800;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        margin-bottom: 0.7rem;
+        position: relative; z-index: 1;
+    }
+    .summary-title i { color: var(--accent); }
+    .summary-divider { border-top: 1px dashed rgba(255,255,255,0.2); margin: 0.6rem 0; position: relative; z-index: 1; }
+    .summary-seg-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        padding: 0.3rem 0;
+        position: relative; z-index: 1;
+    }
+    .summary-seg-label { color: #fff; font-weight: 700; display: flex; align-items: center; gap: 0.4rem; }
+    .summary-seg-label .seg-num {
+        background: var(--accent); color: #fff; font-size: 0.68rem; font-weight: 800;
+        width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .summary-seg-date { color: rgba(255,255,255,0.7); font-weight: 600; }
+    .summary-meta-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+        color: rgba(255,255,255,0.7);
+        padding: 0.15rem 0;
+        position: relative; z-index: 1;
+    }
+    .summary-meta-row b { color: var(--accent); font-weight: 800; }
     .acc-toggle-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -521,7 +615,7 @@
     .acc-toggle-card.is-selected {
         border-color: var(--primary);
         background: var(--primary-soft);
-        box-shadow: 0 0 0 3px rgba(112,97,189,0.1);
+        box-shadow: 0 0 0 3px rgba(11,77,162,0.1);
     }
     .acc-toggle-card input[type="radio"] { display: none; }
     .acc-toggle-icon {
@@ -555,10 +649,6 @@
     }
     .acc-toggle-check i { color: #fff; font-size: 0.52rem; }
     .acc-toggle-card.is-selected .acc-toggle-check { display: flex; }
-
-    /* ═══════════════════════════════════════
-       ACCOMMODATION RESULT (Agoda hotel card)
-    ═══════════════════════════════════════ */
     .acc-result-box {
         background: var(--surface);
         border: 1.5px solid var(--border);
@@ -616,6 +706,37 @@
         font-size: 1.4rem;
         color: var(--primary);
         opacity: 0.07;
+    }
+
+    .acc-windows-list {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 0.7rem 0.85rem;
+        margin-bottom: 0.85rem;
+    }
+    .acc-window-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.83rem;
+        padding: 0.3rem 0;
+    }
+    .acc-window-num {
+        background: var(--primary); color: #fff; font-size: 0.68rem; font-weight: 800;
+        width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .acc-window-date { flex: 1; font-weight: 700; color: var(--text); }
+    .acc-window-nights { color: var(--primary); font-weight: 700; font-size: 0.78rem; }
+    .acc-window-hint {
+        font-size: 0.72rem;
+        color: var(--muted);
+        margin-top: 0.4rem;
+        padding-top: 0.4rem;
+        border-top: 1px dashed var(--border-strong);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
     }
 
     .rooms-avail-strip {
@@ -697,9 +818,6 @@
     .unavail-text-wrap .t { font-weight: 700; color: var(--danger); font-size: 0.9rem; }
     .unavail-text-wrap .s { font-size: 0.78rem; color: var(--muted); margin-top: 0.1rem; }
 
-    /* ═══════════════════════════════════════
-       INLINE ALERTS
-    ═══════════════════════════════════════ */
     .inline-alert {
         border-radius: var(--radius);
         padding: 0.75rem 0.9rem;
@@ -714,13 +832,10 @@
     .inline-alert.success { background: var(--success-soft); border-color: rgba(5,150,105,0.25); color: var(--success); }
     .inline-alert.warning { background: var(--warning-soft); border-color: rgba(217,119,6,0.25); color: var(--warning); }
     .inline-alert.danger  { background: var(--danger-soft);  border-color: rgba(229,72,77,0.25);  color: var(--danger); }
-    .inline-alert.info    { background: var(--info-soft);    border-color: rgba(2,132,199,0.25);   color: var(--info); }
+    .inline-alert.info    { background: var(--info-soft);    border-color: rgba(11,77,162,0.25);   color: var(--info); }
 
-    /* ═══════════════════════════════════════
-       PDPA CARD
-    ═══════════════════════════════════════ */
     .pdpa-wrap {
-        background: #f7f6fd;
+        background: var(--primary-xsoft);
         border: 1.5px solid var(--border-strong);
         border-radius: var(--radius-lg);
         padding: 1rem 1.1rem;
@@ -751,9 +866,6 @@
         border-bottom: 1px dashed var(--primary);
     }
 
-    /* ═══════════════════════════════════════
-       STICKY BOTTOM CTA (Lineman style)
-    ═══════════════════════════════════════ */
     .bottom-cta {
         position: fixed;
         bottom: 0; left: 50%;
@@ -770,11 +882,11 @@
         padding: 1rem 1.5rem;
         border: none;
         border-radius: var(--radius-md);
-        background: linear-gradient(135deg, var(--primary), #5a4da0);
+        background: var(--gradient-accent);
         color: #fff;
         font-size: 1rem;
         font-weight: 700;
-        font-family: 'Sarabun', sans-serif;
+        font-family: 'Prompt', sans-serif;
         letter-spacing: 0.2px;
         cursor: pointer;
         display: flex;
@@ -782,12 +894,12 @@
         justify-content: center;
         gap: 0.55rem;
         transition: all 0.25s ease;
-        box-shadow: 0 8px 24px rgba(112,97,189,0.4);
+        box-shadow: 0 10px 24px -6px rgba(255,122,26,0.5);
         pointer-events: all;
     }
     .cta-btn:hover:not(:disabled) {
         transform: translateY(-2px);
-        box-shadow: 0 12px 32px rgba(112,97,189,0.5);
+        box-shadow: 0 14px 30px -6px rgba(255,122,26,0.55);
     }
     .cta-btn:disabled {
         opacity: 0.45;
@@ -796,13 +908,10 @@
         box-shadow: none;
     }
 
-    /* ═══════════════════════════════════════
-       LOADING OVERLAY
-    ═══════════════════════════════════════ */
     .loading-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(112,97,189,0.15);
+        background: rgba(11,77,162,0.15);
         backdrop-filter: blur(12px);
         display: none;
         align-items: center;
@@ -828,12 +937,8 @@
     }
     @keyframes spin { to { transform: rotate(360deg); } }
     .loading-label { font-size: 0.9rem; color: var(--text-2); font-weight: 600; }
-
-    /* ═══════════════════════════════════════
-       SKELETON
-    ═══════════════════════════════════════ */
     .skeleton-block {
-        background: linear-gradient(90deg, #ede8f8 25%, #f5f2fc 50%, #ede8f8 75%);
+        background: linear-gradient(90deg, #eef1f5 25%, #f7f9fb 50%, #eef1f5 75%);
         background-size: 200% 100%;
         animation: shimmer 1.5s infinite;
         border-radius: var(--radius);
@@ -842,157 +947,12 @@
     }
     @keyframes shimmer { 0%{background-position:200% 0;} 100%{background-position:-200% 0;} }
 
-    /* ═══════════════════════════════════════
-       ALT DATE SUGGESTION BOX
-    ═══════════════════════════════════════ */
-    .alt-date-box {
-        background: var(--surface);
-        border: 1.5px solid rgba(217,119,6,0.25);
-        border-radius: var(--radius-md);
-        margin-top: 0.75rem;
-        overflow: hidden;
-        animation: slideUp 0.32s ease;
-    }
-    .alt-date-head {
-        background: linear-gradient(90deg, #f59e0b, #d97706);
-        padding: 0.7rem 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.55rem;
-    }
-    .alt-date-head-title {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: #fff;
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-        flex: 1;
-    }
-    .alt-date-count {
-        background: rgba(255,255,255,0.22);
-        color: #fff;
-        font-size: 0.7rem;
-        font-weight: 700;
-        padding: 0.15rem 0.55rem;
-        border-radius: 20px;
-    }
-    .alt-date-body { padding: 0.85rem 1rem; }
-    .alt-date-hint {
-        font-size: 0.78rem;
-        color: var(--muted);
-        margin-bottom: 0.65rem;
-        display: flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-    .alt-date-grid {
-        display: flex;
-        flex-direction: column;
-        gap: 0.45rem;
-    }
-    .alt-date-chip {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        background: var(--warning-soft);
-        border: 1.5px solid rgba(217,119,6,0.18);
-        border-radius: var(--radius);
-        padding: 0.7rem 0.9rem;
-        cursor: pointer;
-        transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
-        gap: 0.6rem;
-    }
-    .alt-date-chip:hover {
-        background: #fef0c7;
-        border-color: rgba(217,119,6,0.4);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(217,119,6,0.15);
-    }
-    .alt-date-chip.is-best {
-        background: linear-gradient(90deg, #fef9e7, #fef3c7);
-        border-color: rgba(217,119,6,0.35);
-    }
-    .alt-date-chip-left { flex: 1; }
-    .alt-date-range {
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        gap: 0.4rem;
-    }
-    .alt-date-avail {
-        font-size: 0.73rem;
-        color: var(--warning);
-        margin-top: 0.15rem;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-    }
-    .alt-date-best-tag {
-        font-size: 0.65rem;
-        background: var(--warning);
-        color: #fff;
-        font-weight: 800;
-        padding: 0.12rem 0.45rem;
-        border-radius: 8px;
-        letter-spacing: 0.02em;
-        white-space: nowrap;
-    }
-    .alt-date-apply-btn {
-        background: var(--warning);
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 0.38rem 0.75rem;
-        font-size: 0.78rem;
-        font-weight: 700;
-        font-family: 'Sarabun', sans-serif;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 0.3rem;
-        transition: all 0.2s;
-        flex-shrink: 0;
-    }
-    .alt-date-apply-btn:hover { background: #b45309; }
-    .alt-date-none {
-        background: var(--bg);
-        border: 1.5px dashed var(--border);
-        border-radius: var(--radius);
-        padding: 1rem;
-        text-align: center;
-        color: var(--muted);
-        font-size: 0.83rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.4rem;
-    }
-    .searching-dates {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.83rem;
-        color: var(--warning);
-        font-weight: 600;
-        padding: 0.5rem 0;
-    }
-
-    /* ═══════════════════════════════════════
-       SWEETALERT OVERRIDES
-    ═══════════════════════════════════════ */
-    .swal2-popup { font-family: 'Sarabun', sans-serif !important; border-radius: 20px !important; }
+    .swal2-popup { font-family: 'Prompt', sans-serif !important; border-radius: 20px !important; }
     .swal2-confirm { background: var(--primary) !important; border-radius: 10px !important; }
-
-    /* ═══════════════════════════════════════
-       DESKTOP LAYOUT
-    ═══════════════════════════════════════ */
     .desktop-sidebar { display: none; }
 
     @media (min-width: 768px) {
-        body { background: linear-gradient(145deg, #eeecf9 0%, #e5e2f0 100%); }
+        body { background: linear-gradient(145deg, #EAF2FF 0%, #F1F5FB 100%); }
         .app-container {
             max-width: 100%;
             display: flex;
@@ -1007,7 +967,7 @@
             display: flex;
             flex-direction: column;
             width: 340px;
-            background: linear-gradient(180deg, #7061bd 0%, #5a4da0 60%, #44388a 100%);
+            background: var(--gradient-brand);
             padding: 2.5rem 2rem;
             position: sticky;
             top: 0;
@@ -1144,10 +1104,6 @@
 </head>
 <body>
 <div class="app-container">
-
-    <!-- ════════════════════════════════
-         DESKTOP SIDEBAR
-    ════════════════════════════════ -->
     <div class="desktop-sidebar">
         <div class="sidebar-inner">
             <div class="sidebar-logo"><i class="fas fa-hotel"></i></div>
@@ -1190,12 +1146,7 @@
         </div>
     </div>
 
-    <!-- ════════════════════════════════
-         DESKTOP MAIN
-    ════════════════════════════════ -->
     <div class="desktop-main">
-
-        <!-- MOBILE: Sticky Top Bar -->
         <div class="top-bar">
             <a href="index.html" class="top-bar-back"><i class="fas fa-arrow-left" style="font-size:0.8rem;"></i></a>
             <div class="top-bar-info">
@@ -1205,7 +1156,6 @@
             <div class="top-bar-icon"><i class="fas fa-calendar-plus"></i></div>
         </div>
 
-        <!-- MOBILE: Hero Banner -->
         <div class="hero-banner">
             <div class="hero-pattern"></div>
             <div class="hero-grid"></div>
@@ -1222,7 +1172,6 @@
 
         <div id="mainContent">
 
-            <!-- MOBILE: Floating Steps -->
             <div class="steps-float">
                 <div class="steps-track">
                     <div class="step-item active" id="step1">
@@ -1244,7 +1193,6 @@
 
             <div class="page-body">
 
-                <!-- DESKTOP: Welcome block -->
                 <div class="desktop-welcome d-none d-md-block">
                     <div class="welcome-header">
                         <div class="welcome-icon-lg"><i class="fas fa-calendar-plus"></i></div>
@@ -1262,9 +1210,6 @@
 
                 <form id="bookingForm">
 
-                    <!-- ══════════════════════
-                         CARD 1: ข้อมูลผู้จอง
-                    ══════════════════════ -->
                     <div class="bk-card">
                         <div class="card-header-strip">
                             <div class="card-header-icon"><i class="fas fa-user"></i></div>
@@ -1316,9 +1261,6 @@
                         </div>
                     </div>
 
-                    <!-- ══════════════════════════════
-                         CARD 2: รายละเอียดการจอง
-                    ══════════════════════════════ -->
                     <div class="bk-card">
                         <div class="card-header-strip">
                             <div class="card-header-icon"><i class="fas fa-calendar-alt"></i></div>
@@ -1340,46 +1282,27 @@
                                 </div>
                             </div>
 
-                            <!-- Date Range (Agoda style) -->
                             <div class="field-group">
-                                <label class="field-label">ช่วงเวลา <span class="req">*</span></label>
-                                <div class="date-range-box">
-                                    <div class="date-cell">
-                                        <div class="date-cell-label"><i class="fas fa-calendar-day" style="font-size:0.65rem;"></i> วันเริ่มต้น</div>
-                                        <input type="date" id="startDate" name="startDate" required>
-                                    </div>
-                                    <div class="date-cell">
-                                        <div class="date-cell-label"><i class="fas fa-calendar-check" style="font-size:0.65rem;"></i> วันสิ้นสุด</div>
-                                        <input type="date" id="endDate" name="endDate" required>
-                                    </div>
+                                <label class="field-label">ช่วงวันที่และห้องประชุม <span class="req">*</span></label>
+                                <div class="segments-wrap" id="segmentsContainer"></div>
+                                <button type="button" class="add-segment-btn" id="addSegmentBtn" onclick="addSegment()">
+                                    <i class="fas fa-plus-circle"></i> เพิ่มช่วงวันที่ / ห้องประชุม
+                                </button>
+                                <div class="segment-summary-hint">
+                                    <i class="fas fa-info-circle"></i> สามารถจองได้หลายช่วงวันที่และห้องประชุมต่างกันในการจองเดียว
                                 </div>
                             </div>
 
-                            <!-- Room + Attendees -->
-                            <div class="field-row-7-3">
-                                <div class="field-group">
-                                    <label class="field-label">เลือกห้องประชุม <span class="req">*</span></label>
-                                    <div style="position:relative;">
-                                        <div class="room-select-btn" id="customMeetingRoomSelect">
-                                            <span class="room-select-text" id="roomSelectLabel">กรุณาเลือกวันที่ก่อน</span>
-                                            <i class="fas fa-chevron-down room-select-arrow"></i>
-                                        </div>
-                                        <ul class="room-dropdown" id="meetingRoomOptions"></ul>
-                                        <input type="hidden" id="meetingRoom" name="meetingRoom" required>
-                                    </div>
-                                </div>
-                                <div class="field-group">
-                                    <label class="field-label" for="attendees">จำนวน (คน) <span class="req">*</span></label>
-                                    <div class="field-input-wrap">
-                                        <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
-                                               placeholder="คน" required min="1"
-                                               oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                        <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
-                                    </div>
+                            <div class="field-group">
+                                <label class="field-label" for="attendees">จำนวนผู้เข้าร่วม (คน) <span class="req">*</span></label>
+                                <div class="field-input-wrap">
+                                    <input type="number" class="field-input has-icon-right" id="attendees" name="attendees"
+                                           placeholder="กรอกจำนวนผู้เข้าร่วม" required min="1"
+                                           oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                    <span class="field-icon-right"><i class="fas fa-users" style="font-size:0.8rem;"></i></span>
                                 </div>
                             </div>
 
-                            <!-- Accommodation Toggle -->
                             <div class="mb-3" style="margin-top: 1rem;">
                                 <label class="field-label">ต้องการที่พัก <span class="req">*</span></label>
                                 <div class="acc-toggle-group">
@@ -1403,7 +1326,8 @@
                         </div>
                     </div>
 
-                    <!-- PDPA -->
+                    <div class="booking-summary-card" id="bookingSummaryCard" style="display:none;"></div>
+
                     <div class="pdpa-wrap">
                         <input class="pdpa-checkbox-custom" type="checkbox" id="pdpaConsent" required>
                         <label class="pdpa-body-text" for="pdpaConsent">
@@ -1412,7 +1336,6 @@
                         </label>
                     </div>
 
-                    <!-- Spacer for sticky button -->
                     <div style="height: 4.5rem;"></div>
 
                 </form>
@@ -1421,7 +1344,6 @@
             </div>
         </div>
 
-        <!-- Sticky Bottom CTA -->
         <div class="bottom-cta">
             <button type="button" class="cta-btn" id="submitBtn" disabled onclick="document.getElementById('bookingForm').requestSubmit()">
                 <i class="fas fa-paper-plane"></i>
@@ -1429,7 +1351,6 @@
             </button>
         </div>
 
-        <!-- Loading Overlay -->
         <div id="loading" class="loading-overlay">
             <div class="loading-box">
                 <div class="spinner"></div>
@@ -1443,21 +1364,123 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     const LIFF_ID = "2007123923-K5wdmekE";
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxZ8GyweVTS9zFKgg7W5jpSEV3i2ocYzCMcZsze9UFSL8XFDe6n-hY9I5B0ZzgE61St1A/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
 
     const mainContent = document.getElementById('mainContent');
     const submitBtn = document.getElementById('submitBtn');
     const loadingDiv = document.getElementById('loading');
-    const customMeetingRoomSelect = document.getElementById('customMeetingRoomSelect');
-    const meetingRoomOptions = document.getElementById('meetingRoomOptions');
-    const hiddenMeetingRoomInput = document.getElementById('meetingRoom');
-    const roomSelectLabel = document.getElementById('roomSelectLabel');
+    const segmentsContainer = document.getElementById('segmentsContainer');
 
     let userId = '', displayName = '';
     let isEmployeeVerified = false;
-    let roomData = [];
     let accommodationAvailable = true;
     let checkTimeout = null;
+
+    /* ─── Booking segments (วันที่ + ห้องประชุม หลายช่วงต่อการจอง) ─── */
+    let segIdCounter = 0;
+    let segments = [ createSegment() ];
+
+    function createSegment(startDate, endDate) {
+        segIdCounter += 1;
+        return { id: segIdCounter, startDate: startDate || '', endDate: endDate || '', room: '', roomData: [] };
+    }
+
+    function todayStr() { return new Date().toISOString().split('T')[0]; }
+
+    function addSegment() {
+        const last = segments[segments.length - 1];
+        // สะดวกขึ้น: เริ่มช่วงถัดไปต่อจากวันสิ้นสุดของช่วงก่อนหน้า (ถ้ามี)
+        const nextStart = last && last.endDate ? last.endDate : '';
+        segments.push(createSegment(nextStart, ''));
+        renderSegments();
+        updateProgressSteps();
+        const el = document.getElementById(`seg-${segments[segments.length - 1].id}-startDate`);
+        if (el) el.focus();
+    }
+
+    function removeSegment(id) {
+        if (segments.length <= 1) return; // ต้องมีอย่างน้อย 1 ช่วงเสมอ
+        segments = segments.filter(s => s.id !== id);
+        renderSegments();
+        checkAccommodation();
+        updateProgressSteps();
+    }
+
+    function getSegment(id) { return segments.find(s => s.id === id); }
+
+    function renderSegments() {
+        segmentsContainer.innerHTML = segments.map((seg, idx) => `
+            <div class="segment-card" data-seg-id="${seg.id}">
+                <div class="segment-card-head">
+                    <span class="segment-badge"><span class="segment-badge-num">${idx + 1}</span> ช่วงที่ ${idx + 1}</span>
+                    ${segments.length > 1 ? `<button type="button" class="segment-remove-btn" onclick="removeSegment(${seg.id})" title="ลบช่วงนี้"><i class="fas fa-times"></i></button>` : ''}
+                </div>
+                <div class="date-range-box">
+                    <div class="date-cell">
+                        <div class="date-cell-label"><i class="fas fa-calendar-day" style="font-size:0.65rem;"></i> วันเริ่มต้น</div>
+                        <input type="date" id="seg-${seg.id}-startDate" value="${seg.startDate}" min="${todayStr()}"
+                               onchange="onSegmentDateChange(${seg.id}, 'startDate', this.value)">
+                    </div>
+                    <div class="date-cell">
+                        <div class="date-cell-label"><i class="fas fa-calendar-check" style="font-size:0.65rem;"></i> วันสิ้นสุด</div>
+                        <input type="date" id="seg-${seg.id}-endDate" value="${seg.endDate}" min="${seg.startDate || todayStr()}"
+                               onchange="onSegmentDateChange(${seg.id}, 'endDate', this.value)">
+                    </div>
+                </div>
+                    <div class="field-group" style="margin-top:0.75rem;margin-bottom:0;">
+                        <label class="field-label">เลือกห้องประชุม <span class="req">*</span></label>
+                        <div style="position:relative;">
+                            <div class="room-select-btn" id="seg-${seg.id}-roomBtn" onclick="toggleRoomDropdown(${seg.id})">
+                                <span class="room-select-text ${seg.room ? 'selected' : ''}" id="seg-${seg.id}-roomLabel">${seg.room || (seg.startDate && seg.endDate ? 'กำลังตรวจสอบห้องว่าง...' : 'กรุณาเลือกวันที่ก่อน')}</span>
+                                <i class="fas fa-chevron-down room-select-arrow"></i>
+                            </div>
+                            <ul class="room-dropdown" id="seg-${seg.id}-roomOptions"></ul>
+                        </div>
+                    </div>
+                </div>
+        `).join('');
+
+        segments.forEach(seg => {
+            if (seg.room && seg.roomData && seg.roomData.length > 0) {
+                // มีห้องที่เลือกไว้แล้วและมีข้อมูลแคชอยู่ -> แสดงผลจากแคชทันที ไม่ต้องยิง fetch ใหม่ (กันบั๊ก label ค้าง/กระพริบ)
+                renderRoomOptions(seg.id, seg.roomData);
+            } else if (seg.startDate && seg.endDate) {
+                checkMeetingRoomAvailability(seg.id);
+            } else {
+                renderRoomOptions(seg.id, []);
+            }
+        });
+    }
+
+    function toggleRoomDropdown(segId) {
+        const btn = document.getElementById(`seg-${segId}-roomBtn`);
+        const list = document.getElementById(`seg-${segId}-roomOptions`);
+        const isOpen = list.classList.contains('show');
+        document.querySelectorAll('.room-dropdown.show').forEach(el => el.classList.remove('show'));
+        document.querySelectorAll('.room-select-btn.is-open').forEach(el => el.classList.remove('is-open'));
+        if (!isOpen) { list.classList.add('show'); btn.classList.add('is-open'); }
+    }
+
+    function onSegmentDateChange(segId, field, value) {
+        const seg = getSegment(segId);
+        if (!seg) return;
+        seg[field] = value;
+        if (field === 'startDate') {
+            const endInput = document.getElementById(`seg-${segId}-endDate`);
+            if (endInput) {
+                endInput.setAttribute('min', value);
+                if (seg.endDate && seg.endDate < value) { seg.endDate = value; endInput.value = value; }
+            }
+        }
+        seg.room = '';
+        if (seg.startDate && seg.endDate) {
+            checkMeetingRoomAvailability(segId);
+        } else {
+            renderRoomOptions(segId, []);
+        }
+        checkAccommodation();
+        updateProgressSteps();
+    }
 
     /* ─── LIFF ─── */
     async function initializeLiff() {
@@ -1568,16 +1591,53 @@
     }
 
     /* ─── Progress steps ─── */
+    function segmentsValid() {
+        return segments.length > 0 && segments.every(s => s.startDate && s.endDate && s.room);
+    }
+
+    function formatShortTH_(dateStr) {
+        if (!dateStr) return '';
+        return new Date(dateStr).toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
+    }
+
+    function renderBookingSummary(show) {
+        const card = document.getElementById('bookingSummaryCard');
+        if (!card) return;
+        if (!show) { card.style.display = 'none'; return; }
+
+        const attendees = document.getElementById('attendees').value || '-';
+        const accChoice = document.querySelector('input[name="accommodation"]:checked');
+        const accVal = accChoice ? accChoice.value : '-';
+        const numRoomsInput = document.getElementById('numRooms');
+        const numRoomsVal = (accVal === 'ต้องการ' && numRoomsInput) ? numRoomsInput.value : null;
+
+        const segRows = segments.map((s, idx) => `
+            <div class="summary-seg-row">
+                <span class="summary-seg-label"><span class="seg-num">${idx + 1}</span>${s.room || 'ยังไม่ได้เลือกห้อง'}</span>
+                <span class="summary-seg-date">${s.startDate && s.endDate ? `${formatShortTH_(s.startDate)} – ${formatShortTH_(s.endDate)}` : 'ยังไม่ระบุวันที่'}</span>
+            </div>`).join('');
+
+        card.style.display = 'block';
+        card.innerHTML = `
+            <div class="summary-title"><i class="fas fa-clipboard-check"></i> สรุปการจองของท่าน</div>
+            ${segRows}
+            <div class="summary-divider"></div>
+            <div class="summary-meta-row"><span>ผู้เข้าร่วม</span><b>${attendees} คน</b></div>
+            <div class="summary-meta-row"><span>ที่พัก</span><b>${accVal}${numRoomsVal ? ` (${numRoomsVal} ห้อง)` : ''}</b></div>
+        `;
+    }
+
     function updateProgressSteps() {
         const s1f = ['employeeId','fullName','department','phone'];
-        const s2f = ['courseName','startDate','endDate','meetingRoom','attendees'];
+        const s2f = ['courseName','attendees'];
         const accChecked = document.querySelector('input[name="accommodation"]:checked') !== null;
         const s1filled   = s1f.every(f => document.getElementById(f).value.trim() !== '');
         const step1Done  = s1filled && isEmployeeVerified;
-        const step2Done  = s2f.every(f => document.getElementById(f).value.trim() !== '') && accChecked;
+        const step2Done  = s2f.every(f => document.getElementById(f).value.trim() !== '') && accChecked && segmentsValid();
         const pdpaOk     = document.getElementById('pdpaConsent').checked;
 
         if (submitBtn) submitBtn.disabled = !(step1Done && step2Done && pdpaOk);
+        renderBookingSummary(step2Done);
 
         // Mobile steps
         const el1 = document.getElementById('step1');
@@ -1627,29 +1687,33 @@
         }
     }
 
-    /* ─── Meeting room availability ─── */
-    async function checkMeetingRoomAvailability() {
-        const startDate = document.getElementById('startDate').value;
-        const endDate   = document.getElementById('endDate').value;
-        if (!startDate || !endDate) { updateRoomSelect([]); return; }
+    /* ─── Meeting room availability (ต่อ 1 ช่วงการจอง) ─── */
+    async function checkMeetingRoomAvailability(segId) {
+        const seg = getSegment(segId);
+        if (!seg) return;
+        const label = document.getElementById(`seg-${segId}-roomLabel`);
+        if (label) { label.textContent = 'กำลังตรวจสอบห้องว่าง...'; label.className = 'room-select-text'; }
         try {
-            const res    = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${startDate}&endDate=${endDate}`);
+            const res = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${seg.startDate}&endDate=${seg.endDate}`);
             const result = await res.json();
             if (result.error) throw new Error(result.error);
-            roomData = result.rooms || [];
-            updateRoomSelect(roomData);
-        } catch (error) { updateRoomSelect([]); }
+            seg.roomData = result.rooms || [];
+            renderRoomOptions(segId, seg.roomData);
+        } catch (error) {
+            seg.roomData = [];
+            renderRoomOptions(segId, []);
+        }
     }
 
-    function updateRoomSelect(rooms) {
-        meetingRoomOptions.innerHTML = '';
-        // ลบ alt-date box ของห้องประชุม (ถ้ามี)
-        const existingAltBox = document.getElementById('meetingRoomAltDateBox');
-        if (existingAltBox) existingAltBox.remove();
+    function renderRoomOptions(segId, rooms) {
+        const seg = getSegment(segId);
+        const optionsEl = document.getElementById(`seg-${segId}-roomOptions`);
+        const label = document.getElementById(`seg-${segId}-roomLabel`);
+        if (!optionsEl || !label || !seg) return;
 
+        optionsEl.innerHTML = '';
         if (rooms.length === 0) {
-            roomSelectLabel.textContent = 'กรุณาเลือกวันที่ก่อน';
-            roomSelectLabel.className   = 'room-select-text';
+            if (!seg.room) { label.textContent = seg.startDate && seg.endDate ? 'ไม่พบข้อมูลห้องประชุม' : 'กรุณาเลือกวันที่ก่อน'; label.className = 'room-select-text'; }
             return;
         }
         rooms.forEach(room => {
@@ -1667,82 +1731,66 @@
                 </span>`;
             if (room.isAvailable) {
                 li.addEventListener('click', () => {
-                    roomSelectLabel.textContent = room.name;
-                    roomSelectLabel.className   = 'room-select-text selected';
-                    hiddenMeetingRoomInput.value = room.name;
-                    meetingRoomOptions.classList.remove('show');
-                    customMeetingRoomSelect.classList.remove('is-open');
-                    hiddenMeetingRoomInput.dispatchEvent(new Event('change'));
-                    // ลบ alt-date box ถ้าเลือกห้องได้แล้ว
-                    const altBox = document.getElementById('meetingRoomAltDateBox');
-                    if (altBox) altBox.remove();
-                });
-            } else {
-                // ห้องไม่ว่าง: คลิกแล้วแสดง alt-date
-                li.addEventListener('click', () => {
-                    meetingRoomOptions.classList.remove('show');
-                    customMeetingRoomSelect.classList.remove('is-open');
-                    showMeetingRoomAltDates(room.name);
+                    seg.room = room.name;
+                    label.textContent = room.name;
+                    label.className = 'room-select-text selected';
+                    optionsEl.classList.remove('show');
+                    document.getElementById(`seg-${segId}-roomBtn`).classList.remove('is-open');
+                    updateProgressSteps();
                 });
             }
-            meetingRoomOptions.appendChild(li);
+            optionsEl.appendChild(li);
         });
 
-        const selected = hiddenMeetingRoomInput.value;
-        if (selected) {
-            const found = rooms.find(r => r.name === selected);
+        if (seg.room) {
+            const found = rooms.find(r => r.name === seg.room);
             if (!found || !found.isAvailable) {
-                hiddenMeetingRoomInput.value = '';
-                roomSelectLabel.textContent  = 'กรุณาเลือกห้องประชุม';
-                roomSelectLabel.className    = 'room-select-text';
+                seg.room = '';
+                label.textContent = 'กรุณาเลือกห้องประชุม';
+                label.className = 'room-select-text';
                 updateProgressSteps();
-                // แสดง alt-date สำหรับห้องที่เคยเลือก
-                if (selected && document.getElementById('startDate').value && document.getElementById('endDate').value) {
-                    showMeetingRoomAltDates(selected);
-                }
+            } else {
+                // ห้องที่เลือกไว้ยังว่างอยู่ -> คืนค่าชื่อห้องกลับที่ label
+                // (ป้องกันบั๊ก: label ค้างที่ "กำลังตรวจสอบห้องว่าง..." ตอนรีเฟรชช่วงอื่นพร้อมกัน)
+                label.textContent = seg.room;
+                label.className = 'room-select-text selected';
             }
         }
-    }
-
-    /* ─── แสดง alt-date สำหรับห้องประชุมที่ไม่ว่าง ─── */
-    function showMeetingRoomAltDates(roomName) {
-        const startDate = document.getElementById('startDate').value;
-        const endDate   = document.getElementById('endDate').value;
-        if (!startDate || !endDate || !roomName) return;
-
-        // สร้าง container สำหรับแสดงผล (ใต้ dropdown)
-        let altBox = document.getElementById('meetingRoomAltDateBox');
-        if (!altBox) {
-            altBox = document.createElement('div');
-            altBox.id = 'meetingRoomAltDateBox';
-            altBox.style.marginTop = '0.75rem';
-            // ใส่ใต้ room select group
-            const roomSelectGroup = customMeetingRoomSelect.closest('.field-group') || customMeetingRoomSelect.parentElement;
-            roomSelectGroup.appendChild(altBox);
-        }
-
-        // แสดงข้อความว่าห้องไม่ว่าง
-        altBox.innerHTML = `
-            <div class="unavail-alert-box" style="margin-top:0;">
-                <div class="unavail-icon-wrap"><i class="fas fa-door-closed"></i></div>
-                <div class="unavail-text-wrap">
-                    <div class="t">ห้อง ${roomName} ไม่ว่างในช่วงนี้</div>
-                    <div class="s">กำลังค้นหาวันที่ว่างใกล้เคียง...</div>
-                </div>
-            </div>
-            <div id="meetingRoomAltInner"></div>`;
-
-        findAltDatesForMeetingRoom(startDate, endDate, roomName, document.getElementById('meetingRoomAltInner'));
     }
 
     /* ─── Accommodation check ─── */
     let maxAvailableRooms = 0;
+
+    // ที่พักนับเฉพาะคืนในแต่ละช่วงจริง (เหมือน backend) ไม่รวมคืนในช่วงว่างระหว่างช่วงประชุม
+    // 1 segment -> 1 window (checkin = 1 วันก่อนเริ่ม, checkout = วันสิ้นสุด) แล้วรวมช่วงที่ติด/ทับกันเพื่อแสดงผล
+    function computeAccommodationWindows(segs) {
+        const raw = segs
+            .filter(s => s.startDate && s.endDate)
+            .map(s => {
+                const start = new Date(s.startDate);
+                const checkin = new Date(start); checkin.setDate(start.getDate() - 1);
+                const checkout = new Date(s.endDate);
+                return { checkin, checkout };
+            })
+            .sort((a, b) => a.checkin - b.checkin);
+
+        const merged = [];
+        raw.forEach(w => {
+            const last = merged[merged.length - 1];
+            if (last && w.checkin <= last.checkout) {
+                if (w.checkout > last.checkout) last.checkout = w.checkout;
+            } else {
+                merged.push({ checkin: new Date(w.checkin), checkout: new Date(w.checkout) });
+            }
+        });
+        return merged;
+    }
+
     async function checkAccommodation() {
         clearTimeout(checkTimeout);
         checkTimeout = setTimeout(async () => {
             const accChoice   = document.querySelector('input[name="accommodation"]:checked');
-            const startDate   = document.getElementById('startDate').value;
-            const endDate     = document.getElementById('endDate').value;
+            const validSegs    = segments.filter(s => s.startDate && s.endDate);
             const attendeesIn = document.getElementById('attendees').value;
             const attendees   = parseInt(attendeesIn) || 0;
             const container   = document.getElementById('accommodationStatus');
@@ -1752,7 +1800,7 @@
             if (!accChoice || accChoice.value !== 'ต้องการ') {
                 container.innerHTML = ''; container.style.display = 'none'; return;
             }
-            if (!startDate || !endDate || !attendeesIn || attendees <= 0) {
+            if (validSegs.length === 0 || !attendeesIn || attendees <= 0) {
                 container.innerHTML = ''; container.style.display = 'none'; return;
             }
             container.style.display = 'block';
@@ -1764,19 +1812,39 @@
                     <div style="padding:1rem;"><div class="skeleton-block"></div></div>
                 </div>`;
             try {
-                const s = new Date(startDate), e = new Date(endDate);
-                const checkin = new Date(s); checkin.setDate(s.getDate()-1);
-                const checkout = new Date(e);
-                const nights = Math.ceil((checkout-checkin)/(1000*60*60*24));
+                const windows = computeAccommodationWindows(validSegs);
                 const opt = { day:'numeric', month:'short', year:'2-digit' };
-                const showCI = checkin.toLocaleDateString('th-TH', opt);
-                const showCO = checkout.toLocaleDateString('th-TH', opt);
-                const sStr = s.toISOString().split('T')[0];
-                const eStr = e.toISOString().split('T')[0];
+                const segmentsPayload = validSegs.map(s => ({ startDate: s.startDate, endDate: s.endDate }));
 
-                const res    = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${sStr}&endDate=${eStr}`);
+                const res    = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&segments=${encodeURIComponent(JSON.stringify(segmentsPayload))}`);
                 const result = await res.json();
                 if (result.error) throw new Error(result.error);
+
+                const nights = result.nightsCount; // จำนวนคืนจริงจาก backend (นับเฉพาะคืนในแต่ละช่วง ไม่รวมช่วงว่าง)
+                const ciCoHtml = windows.length <= 1
+                    ? `<div class="checkin-checkout-row">
+                        <div class="ci-co-box">
+                            <div class="ci-co-label">Check-in</div>
+                            <div class="ci-co-date">${windows[0].checkin.toLocaleDateString('th-TH', opt)}</div>
+                            <div class="ci-co-time">เวลา 14:00 น.</div>
+                            <i class="fas fa-calendar-check ci-co-icon"></i>
+                        </div>
+                        <div class="ci-co-box">
+                            <div class="ci-co-label">Check-out</div>
+                            <div class="ci-co-date">${windows[0].checkout.toLocaleDateString('th-TH', opt)}</div>
+                            <div class="ci-co-time">เวลา 10:00 น.</div>
+                            <i class="fas fa-calendar-times ci-co-icon"></i>
+                        </div>
+                    </div>`
+                    : `<div class="acc-windows-list">
+                        ${windows.map((w, idx) => `
+                            <div class="acc-window-row">
+                                <span class="acc-window-num">${idx + 1}</span>
+                                <span class="acc-window-date">${w.checkin.toLocaleDateString('th-TH', opt)} – ${w.checkout.toLocaleDateString('th-TH', opt)}</span>
+                                <span class="acc-window-nights">${Math.round((w.checkout - w.checkin) / 86400000)} คืน</span>
+                            </div>`).join('')}
+                        <div class="acc-window-hint"><i class="fas fa-info-circle"></i> ไม่รวมคืนในช่วงว่างระหว่างกิจกรรม</div>
+                    </div>`;
 
                 const available = result.availableRooms;
                 maxAvailableRooms = available;
@@ -1792,20 +1860,7 @@
                                 <span class="nights-badge">${nights} คืน</span>
                             </div>
                             <div class="acc-result-body">
-                                <div class="checkin-checkout-row">
-                                    <div class="ci-co-box">
-                                        <div class="ci-co-label">Check-in</div>
-                                        <div class="ci-co-date">${showCI}</div>
-                                        <div class="ci-co-time">เวลา 14:00 น.</div>
-                                        <i class="fas fa-calendar-check ci-co-icon"></i>
-                                    </div>
-                                    <div class="ci-co-box">
-                                        <div class="ci-co-label">Check-out</div>
-                                        <div class="ci-co-date">${showCO}</div>
-                                        <div class="ci-co-time">เวลา 10:00 น.</div>
-                                        <i class="fas fa-calendar-times ci-co-icon"></i>
-                                    </div>
-                                </div>
+                                ${ciCoHtml}
                                 <div class="rooms-avail-strip">
                                     <div class="rooms-avail-lbl"><i class="fas fa-check-circle"></i> ห้องพักว่าง</div>
                                     <span class="rooms-count-badge">${available} ห้อง</span>
@@ -1820,7 +1875,7 @@
                                                    min="1" max="${available}" value="${suggested}" required>
                                         </div>
                                         <div class="room-hints">
-                                            <div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง สำหรับ ${attendees} ท่าน (สามารถแก้ไขได้)</div>
+                                            <div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง ${attendees} สำหรับท่าน (สามารถแก้ไขได้)</div>
                                             <div class="room-hint-item"><i class="fas fa-info-circle"></i> ห้อง standard พัก 2 ท่าน/ห้อง</div>
                                         </div>
                                     </div>
@@ -1845,18 +1900,16 @@
                     accommodationAvailable = false;
                     const title = available === 0 ? 'ไม่มีห้องพักว่าง' : `ห้องพักไม่เพียงพอ`;
                     const desc  = available === 0 ? 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว' : `ต้องการ ${suggested} ห้อง แต่มีว่างเพียง ${available} ห้อง`;
+                    const rangeSummary = windows.map(w => `${w.checkin.toLocaleDateString('th-TH', opt)} – ${w.checkout.toLocaleDateString('th-TH', opt)}`).join(', ');
                     container.innerHTML = `
                         <div class="unavail-alert-box">
                             <div class="unavail-icon-wrap"><i class="fas fa-times"></i></div>
                             <div class="unavail-text-wrap">
                                 <div class="t">${title}</div>
-                                <div class="s">${showCI} – ${showCO} (${nights} คืน)</div>
-                                <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} โปรดเลือกช่วงเวลาอื่น</div>
+                                <div class="s">${rangeSummary} (${nights} คืน)</div>
+                                <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} กรุณาเลือกวันที่อื่น หรือติดต่อ admin ผ่าน Line OA</div>
                             </div>
-                        </div>
-                        <div id="altDateAccBox"></div>`;
-                    // ค้นหาวันที่ใกล้เคียงสำหรับห้องพัก
-                    findAltDatesForAccommodation(startDate, endDate, suggested, document.getElementById('altDateAccBox'));
+                        </div>`;
                 }
             } catch (error) {
                 accommodationAvailable = true;
@@ -1869,245 +1922,6 @@
         }, 600);
     }
 
-    /* ─── Helper: ตรวจสอบว่าเป็นวันจันทร์-ศุกร์ ─── */
-    function isWeekday(date) {
-        const day = date.getDay(); // 0=อาทิตย์, 6=เสาร์
-        return day !== 0 && day !== 6;
-    }
-
-    /* ─── Helper: หาวันถัดไปที่เป็น Weekday ─── */
-    function nextWeekday(date, direction) {
-        const d = new Date(date);
-        d.setDate(d.getDate() + direction);
-        while (!isWeekday(d)) {
-            d.setDate(d.getDate() + direction);
-        }
-        return d;
-    }
-
-    /* ─── Helper: format date to YYYY-MM-DD ─── */
-    function toYMD(date) {
-        return date.toISOString().split('T')[0];
-    }
-
-    /* ─── Helper: format date Thai short ─── */
-    function fmtTH(dateStr) {
-        const d = new Date(dateStr);
-        return d.toLocaleDateString('th-TH', { day:'numeric', month:'short', year:'2-digit' });
-    }
-
-    /* ─── ค้นหาวันที่ทดแทนสำหรับห้องพัก ─── */
-    async function findAltDatesForAccommodation(origStart, origEnd, neededRooms, container) {
-        container.innerHTML = `
-            <div class="alt-date-box">
-                <div class="alt-date-head">
-                    <div class="alt-date-head-title"><i class="fas fa-search"></i> กำลังค้นหาวันที่ว่าง...</div>
-                </div>
-                <div class="alt-date-body">
-                    <div class="searching-dates"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบวันที่ใกล้เคียง ±1 เดือน...</div>
-                </div>
-            </div>`;
-
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        const origStartDate = new Date(origStart);
-        const origEndDate   = new Date(origEnd);
-        const duration = Math.round((origEndDate - origStartDate) / (1000*60*60*24)); // จำนวนวันของช่วงที่เลือก
-
-        // สร้างรายการวันที่จะตรวจสอบ: ±1 เดือนจากวันเริ่มต้น, step 1 วัน
-        const searchStart = new Date(origStartDate);
-        searchStart.setMonth(searchStart.getMonth() - 1);
-        const searchEnd = new Date(origStartDate);
-        searchEnd.setMonth(searchEnd.getMonth() + 1);
-
-        // ตรวจสอบทีละวัน (batch เล็กๆ กัน timeout)
-        const candidates = [];
-        let cursor = new Date(searchStart);
-        while (cursor <= searchEnd) {
-            // ข้ามวันที่ < วันนี้ และข้ามวันที่เหมือนเดิม
-            if (cursor >= today && cursor.getTime() !== origStartDate.getTime()) {
-                if (isWeekday(cursor)) {
-                    candidates.push(new Date(cursor));
-                }
-            }
-            cursor.setDate(cursor.getDate() + 1);
-        }
-
-        // เรียง candidates ตามระยะห่างจาก origStart
-        candidates.sort((a,b) => {
-            return Math.abs(a - origStartDate) - Math.abs(b - origStartDate);
-        });
-
-        // ตรวจสอบความพร้อมห้องพักสำหรับแต่ละ candidate (max 10 candidates)
-        const results = [];
-        const toCheck = candidates.slice(0, 30); // ตรวจสอบสูงสุด 30 วัน แล้วเอาที่ผ่าน
-
-        for (let cand of toCheck) {
-            if (results.length >= 3) break;
-            const candEnd = new Date(cand);
-            candEnd.setDate(cand.getDate() + duration);
-            // ตรวจว่า candEnd ก็ต้องเป็น weekday ด้วย
-            if (!isWeekday(candEnd)) continue;
-
-            try {
-                const res = await fetch(`${GAS_WEB_APP_URL}?action=checkAvailability&startDate=${toYMD(cand)}&endDate=${toYMD(candEnd)}`);
-                const data = await res.json();
-                if (!data.error && data.availableRooms >= neededRooms) {
-                    results.push({
-                        startDate: toYMD(cand),
-                        endDate: toYMD(candEnd),
-                        available: data.availableRooms,
-                        diff: Math.abs(cand - origStartDate)
-                    });
-                }
-            } catch(e) { /* skip */ }
-        }
-
-        renderAltDateBox(container, results, origStart, origEnd, duration, 'accommodation');
-    }
-
-    /* ─── ค้นหาวันที่ทดแทนสำหรับห้องประชุม ─── */
-    async function findAltDatesForMeetingRoom(origStart, origEnd, selectedRoomName, container) {
-        container.innerHTML = `
-            <div class="alt-date-box">
-                <div class="alt-date-head">
-                    <div class="alt-date-head-title"><i class="fas fa-search"></i> กำลังค้นหาวันที่ว่าง...</div>
-                </div>
-                <div class="alt-date-body">
-                    <div class="searching-dates"><i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบวันที่ว่างสำหรับห้องประชุม ±1 เดือน...</div>
-                </div>
-            </div>`;
-
-        const today = new Date();
-        today.setHours(0,0,0,0);
-        const origStartDate = new Date(origStart);
-        const origEndDate   = new Date(origEnd);
-        const duration = Math.round((origEndDate - origStartDate) / (1000*60*60*24));
-
-        const searchStart = new Date(origStartDate);
-        searchStart.setMonth(searchStart.getMonth() - 1);
-        const searchEnd = new Date(origStartDate);
-        searchEnd.setMonth(searchEnd.getMonth() + 1);
-
-        const candidates = [];
-        let cursor = new Date(searchStart);
-        while (cursor <= searchEnd) {
-            if (cursor >= today && cursor.getTime() !== origStartDate.getTime()) {
-                if (isWeekday(cursor)) {
-                    candidates.push(new Date(cursor));
-                }
-            }
-            cursor.setDate(cursor.getDate() + 1);
-        }
-
-        candidates.sort((a,b) => Math.abs(a - origStartDate) - Math.abs(b - origStartDate));
-
-        const results = [];
-        const toCheck = candidates.slice(0, 30);
-
-        for (let cand of toCheck) {
-            if (results.length >= 3) break;
-            const candEnd = new Date(cand);
-            candEnd.setDate(cand.getDate() + duration);
-            if (!isWeekday(candEnd)) continue;
-
-            try {
-                const res = await fetch(`${GAS_WEB_APP_URL}?action=checkMeetingRoomAvailability&startDate=${toYMD(cand)}&endDate=${toYMD(candEnd)}`);
-                const data = await res.json();
-                if (!data.error && data.rooms) {
-                    const room = data.rooms.find(r => r.name === selectedRoomName);
-                    if (room && room.isAvailable) {
-                        results.push({
-                            startDate: toYMD(cand),
-                            endDate: toYMD(candEnd),
-                            available: true,
-                            diff: Math.abs(cand - origStartDate)
-                        });
-                    }
-                }
-            } catch(e) { /* skip */ }
-        }
-
-        renderAltDateBox(container, results, origStart, origEnd, duration, 'meetingRoom', selectedRoomName);
-    }
-
-    /* ─── Render กล่องแนะนำวันที่ ─── */
-    function renderAltDateBox(container, results, origStart, origEnd, duration, type, roomName) {
-        if (results.length === 0) {
-            container.innerHTML = `
-                <div class="alt-date-box">
-                    <div class="alt-date-head">
-                        <div class="alt-date-head-title"><i class="fas fa-calendar-times"></i> ไม่พบวันที่ว่างใกล้เคียง</div>
-                    </div>
-                    <div class="alt-date-body">
-                        <div class="alt-date-none">
-                            <i class="fas fa-info-circle"></i>
-                            ไม่มีวันที่ว่างใน ±1 เดือน กรุณาติดต่อเจ้าหน้าที่
-                        </div>
-                    </div>
-                </div>`;
-            return;
-        }
-
-        const typeLabel = type === 'accommodation' ? 'ห้องพัก' : `ห้อง ${roomName}`;
-        const chipsHtml = results.map((r, i) => {
-            const isBest = i === 0;
-            const availText = type === 'accommodation' ? `ว่าง ${r.available} ห้อง` : 'ห้องว่าง';
-            return `
-            <div class="alt-date-chip ${isBest ? 'is-best' : ''}" onclick="applyAltDate('${r.startDate}','${r.endDate}')">
-                <div class="alt-date-chip-left">
-                    <div class="alt-date-range">
-                        <i class="fas fa-calendar-alt" style="color:var(--warning);font-size:0.8rem;"></i>
-                        ${fmtTH(r.startDate)} – ${fmtTH(r.endDate)}
-                        ${isBest ? '<span class="alt-date-best-tag">แนะนำ</span>' : ''}
-                    </div>
-                    <div class="alt-date-avail">
-                        <i class="fas fa-check-circle" style="font-size:0.68rem;"></i>
-                        ${availText}
-                    </div>
-                </div>
-                <button class="alt-date-apply-btn" onclick="event.stopPropagation(); applyAltDate('${r.startDate}','${r.endDate}')">
-                    <i class="fas fa-calendar-check"></i> เลือก
-                </button>
-            </div>`;
-        }).join('');
-
-        container.innerHTML = `
-            <div class="alt-date-box">
-                <div class="alt-date-head">
-                    <div class="alt-date-head-title">
-                        <i class="fas fa-lightbulb"></i> วันที่แนะนำใกล้เคียง
-                    </div>
-                    <span class="alt-date-count">${results.length} ตัวเลือก</span>
-                </div>
-                <div class="alt-date-body">
-                    <div class="alt-date-hint">
-                        <i class="fas fa-info-circle"></i>
-                        วันที่ว่างสำหรับ${typeLabel} ใกล้เคียงกับช่วงที่เลือก (จ.–ศ. เท่านั้น)
-                    </div>
-                    <div class="alt-date-grid">
-                        ${chipsHtml}
-                    </div>
-                </div>
-            </div>`;
-    }
-
-    /* ─── Apply วันที่ที่เลือกจาก suggestion ─── */
-    function applyAltDate(startDate, endDate) {
-        document.getElementById('startDate').value = startDate;
-        document.getElementById('endDate').value   = endDate;
-        document.getElementById('endDate').setAttribute('min', startDate);
-        // รีเซ็ตห้องประชุมที่เลือก
-        hiddenMeetingRoomInput.value = '';
-        roomSelectLabel.textContent  = 'กรุณาเลือกห้องประชุม';
-        roomSelectLabel.className    = 'room-select-text';
-        // โหลดข้อมูลใหม่
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-        updateProgressSteps();
-        // Scroll ขึ้นไปที่ date picker
-        document.getElementById('startDate').scrollIntoView({ behavior:'smooth', block:'center' });
-    }
 
     /* ─── Event Listeners ─── */
     // Accommodation toggle
@@ -2122,15 +1936,11 @@
         });
     });
 
-    // Room select dropdown
-    customMeetingRoomSelect.addEventListener('click', () => {
-        meetingRoomOptions.classList.toggle('show');
-        customMeetingRoomSelect.classList.toggle('is-open');
-    });
+    // Room select dropdown (ปิดเมื่อคลิกนอกกล่อง — ใช้ event delegation เพราะมีหลายช่วง)
     document.addEventListener('click', (e) => {
-        if (!customMeetingRoomSelect.contains(e.target) && !meetingRoomOptions.contains(e.target)) {
-            meetingRoomOptions.classList.remove('show');
-            customMeetingRoomSelect.classList.remove('is-open');
+        if (!e.target.closest('.segment-card')) {
+            document.querySelectorAll('.room-dropdown.show').forEach(el => el.classList.remove('show'));
+            document.querySelectorAll('.room-select-btn.is-open').forEach(el => el.classList.remove('is-open'));
         }
     });
 
@@ -2140,16 +1950,6 @@
         inp.addEventListener('change', updateProgressSteps);
     });
     document.getElementById('pdpaConsent').addEventListener('change', updateProgressSteps);
-    document.getElementById('startDate').addEventListener('change', () => {
-        const s = document.getElementById('startDate').value;
-        document.getElementById('endDate').setAttribute('min', s);
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-    });
-    document.getElementById('endDate').addEventListener('change', () => {
-        checkMeetingRoomAvailability();
-        checkAccommodation();
-    });
     document.getElementById('attendees').addEventListener('input', checkAccommodation);
     document.querySelectorAll('input[name="accommodation"]').forEach(r => r.addEventListener('change', checkAccommodation));
 
@@ -2160,6 +1960,10 @@
         if (!pdpaCheckbox.checked) {
             await Swal.fire({ title:'กรุณายอมรับเงื่อนไข', text:'ท่านต้องยอมรับนโยบาย PDPA ก่อนทำการจอง', icon:'warning', confirmButtonText:'ตกลง' });
             pdpaCheckbox.scrollIntoView({ behavior:'smooth', block:'center' }); return;
+        }
+        if (!segmentsValid()) {
+            await Swal.fire({ title:'ข้อมูลไม่ครบถ้วน', text:'กรุณาระบุวันที่และเลือกห้องประชุมให้ครบทุกช่วง', icon:'warning', confirmButtonText:'ตกลง' });
+            return;
         }
         const accChoice = document.querySelector('input[name="accommodation"]:checked');
         let numRoomsValue = 0;
@@ -2183,15 +1987,27 @@
                 await Swal.fire({ title:'ที่พักไม่เพียงพอ!', text:'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว', icon:'error', confirmButtonText:'ตกลง' }); return;
             }
         }
-        const selectedRoomName = hiddenMeetingRoomInput.value;
+
         const attendees = parseInt(document.getElementById('attendees').value) || 0;
-        const roomConfig = roomData.find(r => r.name === selectedRoomName);
-        if (roomConfig && attendees > roomConfig.capacity) {
-            await Swal.fire({ title:'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text:`ห้อง ${selectedRoomName} รองรับได้ ${roomConfig.capacity} คน`, icon:'error', confirmButtonText:'ตกลง' }); return;
+        for (const seg of segments) {
+            const roomConfig = (seg.roomData || []).find(r => r.name === seg.room);
+            if (roomConfig && attendees > roomConfig.capacity) {
+                await Swal.fire({ title:'จำนวนผู้เข้าร่วมเกินความจุห้อง!', text:`ห้อง ${seg.room} รองรับได้ ${roomConfig.capacity} คน`, icon:'error', confirmButtonText:'ตกลง' }); return;
+            }
+            if (roomConfig && !roomConfig.isAvailable) {
+                await Swal.fire({ title:'ห้องประชุมไม่ว่าง!', text:`ห้อง ${seg.room} ไม่ว่างในช่วงที่เลือก กรุณาเลือกห้องหรือวันที่อื่น`, icon:'error', confirmButtonText:'ตกลง' }); return;
+            }
         }
-        if (roomConfig && !roomConfig.isAvailable) {
-            await Swal.fire({ title:'ห้องประชุมไม่ว่าง!', text:'กรุณาเลือกห้องอื่น', icon:'error', confirmButtonText:'ตกลง' }); return;
+        // ตรวจสอบห้องซ้ำกันในวันที่ทับซ้อนภายในบุ๊คกิ้งเดียวกัน
+        for (let i = 0; i < segments.length; i++) {
+            for (let j = i + 1; j < segments.length; j++) {
+                const a = segments[i], b = segments[j];
+                if (a.room === b.room && a.startDate <= b.endDate && b.startDate <= a.endDate) {
+                    await Swal.fire({ title:'ช่วงเวลาซ้อนทับกัน', text:`ห้อง ${a.room} ถูกเลือกซ้ำในช่วงวันที่ทับซ้อนกัน กรุณาตรวจสอบ`, icon:'warning', confirmButtonText:'ตกลง' }); return;
+                }
+            }
         }
+
         submitBtn.disabled = true;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>กำลังส่งข้อมูล...';
         loadingDiv.classList.add('show');
@@ -2203,9 +2019,7 @@
             department: formData.get('department'),
             phone:      formData.get('phone'),
             courseName: formData.get('courseName'),
-            startDate:  formData.get('startDate'),
-            endDate:    formData.get('endDate'),
-            meetingRoom:formData.get('meetingRoom'),
+            segments:   segments.map(s => ({ room: s.room, startDate: s.startDate, endDate: s.endDate })),
             accommodation: formData.get('accommodation'),
             attendees:  formData.get('attendees'),
             numRooms:   numRoomsValue,
@@ -2223,7 +2037,7 @@
                 title:'บันทึกข้อมูลสำเร็จ!',
                 text:'ระบบได้บันทึกข้อมูลการจองและจะส่งสรุปให้ทาง LINE',
                 icon:'success', confirmButtonText:'ตกลง', allowOutsideClick:false
-            }).then(r => { if (r.isConfirmed) { if (liff.isInClient()) { liff.closeWindow(); } else { window.close(); } } });
+            }).then(r => { if (r.isConfirmed) { window.location.href = 'index.html'; } });
         } catch (error) {
             loadingDiv.classList.remove('show');
             mainContent.style.display = 'block';
@@ -2235,8 +2049,7 @@
 
     /* ─── Init ─── */
     document.addEventListener('DOMContentLoaded', function() {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('startDate').setAttribute('min', today);
+        renderSegments();
         updateProgressSteps();
     });
 
