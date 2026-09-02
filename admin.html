@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Admin Dashboard | ระบบจองห้องประชุม ศฝฟ.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700&family=Roboto+Mono:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{
+    --primary:#0B4DA2; --primary-dark:#06264D; --primary-light:#2F7BE0;
+    --primary-soft:#EAF2FF; --primary-xsoft:#F5F9FF;
+    --accent:#FF7A1A; --accent-dark:#C15A0E; --accent-soft:#FFF1E4;
+    --danger:#e5484d; --danger-soft:#FEE2E2; --danger-fg:#991B1B;
+    --success:#16A34A; --success-soft:#D1FAE5; --success-fg:#065F46;
+    --warning:#d97706; --warning-soft:#FEF3C7; --warning-fg:#92400E;
+    --info-soft:#DBEAFE; --info-fg:#1E3A8A;
+    --gray-soft:#E5E7EB; --gray-fg:#374151;
+    --bg:#F1F5FB; --surface:#ffffff; --surface-2:#F8FAFD;
+    --text:#0F1B2D; --text-2:#47566B; --muted:#64748B;
+    --border:#E4EAF3; --border-strong:#CBD5E1;
+    --shadow-xs:0 1px 3px rgba(6,38,77,0.08);
+    --shadow-sm:0 4px 14px -6px rgba(6,38,77,0.14);
+    --shadow-md:0 10px 26px -10px rgba(6,38,77,0.18);
+    --radius-xs:8px; --radius:14px; --radius-md:18px; --radius-lg:22px;
+    --mono:'Roboto Mono', 'Noto Sans Thai', monospace;
+    --sidebar-w:224px;
+}
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; }
+body{
+    font-family:'Prompt','Noto Sans Thai',sans-serif;
+    background:var(--bg); color:var(--text);
+    -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--primary-light); color:#fff; }
+a{ color:var(--primary); }
+button{ font-family:inherit; cursor:pointer; }
+:focus-visible{ outline:2.5px solid var(--accent); outline-offset:2px; border-radius:4px; }
+@media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
+
+/* ───────── LOGIN GATE ───────── */
+#loginGate{
+    position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at 15% 15%, #123a72 0%, var(--primary-dark) 55%, #041b3a 100%);
+    padding:20px;
+}
+.login-card{
+    width:100%; max-width:380px; background:var(--surface); border-radius:var(--radius-lg);
+    box-shadow:var(--shadow-md); padding:34px 30px 30px; text-align:center;
+}
+.login-mark{
+    width:56px; height:56px; border-radius:16px; margin:0 auto 16px; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(150deg,#06264D 0%,#0B4DA2 60%,#2F7BE0 100%); color:#fff; font-size:1.4rem; box-shadow:var(--shadow-sm);
+}
+.login-card h1{ font-size:1.15rem; font-weight:700; margin:0 0 4px; }
+.login-card p{ font-size:0.82rem; color:var(--muted); margin:0 0 22px; line-height:1.6; }
+.login-field{ text-align:left; margin-bottom:14px; }
+.login-field label{ font-size:0.76rem; font-weight:600; color:var(--text-2); display:block; margin-bottom:6px; }
+.login-field input{
+    width:100%; padding:12px 14px; border-radius:var(--radius-xs); border:1.5px solid var(--border-strong);
+    font-family:var(--mono); font-size:0.92rem; letter-spacing:0.5px; background:var(--surface-2); color:var(--text);
+}
+.login-field input:focus{ border-color:var(--primary); background:#fff; }
+.login-btn{
+    width:100%; padding:12px; border:none; border-radius:var(--radius-xs); background:var(--gradient-brand,var(--primary));
+    background:linear-gradient(135deg,var(--primary) 0%,var(--primary-light) 100%);
+    color:#fff; font-weight:600; font-size:0.94rem; box-shadow:var(--shadow-sm);
+}
+.login-btn:hover{ filter:brightness(1.06); }
+.login-err{ color:var(--danger); font-size:0.78rem; margin-top:12px; min-height:1.1em; }
+.login-hint{ margin-top:18px; font-size:0.7rem; color:var(--muted); border-top:1px dashed var(--border); padding-top:14px; text-align:left; line-height:1.6; }
+
+/* ───────── APP SHELL ───────── */
+#appShell{ display:none; min-height:100vh; }
+#appShell.ready{ display:flex; }
+
+.sidebar{
+    width:var(--sidebar-w); flex-shrink:0; background:linear-gradient(180deg,#06264D 0%,#0B3A82 100%);
+    color:#EAF2FF; display:flex; flex-direction:column; position:sticky; top:0; height:100vh; z-index:20;
+}
+.sidebar-brand{ padding:22px 20px 16px; display:flex; align-items:center; gap:10px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sidebar-brand .mark{ width:34px; height:34px; border-radius:10px; background:rgba(255,255,255,0.12); display:flex; align-items:center; justify-content:center; color:var(--accent); font-size:1rem; flex-shrink:0; }
+.sidebar-brand .txt{ line-height:1.25; }
+.sidebar-brand .txt b{ display:block; font-size:0.86rem; font-weight:700; color:#fff; }
+.sidebar-brand .txt span{ font-size:0.68rem; color:#9FC0EE; }
+.sidebar-nav{ flex:1; padding:14px 12px; display:flex; flex-direction:column; gap:4px; overflow-y:auto; }
+.nav-item{
+    display:flex; align-items:center; gap:11px; padding:11px 13px; border-radius:11px; border:none; background:transparent;
+    color:#C7DAF5; font-size:0.85rem; font-weight:500; text-align:left; width:100%; transition:background .15s,color .15s;
+}
+.nav-item i{ width:18px; text-align:center; font-size:0.92rem; color:#7FA6E0; transition:color .15s; }
+.nav-item .cnt{ margin-left:auto; font-family:var(--mono); font-size:0.68rem; background:rgba(255,255,255,0.08); padding:2px 7px; border-radius:20px; color:#BFD6F5; }
+.nav-item:hover{ background:rgba(255,255,255,0.06); color:#fff; }
+.nav-item.active{ background:#fff; color:var(--primary-dark); }
+.nav-item.active i{ color:var(--accent); }
+.nav-item.active .cnt{ background:var(--primary-soft); color:var(--primary); }
+.sidebar-foot{ padding:14px 18px 20px; border-top:1px solid rgba(255,255,255,0.08); }
+.sidebar-foot button{ background:none; border:none; color:#9FC0EE; font-size:0.74rem; display:flex; align-items:center; gap:7px; padding:6px 0; }
+.sidebar-foot button:hover{ color:#fff; }
+
+.main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+.topbar{
+    position:sticky; top:0; z-index:15; background:rgba(241,245,251,0.9); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border); padding:16px 26px; display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.topbar h2{ font-size:1.08rem; font-weight:700; margin:0; color:var(--primary-dark); }
+.topbar .sub{ font-size:0.72rem; color:var(--muted); margin-top:1px; }
+.topbar-actions{ margin-left:auto; display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.sync-chip{ font-size:0.7rem; color:var(--muted); font-family:var(--mono); display:flex; align-items:center; gap:6px; }
+.sync-chip .dot{ width:7px; height:7px; border-radius:50%; background:var(--success); box-shadow:0 0 0 3px var(--success-soft); }
+.btn{
+    display:inline-flex; align-items:center; gap:7px; padding:9px 15px; border-radius:10px; border:1.5px solid var(--border-strong);
+    background:#fff; color:var(--text-2); font-size:0.78rem; font-weight:600;
+}
+.btn:hover{ border-color:var(--primary); color:var(--primary); }
+.btn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+.btn.primary:hover{ background:var(--primary-dark); color:#fff; }
+.btn.ghost{ border-color:transparent; background:transparent; }
+
+.content{ padding:22px 26px 60px; }
+.panel{ display:none; }
+.panel.active{ display:block; animation:fadeIn .25s ease; }
+@keyframes fadeIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:none;} }
+
+.empty-hint{ text-align:center; padding:70px 20px; color:var(--muted); }
+.empty-hint i{ font-size:2.1rem; color:var(--border-strong); margin-bottom:12px; display:block; }
+.loading-hint{ text-align:center; padding:70px 20px; color:var(--muted); font-size:0.85rem; }
+.spin{ width:26px; height:26px; border-radius:50%; border:3px solid var(--border); border-top-color:var(--primary); margin:0 auto 14px; animation:spin .8s linear infinite; }
+@keyframes spin{ to{ transform:rotate(360deg); } }
+
+/* status chip */
+.chip{ display:inline-flex; align-items:center; gap:5px; padding:3px 10px; border-radius:20px; font-size:0.72rem; font-weight:600; white-space:nowrap; }
+.chip .dot{ width:6px; height:6px; border-radius:50%; }
+
+/* ───────── TAB1: table ───────── */
+.toolbar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.search-box{ position:relative; flex:1; min-width:220px; max-width:340px; }
+.search-box i{ position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.82rem; }
+.search-box input{ width:100%; padding:10px 12px 10px 34px; border-radius:10px; border:1.5px solid var(--border-strong); background:#fff; font-size:0.82rem; }
+.search-box input:focus{ border-color:var(--primary); }
+.status-filters{ display:flex; gap:6px; flex-wrap:wrap; }
+.status-pill{ padding:7px 13px; border-radius:20px; border:1.5px solid var(--border-strong); background:#fff; font-size:0.75rem; font-weight:600; color:var(--text-2); display:flex; align-items:center; gap:6px; }
+.status-pill b{ font-family:var(--mono); font-weight:600; }
+.status-pill.active{ border-color:var(--primary); background:var(--primary-soft); color:var(--primary-dark); }
+
+.table-card{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-xs); overflow:hidden; }
+.table-scroll{ overflow-x:auto; }
+table.data-table{ width:100%; border-collapse:collapse; font-size:0.82rem; min-width:820px; }
+table.data-table thead th{
+    text-align:left; padding:12px 14px; background:var(--surface-2); color:var(--text-2); font-weight:600;
+    font-size:0.72rem; text-transform:uppercase; letter-spacing:0.4px; border-bottom:1px solid var(--border); white-space:nowrap; cursor:pointer; user-select:none;
+}
+table.data-table thead th:hover{ color:var(--primary); }
+table.data-table thead th i{ margin-left:5px; font-size:0.62rem; opacity:0.55; }
+table.data-table tbody tr{ border-bottom:1px solid var(--border); cursor:pointer; transition:background .12s; }
+table.data-table tbody tr:hover{ background:var(--primary-xsoft); }
+table.data-table tbody td{ padding:12px 14px; vertical-align:middle; color:var(--text); }
+.td-id{ font-family:var(--mono); font-weight:600; color:var(--primary-dark); }
+.td-sub{ font-size:0.72rem; color:var(--muted); margin-top:2px; }
+.cell-seg-line{ font-size:0.8rem; line-height:1.5; }
+.cell-seg-line + .cell-seg-line{ margin-top:2px; }
+.cell-seg-line b{ color:var(--primary); font-weight:700; }
+.cell-seg-date{ color:var(--muted); font-size:0.74rem; }
+.seg-badge{ display:inline-flex; align-items:center; gap:4px; background:var(--accent-soft); color:var(--accent-dark); font-size:0.68rem; font-weight:700; padding:2px 7px; border-radius:20px; margin-left:6px; }
+.table-foot{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; font-size:0.74rem; color:var(--muted); border-top:1px solid var(--border); }
+
+/* ───────── TAB2: SLA tracking ───────── */
+.sla-summary{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin-bottom:18px; }
+.sla-sum-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:15px 17px; box-shadow:var(--shadow-xs); }
+.sla-sum-card .n{ font-family:var(--mono); font-size:1.5rem; font-weight:700; line-height:1; }
+.sla-sum-card .l{ font-size:0.72rem; color:var(--muted); margin-top:6px; }
+.sla-sum-card.overdue .n{ color:var(--danger); }
+.sla-sum-card.warn .n{ color:var(--warning); }
+.sla-sum-card.ok .n{ color:var(--success); }
+
+.sla-row{ display:flex; align-items:center; gap:16px; background:#fff; border:1px solid var(--border); border-left:4px solid var(--border-strong); border-radius:var(--radius); padding:14px 18px; margin-bottom:10px; cursor:pointer; transition:transform .12s, box-shadow .12s; }
+.sla-row:hover{ box-shadow:var(--shadow-sm); transform:translateY(-1px); }
+.sla-row.risk-overdue{ border-left-color:var(--danger); background:linear-gradient(90deg,var(--danger-soft) 0%, #fff 22%); }
+.sla-row.risk-urgent{ border-left-color:var(--danger); }
+.sla-row.risk-warn{ border-left-color:var(--warning); background:linear-gradient(90deg,var(--warning-soft) 0%, #fff 30%); }
+.sla-row.risk-ok{ border-left-color:var(--border-strong); }
+
+.sla-ring{ position:relative; width:52px; height:52px; flex-shrink:0; }
+.sla-ring svg{ transform:rotate(-90deg); }
+.sla-ring .track{ fill:none; stroke:var(--border); stroke-width:5; }
+.sla-ring .prog{ fill:none; stroke-width:5; stroke-linecap:round; transition:stroke-dashoffset .4s; }
+.sla-ring .lbl{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:var(--mono); }
+.sla-ring .lbl b{ font-size:0.82rem; line-height:1; }
+.sla-ring .lbl span{ font-size:0.5rem; color:var(--muted); }
+
+.sla-info{ flex:1; min-width:0; }
+.sla-info .top{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.sla-info .course{ font-weight:600; font-size:0.9rem; }
+.sla-info .meta{ font-size:0.76rem; color:var(--muted); margin-top:4px; display:flex; gap:14px; flex-wrap:wrap; }
+.sla-info .meta span{ display:inline-flex; align-items:center; gap:5px; }
+.sla-status-tag{ font-size:0.68rem; font-weight:700; padding:4px 10px; border-radius:20px; white-space:nowrap; }
+.sla-status-tag.overdue{ background:var(--danger-soft); color:var(--danger-fg); }
+.sla-status-tag.urgent{ background:var(--danger-soft); color:var(--danger-fg); }
+.sla-status-tag.warn{ background:var(--warning-soft); color:var(--warning-fg); }
+.sla-status-tag.ok{ background:var(--gray-soft); color:var(--gray-fg); }
+
+/* ───────── TAB3: report ───────── */
+.report-picker{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:18px; margin-bottom:20px; box-shadow:var(--shadow-xs); }
+.report-picker label{ font-size:0.78rem; font-weight:600; color:var(--text-2); display:block; margin-bottom:8px; }
+.report-picker .picker-row{ display:flex; gap:10px; flex-wrap:wrap; }
+.report-picker select{ flex:1; min-width:260px; padding:11px 12px; border-radius:10px; border:1.5px solid var(--border-strong); font-size:0.85rem; background:#fff; font-family:inherit; }
+#reportExtras{ margin-top:16px; padding-top:16px; border-top:1px dashed var(--border); }
+#reportExtras:empty{ display:none; margin:0; padding:0; border:none; }
+
+.report-doc{ background:#fff; border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-sm); overflow:hidden; }
+.report-head{ background:linear-gradient(135deg,#06264D 0%,#0B4DA2 100%); color:#fff; padding:26px 30px; display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.report-head h3{ margin:0 0 6px; font-size:1.15rem; }
+.report-head .rid{ font-family:var(--mono); font-size:0.82rem; color:#BFD6F5; }
+.report-head .actions{ display:flex; gap:8px; }
+.report-head .btn{ background:rgba(255,255,255,0.14); border-color:rgba(255,255,255,0.3); color:#fff; }
+.report-head .btn:hover{ background:rgba(255,255,255,0.24); color:#fff; }
+.report-body{ padding:26px 30px; }
+.rep-section{ margin-bottom:24px; }
+.rep-section:last-child{ margin-bottom:0; }
+.rep-section h4{ font-size:0.78rem; text-transform:uppercase; letter-spacing:0.5px; color:var(--primary); font-weight:700; margin:0 0 12px; display:flex; align-items:center; gap:8px; }
+.rep-section h4::after{ content:''; flex:1; height:1px; background:var(--border); }
+.rep-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px 22px; }
+.rep-field .l{ font-size:0.7rem; color:var(--muted); margin-bottom:3px; }
+.rep-field .v{ font-size:0.88rem; font-weight:600; color:var(--text); }
+.rep-seg-item{ display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface-2); border-radius:10px; margin-bottom:8px; font-size:0.84rem; }
+.rep-seg-item .num{ width:22px; height:22px; border-radius:50%; background:var(--primary); color:#fff; font-size:0.68rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rep-files a{ display:inline-flex; align-items:center; gap:7px; font-size:0.8rem; padding:8px 12px; background:var(--primary-xsoft); border-radius:9px; margin:0 8px 8px 0; text-decoration:none; }
+.rep-files a:hover{ background:var(--primary-soft); }
+.rep-timeline{ display:flex; gap:24px; flex-wrap:wrap; }
+.rep-tl-item{ display:flex; align-items:center; gap:10px; }
+.rep-tl-item .ic{ width:30px; height:30px; border-radius:50%; background:var(--success-soft); color:var(--success-fg); display:flex; align-items:center; justify-content:center; font-size:0.8rem; }
+
+/* ───────── FORMAL DOCUMENT (แบบฟอร์มขออนุมัติใช้สถานที่ สำหรับปริ้น) ───────── */
+.formal-doc{ font-family:'Sarabun','Noto Sans Thai',sans-serif; color:#111; background:#fff; }
+.formal-doc .report-body{ padding:34px 40px 40px; }
+.formal-header{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding-bottom:16px; border-bottom:2px solid #111; margin-bottom:6px; flex-wrap:wrap; }
+.formal-org{ display:flex; align-items:center; gap:12px; }
+.formal-org .mark{ width:42px; height:42px; border-radius:50%; border:2px solid #111; display:flex; align-items:center; justify-content:center; font-size:1.05rem; color:#111; flex-shrink:0; }
+.formal-org-name{ font-size:1rem; font-weight:700; line-height:1.35; }
+.formal-org-sub{ font-size:0.78rem; color:#444; }
+.formal-doc-meta{ text-align:right; font-size:0.82rem; line-height:1.9; color:#222; }
+.formal-doc-meta b{ font-family:var(--mono); font-weight:600; }
+.formal-title{ display:flex; align-items:center; justify-content:center; gap:12px; margin:18px 0 22px; flex-wrap:wrap; text-align:center; }
+.formal-title h3{ margin:0; font-size:1.18rem; font-weight:700; letter-spacing:0.2px; }
+.formal-title .formal-status{ display:flex; }
+
+table.formal-table{ width:100%; border-collapse:collapse; margin-bottom:8px; font-size:0.86rem; }
+table.formal-table th, table.formal-table td{ border:1px solid #111; padding:8px 11px; text-align:left; vertical-align:top; line-height:1.55; }
+table.formal-table th{ background:#F3F3F3; font-weight:600; width:17%; white-space:nowrap; }
+table.formal-table td{ font-weight:400; }
+table.formal-table tr.sec td{ background:#111; color:#fff; font-weight:700; padding:7px 11px; font-size:0.8rem; letter-spacing:0.3px; }
+table.formal-table tr.seg-head th{ background:#E4E4E4; width:auto; text-align:center; font-size:0.78rem; }
+table.formal-table td.center{ text-align:center; }
+
+.formal-signblock{ display:flex; gap:22px; margin-top:38px; flex-wrap:wrap; }
+.sign-box{ flex:1; min-width:230px; border:1.5px solid #111; border-radius:4px; padding:20px 18px 18px; text-align:center; }
+.sign-box .sign-role{ font-weight:700; font-size:0.9rem; margin-bottom:22px; }
+.sign-box .sign-line{ font-size:0.88rem; letter-spacing:0.5px; color:#222; }
+.sign-box .sign-name{ font-size:0.82rem; color:#222; margin-top:10px; }
+.sign-box .sign-pos, .sign-box .sign-date{ font-size:0.82rem; color:#333; margin-top:14px; }
+.formal-note{ margin-top:16px; font-size:0.72rem; color:#555; display:flex; align-items:flex-start; gap:6px; }
+
+/* ───────── TAB4: dashboard ───────── */
+.kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:22px; }
+.kpi-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-xs); position:relative; overflow:hidden; }
+.kpi-card .bar{ position:absolute; left:0; top:0; bottom:0; width:4px; }
+.kpi-card .n{ font-family:var(--mono); font-size:1.9rem; font-weight:700; line-height:1; }
+.kpi-card .l{ font-size:0.78rem; color:var(--muted); margin-top:8px; font-weight:500; }
+.kpi-card .pct{ font-size:0.7rem; color:var(--muted); margin-top:3px; font-family:var(--mono); }
+
+.dash-grid{ display:grid; grid-template-columns:1fr 1.3fr; gap:16px; }
+@media (max-width:960px){ .dash-grid{ grid-template-columns:1fr; } }
+.dash-card{ background:#fff; border:1px solid var(--border); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow-xs); }
+.dash-card h4{ margin:0 0 16px; font-size:0.86rem; font-weight:700; color:var(--primary-dark); }
+.donut-wrap{ display:flex; align-items:center; gap:22px; flex-wrap:wrap; }
+.donut-legend{ flex:1; min-width:150px; display:flex; flex-direction:column; gap:9px; }
+.donut-legend .item{ display:flex; align-items:center; gap:9px; font-size:0.78rem; }
+.donut-legend .sw{ width:11px; height:11px; border-radius:3px; flex-shrink:0; }
+.donut-legend .item b{ font-family:var(--mono); margin-left:auto; }
+
+.trend-bars{ display:flex; align-items:flex-end; gap:10px; height:150px; padding-top:10px; }
+.trend-col{ flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; gap:6px; }
+.trend-col .val{ font-size:0.68rem; font-family:var(--mono); color:var(--text-2); }
+.trend-col .bar{ width:100%; max-width:34px; background:linear-gradient(180deg,var(--primary-light),var(--primary)); border-radius:6px 6px 3px 3px; min-height:3px; }
+.trend-col .lbl{ font-size:0.66rem; color:var(--muted); margin-top:2px; }
+
+.callout{ margin-top:16px; padding:14px 16px; border-radius:12px; background:var(--warning-soft); border:1px solid #FDE68A; display:flex; align-items:center; gap:12px; font-size:0.82rem; color:var(--warning-fg); }
+.callout b{ font-family:var(--mono); }
+.callout .go{ margin-left:auto; }
+
+/* ───────── DETAIL DRAWER ───────── */
+.drawer-overlay{ position:fixed; inset:0; background:rgba(6,20,45,0.45); z-index:90; opacity:0; pointer-events:none; transition:opacity .2s; }
+.drawer-overlay.show{ opacity:1; pointer-events:auto; }
+.drawer{ position:fixed; top:0; right:-460px; width:440px; max-width:92vw; height:100vh; background:#fff; z-index:95; box-shadow:-14px 0 40px rgba(6,20,45,0.2); transition:right .25s ease; display:flex; flex-direction:column; }
+.drawer.show{ right:0; }
+.drawer-head{ padding:20px 22px; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:10px; }
+.drawer-head .x{ margin-left:auto; background:none; border:none; font-size:1.1rem; color:var(--muted); }
+.drawer-body{ padding:20px 22px; overflow-y:auto; flex:1; }
+.drawer-foot{ padding:16px 22px; border-top:1px solid var(--border); }
+
+/* ───────── MOBILE ───────── */
+@media (max-width:820px){
+    #appShell.ready{ flex-direction:column; }
+    .sidebar{ width:100%; height:auto; position:sticky; top:0; flex-direction:row; overflow-x:auto; }
+    .sidebar-brand{ border-bottom:none; border-right:1px solid rgba(255,255,255,0.08); flex-shrink:0; }
+    .sidebar-nav{ flex-direction:row; padding:10px; }
+    .nav-item{ white-space:nowrap; }
+    .nav-item .cnt{ display:none; }
+    .sidebar-foot{ display:none; }
+    .content{ padding:16px 14px 50px; }
+    .topbar{ padding:14px 16px; }
+    .dash-grid{ grid-template-columns:1fr; }
+}
+
+/* ───────── PRINT ───────── */
+@media print{
+    .sidebar, .topbar, .toolbar, .report-picker, .table-foot, .drawer, .drawer-overlay{ display:none !important; }
+    body, .content{ background:#fff !important; padding:0 !important; }
+    #appShell.ready{ display:block !important; }
+    .panel{ display:none !important; }
+    .panel.active{ display:block !important; }
+    .report-doc{ box-shadow:none !important; border:none !important; }
+    .report-head{ -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    .formal-doc, .formal-doc *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+    @page{ size:A4; margin:14mm; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN GATE ══════════ -->
+<div id="loginGate">
+    <div class="login-card">
+        <div class="login-mark"><i class="fas fa-shield-halved"></i></div>
+        <h1>Admin Dashboard</h1>
+        <p>ระบบติดตามสถานะการจองห้องประชุม / ที่พัก<br>ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</p>
+        <form id="loginForm">
+            <div class="login-field">
+                <label for="adminKeyInput">รหัสผ่านผู้ดูแลระบบ (Admin Key)</label>
+                <input type="password" id="adminKeyInput" autocomplete="off" placeholder="••••••••••••" required>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn"><i class="fas fa-right-to-bracket"></i>&nbsp; เข้าสู่ระบบ</button>
+        </form>
+        <div class="login-err" id="loginErr"></div>
+        <div class="login-hint">
+            <i class="fas fa-circle-info"></i> สามารถขอรับรหัสผ่านจากแผนกเทคโลโลยีสารสนเทศและสื่อสาร
+        </div>
+    </div>
+</div>
+
+<!-- ══════════ APP SHELL ══════════ -->
+<div id="appShell">
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="mark"><i class="fas fa-bolt"></i></div>
+            <div class="txt"><b>ศฝฟ. Admin</b><span>Booking Control Center</span></div>
+        </div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-tab="tab1"><i class="fas fa-table-list"></i> ข้อมูลการจองทั้งหมด <span class="cnt" id="navCnt1">0</span></button>
+            <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ <span class="cnt" id="navCnt2">0</span></button>
+            <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่ </button>
+            <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปข้อมูล </button>
+        </nav>
+        <div class="sidebar-foot">
+            <button id="logoutBtn"><i class="fas fa-arrow-right-from-bracket"></i> ออกจากระบบ</button>
+        </div>
+    </aside>
+
+    <div class="main">
+        <header class="topbar">
+            <div>
+                <h2 id="topbarTitle">ข้อมูลการจองทั้งหมด</h2>
+                <div class="sub" id="topbarSub">ทุกสถานะ ทุกผู้จอง</div>
+            </div>
+            <div class="topbar-actions">
+                <span class="sync-chip"><span class="dot"></span> อัปเดตล่าสุด <span id="syncTime">-</span></span>
+                <button class="btn" id="refreshBtn"><i class="fas fa-rotate"></i> รีเฟรชข้อมูล</button>
+            </div>
+        </header>
+
+        <div class="content">
+            <div id="loadingState" class="loading-hint"><div class="spin"></div>กำลังโหลดข้อมูลการจอง...</div>
+
+            <!-- TAB 1 -->
+            <section class="panel active" id="tab1">
+                <div class="toolbar">
+                    <div class="search-box">
+                        <i class="fas fa-magnifying-glass"></i>
+                        <input type="text" id="searchInput" placeholder="ค้นหา Booking ID, ชื่อผู้จอง, หลักสูตร, หน่วยงาน...">
+                    </div>
+                    <div class="status-filters" id="statusFilters"></div>
+                    <button class="btn" id="exportCsvBtn"><i class="fas fa-download"></i> ส่งออก CSV</button>
+                </div>
+                <div class="table-card">
+                    <div class="table-scroll">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th data-sort="bookingId">Booking ID <i class="fas fa-sort"></i></th>
+                                    <th data-sort="fullName">ผู้จอง / หน่วยงาน <i class="fas fa-sort"></i></th>
+                                    <th data-sort="courseName">หลักสูตร <i class="fas fa-sort"></i></th>
+                                    <th data-sort="startDate">วันที่จัดอบรม <i class="fas fa-sort"></i></th>
+                                    <th data-sort="room">ห้องประชุม</th>
+                                    <th data-sort="numRooms">ที่พัก</th>
+                                    <th data-sort="status">สถานะ <i class="fas fa-sort"></i></th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                        </table>
+                    </div>
+                    <div class="table-foot"><span id="tableFootInfo">แสดง 0 รายการ</span></div>
+                </div>
+            </section>
+
+            <!-- TAB 2 -->
+            <section class="panel" id="tab2">
+                <div class="sla-summary" id="slaSummary"></div>
+                <div id="slaList"></div>
+            </section>
+
+            <!-- TAB 3 -->
+            <section class="panel" id="tab3">
+                <div class="report-picker">
+                    <label for="reportSelect"><i class="fas fa-magnifying-glass"></i> เลือก Booking ID เพื่อดึงข้อมูลมาสรุปเป็นรายงาน</label>
+                    <div class="picker-row">
+                        <select id="reportSelect">
+                            <option value="">— เลือก Booking ID —</option>
+                        </select>
+                        <button class="btn primary" id="printReportBtn"><i class="fas fa-print"></i> พิมพ์รายงาน</button>
+                    </div>
+                    <div id="reportExtras"></div>
+                </div>
+                <div id="reportArea"></div>
+            </section>
+
+            <!-- TAB 4 -->
+            <section class="panel" id="tab4">
+                <div class="kpi-grid" id="kpiGrid"></div>
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <h4><i class="fas fa-chart-pie"></i> สัดส่วนตามสถานะจริง</h4>
+                        <div class="donut-wrap">
+                            <svg id="donutSvg" width="150" height="150" viewBox="0 0 150 150"></svg>
+                            <div class="donut-legend" id="donutLegend"></div>
+                        </div>
+                        <div class="callout" id="slaCallout" style="display:none;">
+                            <i class="fas fa-triangle-exclamation"></i>
+                            <span>รอยืนยันภายใน 30 วัน: <b id="slaCalloutN">0</b> รายการ</span>
+                            <button class="btn ghost go" id="calloutGoBtn" style="color:var(--warning-fg);border-color:#FDE68A;">ไปที่หน้าติดตามสถานะ →</button>
+                        </div>
+                    </div>
+                    <div class="dash-card">
+                        <h4><i class="fas fa-chart-column"></i> จำนวนการจองที่ยื่นเข้ามา (6 เดือนล่าสุด)</h4>
+                        <div class="trend-bars" id="trendBars"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<div class="drawer" id="drawer">
+    <div class="drawer-head">
+        <div>
+            <div style="font-family:var(--mono);font-size:0.78rem;color:var(--muted);" id="drawerId">-</div>
+            <div style="font-size:1rem;font-weight:700;margin-top:2px;" id="drawerTitle">-</div>
+        </div>
+        <button class="x" id="drawerClose"><i class="fas fa-xmark"></i></button>
+    </div>
+    <div class="drawer-body" id="drawerBody"></div>
+    <div class="drawer-foot">
+        <button class="btn primary" id="drawerReportBtn" style="width:100%;justify-content:center;"><i class="fas fa-file-lines"></i> ดูรายงานฉบับเต็ม</button>
+    </div>
+</div>
+
+<script>
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
+
+const STATUS_META = {
+    Approved:  { label:'Approved',  bg:'var(--success-soft)', fg:'var(--success-fg)', dot:'var(--success)'  },
+    Confirmed: { label:'Confirmed', bg:'var(--info-soft)',    fg:'var(--info-fg)',    dot:'var(--primary)'  },
+    Completed: { label:'Completed', bg:'var(--gray-soft)',    fg:'var(--gray-fg)',    dot:'var(--muted)'    },
+    Cancel:    { label:'Cancel',    bg:'var(--danger-soft)',  fg:'var(--danger-fg)',  dot:'var(--danger)'   }
+};
+const STATUS_ORDER = ['Approved','Confirmed','Completed','Cancel'];
+const SLA_WINDOW_DAYS = 30;
+
+let allBookings = [];
+let activeStatusFilter = 'ALL';
+let searchTerm = '';
+let sortState = { col:'startDate', dir:'asc' };
+
+document.getElementById('loginForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    const key = document.getElementById('adminKeyInput').value.trim();
+    if (!key) return;
+    attemptLogin(key);
+});
+
+async function attemptLogin(key){
+    const btn = document.getElementById('loginBtn');
+    const errBox = document.getElementById('loginErr');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; กำลังตรวจสอบ...';
+    errBox.textContent = '';
+    try {
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=adminGetBookings&adminKey=${encodeURIComponent(key)}`);
+        const result = await res.json();
+        if (!result.success) {
+            errBox.textContent = result.message || 'รหัสผ่านไม่ถูกต้อง';
+            btn.disabled = false; btn.innerHTML = '<i class="fas fa-right-to-bracket"></i>&nbsp; เข้าสู่ระบบ';
+            return;
+        }
+        sessionStorage.setItem('adminKey', key);
+        allBookings = result.bookings || [];
+        document.getElementById('syncTime').textContent = result.generatedAt || '-';
+        enterApp();
+    } catch (err) {
+        errBox.textContent = 'เชื่อมต่อ backend ไม่สำเร็จ กรุณาตรวจสอบ GAS_WEB_APP_URL';
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-right-to-bracket"></i>&nbsp; เข้าสู่ระบบ';
+    }
+}
+
+function enterApp(){
+    document.getElementById('loginGate').style.display = 'none';
+    document.getElementById('appShell').classList.add('ready');
+    document.getElementById('loadingState').style.display = 'none';
+    goToTab('tab1'); // เข้าสู่ระบบแล้วให้เริ่มที่หน้า "ข้อมูลการจองทั้งหมด" เสมอ
+    renderAll();
+}
+
+document.getElementById('logoutBtn').addEventListener('click', function(){
+    sessionStorage.removeItem('adminKey');
+    location.reload();
+});
+
+/* พยายาม auto-login ถ้ามี key เก็บไว้ใน session แล้ว */
+(async function autoLogin(){
+    const saved = sessionStorage.getItem('adminKey');
+    if (saved) { await attemptLogin(saved); document.getElementById('adminKeyInput').value = saved; }
+})();
+
+/* ══════════════════════ REFRESH ══════════════════════ */
+document.getElementById('refreshBtn').addEventListener('click', reloadData);
+async function reloadData(){
+    const key = sessionStorage.getItem('adminKey');
+    if (!key) return;
+    const btn = document.getElementById('refreshBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังโหลด...';
+    try {
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=adminGetBookings&adminKey=${encodeURIComponent(key)}`);
+        const result = await res.json();
+        if (result.success) {
+            allBookings = result.bookings || [];
+            document.getElementById('syncTime').textContent = result.generatedAt || '-';
+            renderAll();
+        }
+    } catch (err) { console.error(err); }
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-rotate"></i> รีเฟรชข้อมูล';
+}
+
+/* ══════════════════════ NAV ══════════════════════ */
+const TAB_META = {
+    tab1:{ title:'ข้อมูลการจองทั้งหมด', sub:'ทุกสถานะ ทุกผู้จอง' },
+    tab2:{ title:'ติดตามสถานะ (SLA)', sub:'รายการที่ Approved แล้วแต่ยังไม่ยืนยันการจอง เรียงตามวันที่จัดใกล้สุดก่อน' },
+    tab3:{ title:'รายงานการใช้สถานที่', sub:'เลือก Booking ID เพื่อสรุปข้อมูลเป็นรายงาน' },
+    tab4:{ title:'Dashboard สรุปภาพรวม', sub:'สถิติการจองทั้งหมดตามสถานะจริง' }
+};
+document.querySelectorAll('.nav-item').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.dataset.tab;
+        document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+        document.getElementById(tab).classList.add('active');
+        document.getElementById('topbarTitle').textContent = TAB_META[tab].title;
+        document.getElementById('topbarSub').textContent = TAB_META[tab].sub;
+        window.scrollTo(0,0);
+    });
+});
+function goToTab(tab){ document.querySelector(`.nav-item[data-tab="${tab}"]`).click(); }
+
+/* ══════════════════════ HELPERS ══════════════════════ */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function todayMidnight(){ const d=new Date(); d.setHours(0,0,0,0); return d; }
+function parseYMD(s){ if(!s) return null; const [y,m,d]=s.split('-').map(Number); if(!y) return null; const dt=new Date(y,m-1,d); dt.setHours(0,0,0,0); return dt; }
+function fmtThaiDate(s){ const d=parseYMD(s); if(!d) return '-'; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); return `${dd}/${mm}/${d.getFullYear()}`; }
+function daysUntil(s){ const d=parseYMD(s); if(!d) return null; return Math.round((d - todayMidnight())/86400000); }
+function statusChip(status){
+    const m = STATUS_META[status] || { label:status||'-', bg:'var(--gray-soft)', fg:'var(--gray-fg)', dot:'var(--muted)' };
+    return `<span class="chip" style="background:${m.bg};color:${m.fg};"><span class="dot" style="background:${m.dot};"></span>${esc(m.label)}</span>`;
+}
+function roomSummary(b){
+    const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
+    if (!segs.length) return '<span style="color:var(--muted);">-</span>';
+    return segs.map((s,i)=>`<div class="cell-seg-line">${segs.length>1?`<b>${i+1}.</b> `:''}${esc(s.room||'-')} <span class="cell-seg-date">(${fmtThaiDate(s.startDate)} - ${fmtThaiDate(s.endDate)})</span></div>`).join('');
+}
+function accSummary(b){
+    if (!b.accommodation || b.accommodation !== 'ต้องการ') return '<span style="color:var(--muted);">ไม่ใช้ที่พัก</span>';
+    const std = parseInt(b.numRooms)||0, vip = parseInt(b.viprooms)||0;
+    const roomsLine = `<div class="cell-seg-line">${std} ห้อง${vip>0?` <span style="color:var(--accent-dark);">(VIP ${vip})</span>`:''}</div>`;
+    const windows = getAccommodationWindows(b);
+    if (!windows.length) return roomsLine;
+    const windowsHtml = windows.map((w,i)=>`<div class="cell-seg-line">${windows.length>1?`<b>${i+1}.</b> `:''}${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} <span class="cell-seg-date">(${nightsBetween(w.checkin,w.checkout)} คืน)</span></div>`).join('');
+    return roomsLine + windowsHtml;
+}
+
+/* ══════════════════════ RENDER ALL ══════════════════════ */
+function renderAll(){
+    buildStatusFilters();
+    renderTable();
+    renderSla();
+    renderReportPicker();
+    renderDashboard();
+}
+
+/* ── TAB 1 ── */
+function buildStatusFilters(){
+    const counts = { ALL: allBookings.length };
+    STATUS_ORDER.forEach(s=> counts[s] = allBookings.filter(b=>b.status===s).length);
+    const wrap = document.getElementById('statusFilters');
+    const items = [['ALL','ทั้งหมด']].concat(STATUS_ORDER.map(s=>[s, STATUS_META[s].label]));
+    wrap.innerHTML = items.map(([key,label])=>`
+        <button class="status-pill ${activeStatusFilter===key?'active':''}" data-status="${key}">
+            ${esc(label)} <b>${counts[key]||0}</b>
+        </button>`).join('');
+    wrap.querySelectorAll('.status-pill').forEach(btn=>{
+        btn.addEventListener('click', ()=>{ activeStatusFilter = btn.dataset.status; renderTable(); buildStatusFilters(); });
+    });
+}
+document.getElementById('searchInput').addEventListener('input', function(e){ searchTerm = e.target.value.trim().toLowerCase(); renderTable(); });
+document.querySelectorAll('th[data-sort]').forEach(th=>{
+    th.addEventListener('click', ()=>{
+        const col = th.dataset.sort;
+        if (sortState.col === col) sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+        else sortState = { col, dir:'asc' };
+        renderTable();
+    });
+});
+
+function getFilteredBookings(){
+    return allBookings.filter(b=>{
+        if (activeStatusFilter !== 'ALL' && b.status !== activeStatusFilter) return false;
+        if (searchTerm){
+            const hay = [b.bookingId,b.fullName,b.courseName,b.department,b.displayName].join(' ').toLowerCase();
+            if (!hay.includes(searchTerm)) return false;
+        }
+        return true;
+    });
+}
+function sortBookings(list){
+    const { col, dir } = sortState;
+    const mul = dir === 'asc' ? 1 : -1;
+    return list.slice().sort((a,b)=>{
+        let va = a[col], vb = b[col];
+        if (col === 'numRooms'){ va = parseInt(a.numRooms)||0; vb = parseInt(b.numRooms)||0; }
+        if (va == null) va=''; if (vb == null) vb='';
+        if (va < vb) return -1*mul;
+        if (va > vb) return 1*mul;
+        return 0;
+    });
+}
+function renderTable(){
+    const list = sortBookings(getFilteredBookings());
+    const tbody = document.getElementById('tableBody');
+    if (list.length === 0){
+        tbody.innerHTML = `<tr><td colspan="7"><div class="empty-hint"><i class="fas fa-inbox"></i>ไม่พบข้อมูลการจองตามเงื่อนไขที่เลือก</div></td></tr>`;
+    } else {
+        tbody.innerHTML = list.map(b=>`
+            <tr data-id="${esc(b.bookingId)}">
+                <td class="td-id">${esc(b.bookingId)}</td>
+                <td>${esc(b.fullName)}<div class="td-sub">${esc(b.department||'-')}</div></td>
+                <td>${esc(b.courseName)}</td>
+                <td>${fmtThaiDate(b.startDate)}${b.endDate && b.endDate!==b.startDate ? ' - '+fmtThaiDate(b.endDate) : ''}</td>
+                <td>${roomSummary(b)}</td>
+                <td>${accSummary(b)}</td>
+                <td>${statusChip(b.status)}</td>
+            </tr>`).join('');
+        tbody.querySelectorAll('tr[data-id]').forEach(tr=>{
+            tr.addEventListener('click', ()=> openDrawer(tr.dataset.id));
+        });
+    }
+    document.getElementById('tableFootInfo').textContent = `แสดง ${list.length} จากทั้งหมด ${allBookings.length} รายการ`;
+    document.getElementById('navCnt1').textContent = allBookings.length;
+}
+
+/* CSV export */
+document.getElementById('exportCsvBtn').addEventListener('click', ()=>{
+    const list = sortBookings(getFilteredBookings());
+    const headers = ['Booking ID','วันที่ยื่น','ผู้จอง','หน่วยงาน','หลักสูตร','วันที่เริ่ม','วันที่สิ้นสุด','ห้องประชุม','จำนวนห้องพัก','ห้อง VIP','สถานะ'];
+    const rows = list.map(b=>[b.bookingId,b.timestamp,b.fullName,b.department,b.courseName,b.startDate,b.endDate,b.room,b.numRooms,b.viprooms,b.status]);
+    const csv = [headers, ...rows].map(r=>r.map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+    const blob = new Blob(['\uFEFF'+csv], { type:'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `bookings_${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+});
+
+/* ── TAB 2: SLA ── */
+function slaRisk(days){
+    if (days < 0) return 'overdue';
+    if (days <= 7) return 'urgent';
+    if (days <= SLA_WINDOW_DAYS) return 'warn';
+    return 'ok';
+}
+function renderSla(){
+    const pending = allBookings.filter(b=>b.status==='Approved');
+    const withDays = pending.map(b=>({ b, days: daysUntil(b.startDate) })).filter(x=>x.days!==null);
+    withDays.sort((a,b)=> a.days - b.days);
+
+    const overdue = withDays.filter(x=>x.days<0).length;
+    const warn = withDays.filter(x=>x.days>=0 && x.days<=SLA_WINDOW_DAYS).length;
+    const ok = withDays.filter(x=>x.days>SLA_WINDOW_DAYS).length;
+
+    document.getElementById('slaSummary').innerHTML = `
+        <div class="sla-sum-card"><div class="n">${withDays.length}</div><div class="l">รอยืนยันทั้งหมด</div></div>
+        <div class="sla-sum-card overdue"><div class="n">${overdue}</div><div class="l"><i class="fas fa-fire"></i> เลยกำหนดวันจัดแล้ว</div></div>
+        <div class="sla-sum-card warn"><div class="n">${warn}</div><div class="l"><i class="fas fa-triangle-exclamation"></i> ภายใน ${SLA_WINDOW_DAYS} วัน (ต้องตามเร่ง)</div></div>
+        <div class="sla-sum-card ok"><div class="n">${ok}</div><div class="l">เกิน ${SLA_WINDOW_DAYS} วัน (ยังไม่เร่งด่วน)</div></div>`;
+
+    const listEl = document.getElementById('slaList');
+    if (withDays.length === 0){
+        listEl.innerHTML = `<div class="empty-hint"><i class="fas fa-circle-check"></i>ไม่มีรายการ Approved ที่ค้างยืนยันอยู่ในขณะนี้</div>`;
+    } else {
+        listEl.innerHTML = withDays.map(({b,days})=>{
+            const risk = slaRisk(days);
+            const ringPct = Math.max(0, Math.min(1, 1 - (days / SLA_WINDOW_DAYS)));
+            const r = 21, c = 2*Math.PI*r;
+            const ringColor = risk==='overdue'||risk==='urgent' ? 'var(--danger)' : risk==='warn' ? 'var(--warning)' : 'var(--success)';
+            const dayLabel = days < 0 ? `+${Math.abs(days)}` : days;
+            const tagText = risk==='overdue' ? `เลยกำหนด ${Math.abs(days)} วัน` : risk==='urgent' ? `ด่วน! เหลือ ${days} วัน` : risk==='warn' ? `เหลือ ${days} วัน` : `เหลือ ${days} วัน`;
+            const tagClass = risk==='overdue' ? 'overdue' : risk==='urgent' ? 'urgent' : risk==='warn' ? 'warn' : 'ok';
+            return `
+            <div class="sla-row risk-${risk}" data-id="${esc(b.bookingId)}">
+                <div class="sla-ring">
+                    <svg width="52" height="52" viewBox="0 0 52 52">
+                        <circle class="track" cx="26" cy="26" r="${r}"></circle>
+                        <circle class="prog" cx="26" cy="26" r="${r}" stroke="${ringColor}"
+                            stroke-dasharray="${c}" stroke-dashoffset="${c*(1-Math.min(1,Math.max(0,ringPct)))}"></circle>
+                    </svg>
+                    <div class="lbl"><b>${dayLabel}</b><span>วัน</span></div>
+                </div>
+                <div class="sla-info">
+                    <div class="top">
+                        <span class="course">${esc(b.courseName)}</span>
+                        <span class="td-id" style="font-family:var(--mono);font-size:0.72rem;color:var(--muted);">${esc(b.bookingId)}</span>
+                    </div>
+                    <div class="meta">
+                        <span><i class="fas fa-user"></i> ${esc(b.fullName)} · ${esc(b.department||'-')}</span>
+                        <span><i class="fas fa-calendar-day"></i> ${fmtThaiDate(b.startDate)}</span>
+                        <span><i class="fas fa-door-open"></i> ${roomSummary(b)}</span>
+                    </div>
+                </div>
+                <span class="sla-status-tag ${tagClass}">${tagText}</span>
+            </div>`;
+        }).join('');
+        listEl.querySelectorAll('.sla-row').forEach(row=>{
+            row.addEventListener('click', ()=> openDrawer(row.dataset.id));
+        });
+    }
+    document.getElementById('navCnt2').textContent = withDays.length;
+}
+
+/* ── TAB 3: report ── */
+function renderReportPicker(){
+    const sel = document.getElementById('reportSelect');
+    const sorted = allBookings.slice().sort((a,b)=> (b.timestamp||'').localeCompare(a.timestamp||''));
+    sel.innerHTML = '<option value="">— เลือก Booking ID —</option>' +
+        sorted.map(b=>`<option value="${esc(b.bookingId)}">${esc(b.bookingId)} — ${esc(b.courseName)} (${esc(b.fullName)})</option>`).join('');
+    sel.onchange = ()=> renderReport(sel.value);
+}
+document.getElementById('printReportBtn').addEventListener('click', ()=> window.print());
+
+function renderReport(bookingId){
+    const area = document.getElementById('reportArea');
+    const extras = document.getElementById('reportExtras');
+    if (!bookingId){
+        area.innerHTML = `<div class="empty-hint"><i class="fas fa-file-circle-question"></i>กรุณาเลือก Booking ID เพื่อดูรายงาน</div>`;
+        extras.innerHTML = '';
+        return;
+    }
+    const b = allBookings.find(x=>x.bookingId===bookingId);
+    if (!b){
+        area.innerHTML = `<div class="empty-hint"><i class="fas fa-triangle-exclamation"></i>ไม่พบข้อมูล Booking นี้</div>`;
+        extras.innerHTML = '';
+        return;
+    }
+
+    const segs = Array.isArray(b.segments) && b.segments.length ? b.segments : (b.room ? [{room:b.room, startDate:b.startDate, endDate:b.endDate}] : []);
+    const files = [
+        b.approvalFileUrl ? { label:'ไฟล์อนุมัติ/หนังสือขออนุมัติ', url:b.approvalFileUrl } : null,
+        b.attendeeListFileUrl ? { label:'รายชื่อผู้เข้าอบรม', url:b.attendeeListFileUrl } : null,
+        b.foodOrderFileUrl ? { label:'ใบสั่งอาหาร', url:b.foodOrderFileUrl } : null
+    ].filter(Boolean);
+    // ช่วงวันที่เข้าพัก (เช็คอิน-เช็คเอาท์) — คำนวณแบบเดียวกับ flexmessage ยืนยันการจอง (buildAccommodationFlexBlock_ ใน code.gs):
+    // อิงจากแต่ละ segment ห้องประชุม ไม่ใช่แค่วันที่เข้าพักรวมช่วงเดียว
+    const accWindows = b.accommodation === 'ต้องการ' ? getAccommodationWindows(b) : [];
+
+    area.innerHTML = `
+    <div class="report-doc formal-doc">
+        <div class="report-body">
+            <div class="formal-header">
+                <div class="formal-org">
+                    <div>
+                        <div class="formal-org-name">ศูนย์ฝึกปฏิบัติการไฟฟ้าแรงสูง</div>
+                        <div class="formal-org-sub">ระบบจองห้องประชุมและที่พัก</div>
+                    </div>
+                </div>
+                <div class="formal-doc-meta">
+                    <div>เลขที่อ้างอิงการจอง: <b>${esc(b.bookingId)}</b></div>
+                    <div>วันที่ออกเอกสาร: <b>${new Date().toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'numeric'})}</b></div>
+                </div>
+            </div>
+            <div class="formal-title">
+                <h3>แบบฟอร์มขออนุมัติใช้สถานที่จัดฝึกอบรม / ประชุม</h3>
+                <div class="formal-status">${statusChip(b.status)}</div>
+            </div>
+
+            <table class="formal-table">
+                <tbody>
+                    <tr class="sec"><td colspan="4">1. ข้อมูลผู้ขอใช้สถานที่</td></tr>
+                    <tr><th>ชื่อ-สกุล</th><td>${esc(b.fullName)}</td><th>หน่วยงาน</th><td>${esc(b.department||'-')}</td></tr>
+                    <tr><th>เบอร์โทรศัพท์</th><td>${esc(b.phone||'-')}</td><th>รหัสพนักงาน</th><td>${esc(b.employeeId||'-')}</td></tr>
+
+                    <tr class="sec"><td colspan="4">2. ข้อมูลการจัดอบรม / ประชุม</td></tr>
+                    <tr><th>หลักสูตร/กิจกรรม</th><td colspan="3">${esc(b.courseName)}</td></tr>
+                    <tr><th>จำนวนผู้เข้าร่วม</th><td>${esc(b.attendees||'-')} คน</td><th>รูปแบบห้อง</th><td>${esc(b.roomSetup||'-')}${b.roomSetupOther?' ('+esc(b.roomSetupOther)+')':''}</td></tr>
+
+                    <tr class="sec"><td colspan="4">3. ห้องประชุมที่ขอใช้ (${segs.length} ช่วง)</td></tr>
+                    <tr class="seg-head"><th style="width:8%;">ลำดับ</th><th>ห้องประชุม</th><th colspan="2">วันที่ใช้งาน</th></tr>
+                    ${segs.length ? segs.map((s,i)=>`<tr><td class="center">${i+1}</td><td>${esc(s.room)}</td><td colspan="2">${fmtThaiDate(s.startDate)} - ${fmtThaiDate(s.endDate)}</td></tr>`).join('')
+                        : `<tr><td colspan="4" class="center">ไม่มีข้อมูล</td></tr>`}
+
+                    <tr class="sec"><td colspan="4">4. ที่พัก</td></tr>
+                    <tr><th>ต้องการที่พัก</th><td>${esc(b.accommodation||'-')}</td><th>จำนวนห้องพัก</th><td>${esc(b.numRooms||0)} ห้อง (VIP ${esc(b.viprooms||0)})</td></tr>
+                    ${accWindows.length ? accWindows.map((w,i)=>`<tr><th>ช่วงเข้าพักที่ ${i+1}</th><td colspan="3">${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} (${nightsBetween(w.checkin,w.checkout)} คืน)</td></tr>`).join('') : ''}
+
+                    <tr class="sec"><td colspan="4">5. อุปกรณ์ / อาหาร / กิจกรรมเพิ่มเติม</td></tr>
+                    <tr><th>อุปกรณ์เพิ่มเติม</th><td colspan="3">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</td></tr>
+                    <tr><th>กิจกรรมภาคสนาม</th><td colspan="3">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</td></tr>
+                    <tr><th>อาหาร</th><td>${esc(b.foodBooking||'-')}</td><th>ร้านอาหาร/ร้านว่าง</th><td>${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</td></tr>
+                </tbody>
+            </table>
+
+            <div class="formal-signblock">
+                <div class="sign-box">
+                    <div class="sign-role">ผู้ขอใช้สถานที่</div>
+                    <div class="sign-line">ลงชื่อ ......................................................</div>
+                    <div class="sign-name">( ${esc(b.fullName || '......................................................')} )</div>
+                    <div class="sign-date">วันที่ ............ / ............ / ............</div>
+                </div>
+                <div class="sign-box">
+                    <div class="sign-role">ผู้อนุมัติใช้สถานที่</div>
+                    <div class="sign-line">ลงชื่อ ......................................................</div>
+                    <div class="sign-name">( ...................................................... )</div>
+                    <div class="sign-pos">ตำแหน่ง ......................................................</div>
+                    <div class="sign-date">วันที่ ............ / ............ / ............</div>
+                </div>
+            </div>
+            <div class="formal-note"><i class="fas fa-circle-info"></i> ช่องลงนามผู้อนุมัติเว้นว่างไว้สำหรับลงนาม/ประทับตราจริงภายหลังการพิมพ์เอกสารฉบับนี้</div>
+        </div>
+    </div>`;
+
+    // เอกสารแนบ + ไทม์ไลน์ ย้ายมาไว้ที่ส่วนหัว "เลือก Booking ID..." แทน — ไม่ต้องปริ้นออกมาด้วย
+    extras.innerHTML = `
+        <div class="rep-section" style="margin-bottom:${files.length?'20':'0'}px;">
+            ${files.length ? `
+            <h4><i class="fas fa-paperclip"></i> เอกสารแนบ</h4>
+            <div class="rep-files">${files.map(f=>`<a href="${esc(f.url)}" target="_blank" rel="noopener"><i class="fas fa-file-arrow-down"></i>${esc(f.label)}</a>`).join('')}</div>
+            ` : `<div style="font-size:0.8rem;color:var(--muted);"><i class="fas fa-paperclip"></i> ไม่มีเอกสารแนบสำหรับรายการนี้</div>`}
+        </div>
+        <div class="rep-section" style="margin-bottom:0;">
+            <h4><i class="fas fa-timeline"></i> ไทม์ไลน์</h4>
+            <div class="rep-timeline">
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-paper-plane"></i></span><div><div class="rep-field"><div class="l">ยื่นคำขอจอง</div><div class="v">${esc(b.timestamp||'-')}</div></div></div></div>
+                <div class="rep-tl-item"><span class="ic"><i class="fas fa-check"></i></span><div><div class="rep-field"><div class="l">ยืนยันการจอง</div><div class="v">${b.confirmedAt ? fmtThaiDate(b.confirmedAt) : 'ยังไม่ยืนยัน'}</div></div></div></div>
+            </div>
+        </div>`;
+}
+
+/* ช่วงวันที่เข้าพัก (checkin/checkout) จาก segments — ตรรกะเดียวกับ getAccommodationWindowsFromSegments_ ใน code.gs
+   ที่ใช้สร้าง flexmessage ตอนยืนยันการจอง: checkin = วันเริ่มของ segment ลบ 1 วัน, checkout = วันสิ้นสุดของ segment */
+function getAccommodationWindows(b){
+    const segs = Array.isArray(b.segments) ? b.segments : [];
+    if (segs.length > 0){
+        return segs.map(s=>{
+            const ci = addDays(parseYMD(s.startDate), -1);
+            const co = parseYMD(s.endDate);
+            return { checkin: ci, checkout: co };
+        }).filter(w=>w.checkin && w.checkout);
+    }
+    if (b.checkin && b.checkout){
+        const ci = parseYMD(b.checkin), co = parseYMD(b.checkout);
+        if (ci && co) return [{ checkin: ci, checkout: co }];
+    }
+    return [];
+}
+function addDays(date, n){ if(!date) return null; const d = new Date(date); d.setDate(d.getDate()+n); return d; }
+function fmtDateObj(d){ if(!d) return '-'; const dd=String(d.getDate()).padStart(2,'0'); const mm=String(d.getMonth()+1).padStart(2,'0'); return `${dd}/${mm}/${d.getFullYear()}`; }
+function nightsBetween(ci,co){ if(!ci||!co) return 0; return Math.round((co-ci)/86400000); }
+
+/* ── TAB 4: dashboard ── */
+function renderDashboard(){
+    const total = allBookings.length;
+    const counts = {}; STATUS_ORDER.forEach(s=> counts[s] = allBookings.filter(b=>b.status===s).length);
+
+    document.getElementById('kpiGrid').innerHTML = `
+        <div class="kpi-card"><div class="bar" style="background:var(--primary);"></div><div class="n">${total}</div><div class="l">การจองทั้งหมด</div></div>
+        ${STATUS_ORDER.map(s=>{
+            const m = STATUS_META[s]; const n = counts[s]; const pct = total ? Math.round(n/total*100) : 0;
+            return `<div class="kpi-card"><div class="bar" style="background:${m.dot};"></div><div class="n" style="color:${m.dot};">${n}</div><div class="l">${m.label}</div><div class="pct">${pct}% ของทั้งหมด</div></div>`;
+        }).join('')}
+    `;
+
+    /* donut chart (สัดส่วนสถานะ) */
+    const svg = document.getElementById('donutSvg');
+    const cx=75, cy=75, rO=68, rI=44;
+    const colorMap = { Approved:'#16A34A', Confirmed:'#0B4DA2', Completed:'#9CA3AF', Cancel:'#e5484d' };
+    const legend = STATUS_ORDER.map(s=>({ s, n:counts[s], pct: total ? Math.round(counts[s]/total*100) : 0 }));
+
+    svg.innerHTML = total ? buildDonutPaths(cx,cy,rO,rI,counts,colorMap) + `<text x="75" y="70" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="22" font-weight="700" fill="var(--text)">${total}</text><text x="75" y="88" text-anchor="middle" font-family="Prompt, sans-serif" font-size="10" fill="var(--muted)">รายการ</text>`
+        : `<circle cx="75" cy="75" r="60" fill="none" stroke="var(--border)" stroke-width="20"/><text x="75" y="80" text-anchor="middle" font-size="12" fill="var(--muted)">ไม่มีข้อมูล</text>`;
+
+    document.getElementById('donutLegend').innerHTML = legend.map(l=>`
+        <div class="item"><span class="sw" style="background:${colorMap[l.s]};"></span>${STATUS_META[l.s].label}<b>${l.n} (${l.pct}%)</b></div>`).join('');
+
+    /* SLA callout */
+    const pendingWithin = allBookings.filter(b=>{
+        if (b.status !== 'Approved') return false;
+        const d = daysUntil(b.startDate);
+        return d !== null && d <= SLA_WINDOW_DAYS;
+    }).length;
+    const callout = document.getElementById('slaCallout');
+    if (pendingWithin > 0){
+        callout.style.display = 'flex';
+        document.getElementById('slaCalloutN').textContent = pendingWithin;
+    } else { callout.style.display = 'none'; }
+
+    /* trend bars: last 6 months by timestamp */
+    const now = new Date();
+    const buckets = [];
+    for (let i=5;i>=0;i--){
+        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+        buckets.push({ key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, label: d.toLocaleDateString('th-TH',{month:'short'}), count:0 });
+    }
+    allBookings.forEach(b=>{
+        if (!b.timestamp) return;
+        const key = b.timestamp.slice(0,7);
+        const bucket = buckets.find(x=>x.key===key);
+        if (bucket) bucket.count++;
+    });
+    const maxCount = Math.max(1, ...buckets.map(b=>b.count));
+    document.getElementById('trendBars').innerHTML = buckets.map(b=>`
+        <div class="trend-col">
+            <span class="val">${b.count}</span>
+            <div class="bar" style="height:${Math.max(4,(b.count/maxCount)*100)}%;"></div>
+            <span class="lbl">${b.label}</span>
+        </div>`).join('');
+}
+
+function buildDonutPaths(cx,cy,rO,rI,counts,colorMap){
+    const total = STATUS_ORDER.reduce((s,k)=>s+counts[k],0);
+    if (!total) return '';
+    let angle = -90;
+    let out = '';
+    STATUS_ORDER.forEach(s=>{
+        const n = counts[s]; if (!n) return;
+        const sweep = (n/total)*360;
+        out += arcPath(cx,cy,rO,rI,angle,angle+sweep,colorMap[s]);
+        angle += sweep;
+    });
+    return out;
+}
+function polar(cx,cy,r,angleDeg){ const a=(angleDeg-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; }
+function arcPath(cx,cy,rO,rI,startA,endA,fill){
+    // ป้องกันเคส 360 องศาเต็มวง (สถานะเดียวครองทั้งหมด)
+    let a0=startA+90, a1=endA+90;
+    const gap = a1-a0 >= 359.9 ? 0.4 : 0;
+    a1 -= gap;
+    const large = (a1-a0) > 180 ? 1 : 0;
+    const [x0,y0] = polar(cx,cy,rO,a0-90);
+    const [x1,y1] = polar(cx,cy,rO,a1-90);
+    const [x2,y2] = polar(cx,cy,rI,a1-90);
+    const [x3,y3] = polar(cx,cy,rI,a0-90);
+    return `<path d="M${x0},${y0} A${rO},${rO} 0 ${large} 1 ${x1},${y1} L${x2},${y2} A${rI},${rI} 0 ${large} 0 ${x3},${y3} Z" fill="${fill}"></path>`;
+}
+
+document.getElementById('calloutGoBtn').addEventListener('click', ()=> goToTab('tab2'));
+
+/* ══════════════════════ DETAIL DRAWER ══════════════════════ */
+const drawer = document.getElementById('drawer');
+const drawerOverlay = document.getElementById('drawerOverlay');
+let drawerBookingId = null;
+
+function openDrawer(bookingId){
+    const b = allBookings.find(x=>x.bookingId===bookingId);
+    if (!b) return;
+    drawerBookingId = bookingId;
+    document.getElementById('drawerId').textContent = b.bookingId;
+    document.getElementById('drawerTitle').textContent = b.courseName;
+    document.getElementById('drawerBody').innerHTML = `
+        <div class="rep-grid" style="margin-bottom:20px;">
+            <div class="rep-field"><div class="l">สถานะ</div><div class="v">${statusChip(b.status)}</div></div>
+            <div class="rep-field"><div class="l">ผู้จอง</div><div class="v">${esc(b.fullName)}</div></div>
+            <div class="rep-field"><div class="l">หน่วยงาน</div><div class="v">${esc(b.department||'-')}</div></div>
+            <div class="rep-field"><div class="l">วันที่จัด</div><div class="v">${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div></div>
+            <div class="rep-field"><div class="l">ห้องประชุม</div><div class="v">${roomSummary(b)}</div></div>
+            <div class="rep-field"><div class="l">ที่พัก</div><div class="v">${accSummary(b)}</div></div>
+        </div>`;
+    drawerOverlay.classList.add('show');
+    drawer.classList.add('show');
+}
+function closeDrawer(){ drawerOverlay.classList.remove('show'); drawer.classList.remove('show'); }
+document.getElementById('drawerClose').addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+document.getElementById('drawerReportBtn').addEventListener('click', ()=>{
+    closeDrawer();
+    goToTab('tab3');
+    document.getElementById('reportSelect').value = drawerBookingId;
+    renderReport(drawerBookingId);
+});
+document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
