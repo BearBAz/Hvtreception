@@ -822,8 +822,8 @@ function renderReport(bookingId){
             <table class="formal-table">
                 <tbody>
                     <tr class="sec"><td colspan="4">1. ข้อมูลผู้ขอใช้สถานที่</td></tr>
-                    <tr><th>ชื่อ-สกุล</th><td>${esc(b.fullName)}</td><th>หน่วยงาน</th><td>${esc(b.department||'-')}</td></tr>
-                    <tr><th>เบอร์โทรศัพท์</th><td>${esc(b.phone||'-')}</td><th>รหัสพนักงาน</th><td>${esc(b.employeeId||'-')}</td></tr>
+                    <tr><th>รหัสพนักงาน</th><td>${esc(b.employeeId||'-')}</td><th>ชื่อ-สกุล</th><td>${esc(b.fullName)}</td></tr>
+                    <tr><th>เบอร์โทรศัพท์</th><td>${esc(b.phone||'-')}</td><th>หน่วยงาน</th><td>${esc(b.department||'-')}</td></tr>
 
                     <tr class="sec"><td colspan="4">2. ข้อมูลการจัดอบรม / ประชุม</td></tr>
                     <tr><th>หลักสูตร/กิจกรรม</th><td colspan="3">${esc(b.courseName)}</td></tr>
