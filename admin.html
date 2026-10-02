@@ -839,7 +839,7 @@ function renderReport(bookingId){
                     ${accWindows.length ? accWindows.map((w,i)=>`<tr><th>ช่วงเข้าพักที่ ${i+1}</th><td colspan="3">${fmtDateObj(w.checkin)} - ${fmtDateObj(w.checkout)} (${nightsBetween(w.checkin,w.checkout)} คืน)</td></tr>`).join('') : ''}
 
                     <tr class="sec"><td colspan="4">5. อุปกรณ์ / อาหาร / กิจกรรมเพิ่มเติม</td></tr>
-                    <tr><th>อุปกรณ์เพิ่มเติม</th><td colspan="3">${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</td></tr>
+                    <tr><th>อุปกรณ์เพิ่มเติม</th><td colspan="3"><div><b>อุปกรณ์พื้นฐาน</b> (ศฝฟ. จัดให้): ไมค์ลอย 2 ตัว, Projector 1 ชุด</div><div><b>อุปกรณ์เพิ่มเติม:</b> ${esc(b.equipment||'-')}${b.equipmentOther?' ('+esc(b.equipmentOther)+')':''}</div></td></tr>
                     <tr><th>กิจกรรมภาคสนาม</th><td colspan="3">${esc(b.fieldActivity||'-')}${b.fieldActivityOther?' ('+esc(b.fieldActivityOther)+')':''}</td></tr>
                     <tr><th>อาหาร</th><td>${esc(b.foodBooking||'-')}</td><th>ร้านอาหาร/ร้านว่าง</th><td>${esc(b.foodShop||b.foodShopOther||'-')} / ${esc(b.snackShop||b.snackShopOther||'-')}</td></tr>
                 </tbody>
