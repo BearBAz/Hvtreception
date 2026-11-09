@@ -328,20 +328,30 @@ table.formal-table td.center{ text-align:center; }
 }
 
 /* ───────── Report picker (search + cards) ───────── */
-.rp-search{ position:relative; }
-.rp-search i{ position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--muted); }
-.rp-search input{ width:100%; padding:11px 12px 11px 36px; border-radius:10px; border:1.5px solid var(--border-strong); font-size:0.88rem; font-family:inherit; background:#fff; }
-.rp-search input:focus{ border-color:var(--primary); outline:none; box-shadow:0 0 0 3px var(--primary-soft); }
-.rp-count{ font-size:0.72rem; color:var(--muted); margin:10px 2px 8px; }
-.rp-cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; max-height:340px; overflow-y:auto; padding:2px; }
-.rp-card{ text-align:left; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; transition:border-color .15s, box-shadow .15s, background .15s; }
-.rp-card:hover{ border-color:var(--primary-light); box-shadow:var(--shadow-xs); }
-.rp-card.selected{ border-color:var(--primary); background:var(--primary-xsoft); box-shadow:0 0 0 3px var(--primary-soft); }
+.rp-dd{ position:relative; flex:1; min-width:260px; }
+.rp-trigger{ width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:left; padding:11px 14px; border-radius:10px; border:1.5px solid var(--border-strong); background:#fff; font-size:0.85rem; font-family:inherit; color:var(--text); min-height:46px; }
+.rp-trigger:hover, .rp-trigger[aria-expanded="true"]{ border-color:var(--primary); }
+.rp-trigger .ph{ color:var(--muted); }
+.rp-trigger .sel-id{ font-family:var(--mono); font-weight:700; color:var(--primary-dark); }
+.rp-trigger .sel-txt{ white-space:normal; word-break:break-word; line-height:1.4; }
+.rp-trigger i{ color:var(--muted); font-size:0.75rem; flex-shrink:0; transition:transform .15s; }
+.rp-trigger[aria-expanded="true"] i{ transform:rotate(180deg); }
+.rp-panel{ position:absolute; top:calc(100% + 6px); left:0; right:0; z-index:80; background:#fff; border:1.5px solid var(--primary); border-radius:12px; box-shadow:var(--shadow-md); display:flex; flex-direction:column; max-height:460px; }
+.rp-panel[hidden]{ display:none; }
+.rp-search{ position:relative; padding:10px 10px 4px; }
+.rp-search i{ position:absolute; left:22px; top:50%; transform:translateY(-35%); color:var(--muted); }
+.rp-search input{ width:100%; padding:9px 12px 9px 34px; border-radius:8px; border:1.5px solid var(--border-strong); font-size:0.85rem; font-family:inherit; }
+.rp-search input:focus{ border-color:var(--primary); outline:none; }
+.rp-count{ font-size:0.7rem; color:var(--muted); padding:4px 14px 6px; }
+.rp-cards{ overflow-y:auto; max-height:360px; border-top:1px solid var(--border); }
+.rp-card{ display:block; width:100%; text-align:left; background:#fff; border:0; border-bottom:1px solid var(--border); padding:11px 14px; font-family:inherit; }
+.rp-card:hover, .rp-card:focus-visible{ background:var(--primary-xsoft); }
+.rp-card.selected{ background:var(--primary-soft); }
 .rp-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
-.rp-id{ font-family:var(--mono); font-size:0.78rem; font-weight:700; color:var(--primary-dark); background:var(--primary-soft); padding:2px 8px; border-radius:6px; }
-.rp-course{ font-size:0.88rem; font-weight:600; line-height:1.35; color:var(--text); white-space:normal; word-break:break-word; }
-.rp-meta{ font-size:0.74rem; color:var(--text-2); line-height:1.4; }
-.rp-empty{ grid-column:1/-1; text-align:center; padding:22px; color:var(--muted); font-size:0.85rem; }
+.rp-id{ font-family:var(--mono); font-size:0.82rem; font-weight:700; color:var(--primary-dark); }
+.rp-course{ font-size:0.86rem; font-weight:600; line-height:1.35; color:var(--text); white-space:normal; word-break:break-word; margin-top:3px; }
+.rp-meta{ font-size:0.73rem; color:var(--text-2); line-height:1.4; margin-top:2px; }
+.rp-empty{ text-align:center; padding:22px; color:var(--muted); font-size:0.85rem; }
 
 /* ───────── Segment toggle ───────── */
 .seg-toggle{ display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:3px; gap:2px; }
@@ -372,9 +382,10 @@ table.formal-table td.center{ text-align:center; }
 .cal-summary{ margin-left:auto; font-size:0.78rem; color:var(--text-2); }
 .cal-grid{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
 .cal-dow{ text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); padding:4px 0; }
-.cal-cell{ min-height:74px; border-radius:10px; border:1.5px solid transparent; padding:7px 8px; text-align:left; display:flex; flex-direction:column; gap:3px; font-family:inherit; }
+.cal-cell{ min-height:96px; border-radius:10px; border:1.5px solid transparent; padding:7px 8px; text-align:left; display:flex; flex-direction:column; gap:3px; font-family:inherit; }
 .cal-cell .dn{ font-family:var(--mono); font-weight:700; font-size:0.92rem; }
 .cal-cell .st{ font-size:0.66rem; font-weight:600; line-height:1.25; }
+.cal-cell .rn{ font-size:0.62rem; line-height:1.3; font-weight:500; word-break:break-word; opacity:.9; }
 .cal-cell.empty{ background:transparent; border:0; }
 .cal-cell.ok{ background:#DCFCE7; border-color:#22C55E; color:#14532D; }
 .cal-cell.no{ background:#FEE2E2; border-color:#EF4444; color:#7F1D1D; }
@@ -487,17 +498,22 @@ table.formal-table td.center{ text-align:center; }
             <!-- TAB 3 -->
             <section class="panel" id="tab3">
                 <div class="report-picker">
-                    <label for="reportSearch"><i class="fas fa-magnifying-glass"></i> ค้นหาและเลือกรายการจองเพื่อสรุปเป็นรายงาน</label>
+                    <label id="rpLabel"><i class="fas fa-magnifying-glass"></i> เลือก Booking ID เพื่อดึงข้อมูลมาสรุปเป็นรายงาน</label>
                     <div class="picker-row">
-                        <div class="rp-search" style="flex:1;min-width:260px;">
-                            <i class="fas fa-magnifying-glass"></i>
-                            <input type="search" id="reportSearch" placeholder="พิมพ์ Booking ID, ชื่อหลักสูตร, ชื่อผู้จอง หรือหน่วยงาน" autocomplete="off">
+                        <div class="rp-dd" id="rpDD">
+                            <button type="button" class="rp-trigger" id="rpTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="rpLabel">
+                                <span id="rpTriggerText"><span class="ph">— เลือก Booking ID —</span></span><i class="fas fa-chevron-down"></i>
+                            </button>
+                            <div class="rp-panel" id="rpPanel" hidden>
+                                <div class="rp-search"><i class="fas fa-magnifying-glass"></i>
+                                    <input type="search" id="reportSearch" placeholder="ค้นหา Booking ID, ชื่อหลักสูตร, ผู้จอง" autocomplete="off"></div>
+                                <div class="rp-count" id="reportCount"></div>
+                                <div class="rp-cards" id="reportCards" role="listbox"></div>
+                            </div>
                         </div>
                         <input type="hidden" id="reportSelect" value="">
                         <button class="btn primary" id="printReportBtn"><i class="fas fa-print"></i> พิมพ์รายงาน</button>
                     </div>
-                    <div class="rp-count" id="reportCount"></div>
-                    <div class="rp-cards" id="reportCards"></div>
                     <div id="reportExtras"></div>
                 </div>
                 <div id="reportArea"></div>
@@ -878,23 +894,37 @@ function renderReportPicker(){
     const cur = document.getElementById('reportSelect').value;
     const sorted = allBookings.slice().sort((a,b)=> (b.timestamp||'').localeCompare(a.timestamp||''));
     const list = sorted.filter(b=> !q || [b.bookingId,b.courseName,b.fullName,b.department,b.displayName].join(' ').toLowerCase().includes(q));
-    document.getElementById('reportCount').textContent = `แสดง ${list.length} จาก ${allBookings.length} รายการ`;
+    document.getElementById('reportCount').textContent = `${list.length} จาก ${allBookings.length} รายการ`;
     document.getElementById('reportCards').innerHTML = list.length ? list.map(b=>`
-        <button type="button" class="rp-card ${b.bookingId===cur?'selected':''}" data-id="${esc(b.bookingId)}">
+        <button type="button" role="option" class="rp-card ${b.bookingId===cur?'selected':''}" data-id="${esc(b.bookingId)}" aria-selected="${b.bookingId===cur}">
             <div class="rp-top"><span class="rp-id">${esc(b.bookingId)}</span>${statusChip(b.status)}</div>
             <div class="rp-course">${esc(b.courseName||'(ไม่ระบุชื่อหลักสูตร)')}</div>
-            <div class="rp-meta"><i class="fas fa-user"></i> ${esc(b.fullName||'-')}${b.department?' · '+esc(b.department):''}<br><i class="fas fa-calendar-day"></i> ${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div>
+            <div class="rp-meta">${esc(b.fullName||'-')}${b.department?' · '+esc(b.department):''} · ${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div>
         </button>`).join('') : '<div class="rp-empty">ไม่พบรายการที่ตรงกับคำค้นหา</div>';
+    const b = allBookings.find(x=>x.bookingId===cur);
+    document.getElementById('rpTriggerText').innerHTML = b
+        ? `<span class="sel-id">${esc(b.bookingId)}</span> <span class="sel-txt">— ${esc(b.courseName)} (${esc(b.fullName)})</span>`
+        : '<span class="ph">— เลือก Booking ID —</span>';
+}
+function setPickerOpen(open){
+    document.getElementById('rpPanel').hidden = !open;
+    document.getElementById('rpTrigger').setAttribute('aria-expanded', open);
+    if (open){ const i=document.getElementById('reportSearch'); i.value=''; renderReportPicker(); i.focus();
+        const sel=document.querySelector('#reportCards .selected'); if (sel) sel.scrollIntoView({block:'nearest'}); }
 }
 function pickReport(id){
     document.getElementById('reportSelect').value = id || '';
     renderReportPicker();
     renderReport(id || '');
 }
+document.getElementById('rpTrigger').addEventListener('click', ()=> setPickerOpen(document.getElementById('rpPanel').hidden));
 document.getElementById('reportSearch').addEventListener('input', renderReportPicker);
 document.getElementById('reportCards').addEventListener('click', e=>{
-    const card = e.target.closest('.rp-card'); if (card) pickReport(card.dataset.id);
+    const card = e.target.closest('.rp-card'); if (!card) return;
+    pickReport(card.dataset.id); setPickerOpen(false);
 });
+document.addEventListener('click', e=>{ if (!e.target.closest('#rpDD')) setPickerOpen(false); });
+document.addEventListener('keydown', e=>{ if (e.key==='Escape' && !document.getElementById('rpPanel').hidden){ setPickerOpen(false); document.getElementById('rpTrigger').focus(); } });
 document.getElementById('printReportBtn').addEventListener('click', ()=> window.print());
 
 function renderReport(bookingId){
@@ -1142,8 +1172,8 @@ const CAL_ROOM_CAP = {         // ตรงกับ MEETING_ROOMS_CONFIG ใน
     'A204':50, 'A205':50, 'A206':50, 'A207':30, 'Computer 1':50, 'Computer 2':50,
     'สนามฝึกกลางแจ้ง':200, 'ห้องปฏิบัติการ SATS':40, 'ห้องปฏิบัติการ DTS':40, 'อาคาร E':200, 'ห้องคาราโอเกะ':40
 };
-/* ห้องที่ไม่นับรวมความจุ: สนามกลางแจ้ง/อาคาร E (งาน Event) และ A201/1-2 (เป็นห้องรวมของ A201/1 + A201/2 กันนับซ้ำ) */
-const CAL_EXCLUDED = ['สนามฝึกกลางแจ้ง','อาคาร E','A201/1-2'];
+const CAL_NON_MEETING = ['สนามฝึกกลางแจ้ง','อาคาร E'];   // ไม่นับเป็นห้องประชุม
+const CAL_NO_SUM = ['A201/1-2'];                          // แสดงชื่อ แต่ไม่รวมความจุ (กันนับซ้ำกับ A201/1 + A201/2)
 let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let calSelKey = null, calIdx = { busy:{}, nights:{} };
 const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -1182,25 +1212,27 @@ function calParams(){
     const useAcc = document.querySelector('#calAcc button.active').dataset.v === '1';
     return { seats, days, useAcc, need: Math.ceil(seats/SEATS_PER_ROOM) };
 }
-function dayMeeting(k){
+function dayFree(k){
     const busy = calIdx.busy[k] || new Set();
-    const free = Object.keys(CAL_ROOM_CAP).filter(r=>!CAL_EXCLUDED.includes(r) && !busy.has(r));
-    return { free, cap: free.reduce((a,r)=>a+CAL_ROOM_CAP[r],0) };
+    return Object.keys(CAL_ROOM_CAP).filter(r=>!CAL_NON_MEETING.includes(r) && !busy.has(r));
 }
+function sumCap(rooms){ return rooms.filter(r=>!CAL_NO_SUM.includes(r)).reduce((a,r)=>a+CAL_ROOM_CAP[r],0); }
 function evalStart(start, p){
     const mRows = [], nRows = [];
-    let meetOk = true, accOk = true;
-    for (let i=0;i<p.days;i++){
-        const d = addDays(start,i), k = fmtKey(d), m = dayMeeting(k);
-        mRows.push({ d, cap:m.cap, free:m.free }); if (m.cap < p.seats) meetOk = false;
+    let common = null, accOk = true;
+    for (let i=0;i<p.days;i++){                 // ห้องที่ใช้ได้ = ว่างครบทุกวันอบรม
+        const d = addDays(start,i), free = dayFree(fmtKey(d));
+        mRows.push({ d, free, cap:sumCap(free) });
+        common = common === null ? free.slice() : common.filter(r=>free.includes(r));
     }
+    const cap = sumCap(common), meetOk = cap >= p.seats;
     if (p.useAcc){
         for (let i=-1;i<p.days-1;i++){           // คืนแรก = วันก่อนเริ่มอบรม 1 คืน (ตรรกะเดียวกับระบบจอง)
             const d = addDays(start,i), avail = STD_ROOMS_TOTAL - (calIdx.nights[fmtKey(d)]||0);
             nRows.push({ d, avail }); if (avail < p.need) accOk = false;
         }
     }
-    return { meetOk, accOk, ok: meetOk && accOk, mRows, nRows };
+    return { meetOk, accOk, ok: meetOk && accOk, common, cap, mRows, nRows };
 }
 function renderCalendar(){
     if (!document.getElementById('calGrid')) return;
@@ -1218,7 +1250,8 @@ function renderCalendar(){
         if (k < today){ html += `<div class="cal-cell past"><span class="dn">${day}</span></div>`; continue; }
         const r = evalStart(d,p); futureCount++; if (r.ok) okCount++;
         const why = r.ok ? 'ว่าง' : [!r.meetOk?'ห้องประชุมไม่พอ':'', !r.accOk?'ห้องพักไม่พอ':''].filter(Boolean).join(' / ');
-        html += `<button type="button" class="cal-cell ${r.ok?'ok':'no'} ${k===today?'today':''} ${k===calSelKey?'sel':''}" data-k="${k}"><span class="dn">${day}</span><span class="st">${why}</span></button>`;
+        const names = r.meetOk ? `<span class="rn">${esc(r.common.join(', '))}</span>` : '';
+        html += `<button type="button" class="cal-cell ${r.ok?'ok':'no'} ${k===today?'today':''} ${k===calSelKey?'sel':''}" data-k="${k}"><span class="dn">${day}</span><span class="st">${why}</span>${names}</button>`;
     }
     document.getElementById('calGrid').innerHTML = html;
     document.getElementById('calSummary').innerHTML = futureCount ? `วันเริ่มอบรมที่ว่างเดือนนี้: <b>${okCount}</b> / ${futureCount} วัน` : 'เดือนนี้ผ่านมาแล้ว';
@@ -1230,9 +1263,9 @@ function renderCalDetail(p){
     const start = parseYMD(calSelKey), r = evalStart(start,p);
     const end = addDays(start,p.days-1);
     let h = `<h5>เริ่มอบรม ${fmtDateObj(start)} – ${fmtDateObj(end)} (${p.days} วัน, ${p.seats} ที่นั่ง) : <span class="${r.ok?'good':'bad'}">${r.ok?'ว่าง':'ไม่ว่าง'}</span></h5>`;
+    h += `<div class="drow"><b>ห้องประชุมที่ว่างครบทุกวันอบรม</b> รวม <span class="${r.meetOk?'good':'bad'}">${r.cap} ที่นั่ง</span> (ต้องการ ${p.seats})<br>${r.common.length?esc(r.common.join(', ')):'<span class="bad">ไม่มีห้องที่ว่างครบทุกวัน</span>'}</div>`;
     r.mRows.forEach(x=>{
-        const ok = x.cap >= p.seats;
-        h += `<div class="drow"><b>${fmtDateObj(x.d)}</b> ห้องประชุมว่างรวม <span class="${ok?'good':'bad'}">${x.cap} ที่นั่ง</span> (ต้องการ ${p.seats})<br><span style="color:var(--muted);">${x.free.length?esc(x.free.join(', ')):'ไม่มีห้องว่าง'}</span></div>`;
+        h += `<div class="drow" style="color:var(--text-2);"><b>${fmtDateObj(x.d)}</b> ห้องว่างในวันนั้น: <span style="color:var(--muted);">${x.free.length?esc(x.free.join(', ')):'ไม่มีห้องว่าง'}</span></div>`;
     });
     if (p.useAcc) r.nRows.forEach(x=>{
         const ok = x.avail >= p.need;
