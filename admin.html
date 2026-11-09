@@ -739,7 +739,7 @@ function renderAll(){
     renderSla();
     renderReportPicker();
     renderDashboard();
-    renderCalendar();
+    renderCalendar(true);
 }
 
 /* ── TAB 1 ── */
@@ -1197,33 +1197,8 @@ let calSelKey = null, calIdx = { busy:{}, nights:{} };
 const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
 function fmtKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 
-function buildAvailIndex(){
-    const busy = {}, nights = {};
-    allBookings.forEach(b=>{
-        if (b.status !== 'Approved' && b.status !== 'Confirmed') return;
-        const segs = (Array.isArray(b.segments) && b.segments.length) ? b.segments
-                   : (b.room ? [{ room:b.room, startDate:b.startDate, endDate:b.endDate }] : []);
-        segs.forEach(sg=>{
-            const s0 = parseYMD(sg.startDate), e0 = parseYMD(sg.endDate);
-            if (!sg.room || !s0 || !e0) return;
-            const rooms = [sg.room];
-            if (sg.room === 'A201/1-2') rooms.push('A201/1','A201/2');
-            else if (sg.room === 'A201/1' || sg.room === 'A201/2') rooms.push('A201/1-2');
-            for (let d=new Date(s0); d<=e0; d.setDate(d.getDate()+1)){
-                const k = fmtKey(d); (busy[k] = busy[k] || new Set()); rooms.forEach(r=>busy[k].add(r));
-            }
-        });
-        const n = parseInt(b.numRooms)||0;
-        if (b.accommodation === 'ต้องการ' && n > 0){
-            getAccommodationWindows(b).forEach(w=>{
-                for (let d=new Date(w.checkin); d<w.checkout; d.setDate(d.getDate()+1)){
-                    const k = fmtKey(d); nights[k] = (nights[k]||0) + n;
-                }
-            });
-        }
-    });
-    return { busy, nights };
-}
+/* ปฏิทินนี้ไม่คำนวณเองในหน้าเว็บ — เรียก backend (adminCalendarAvailability) ที่ใช้กฎเดียวกับหน้า booking */
+let calCache = new Map(), calData = null, calSeq = 0, calTimer = null;
 function calParams(){
     const cat = document.getElementById('calCat').value;
     const fixed = catSeats(cat);
@@ -1233,77 +1208,72 @@ function calParams(){
     const useAcc = document.querySelector('#calAcc button.active').dataset.v === '1';
     return { cat, seats, days, useAcc, need: Math.ceil(seats/SEATS_PER_ROOM) };
 }
-function dayFree(k, cat){
-    const busy = calIdx.busy[k] || new Set();
-    return Object.keys(CAL_ROOMS).filter(r=>CAL_ROOMS[r].cat === cat && !busy.has(r));
+function calMsg(t){
+    document.getElementById('calGrid').innerHTML = `<div style="grid-column:1/-1;padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">${t}</div>`;
+    document.getElementById('calSummary').textContent = ''; document.getElementById('calDetail').innerHTML = '';
 }
-function evalStart(start, p){
-    const mRows = [], nRows = [];
-    let common = null, accOk = true;
-    for (let i=0;i<p.days;i++){                 // ห้องที่ใช้ได้ = ว่างครบทุกวันอบรม
-        const d = addDays(start,i), free = dayFree(fmtKey(d), p.cat);
-        mRows.push({ d, free });
-        common = common === null ? free.slice() : common.filter(r=>free.includes(r));
-    }
-    const meetOk = common.length > 0;
-    if (p.useAcc){
-        for (let i=-1;i<p.days-1;i++){           // คืนแรก = วันก่อนเริ่มอบรม 1 คืน (ตรรกะเดียวกับระบบจอง)
-            const d = addDays(start,i), avail = STD_ROOMS_TOTAL - (calIdx.nights[fmtKey(d)]||0);
-            nRows.push({ d, avail }); if (avail < p.need) accOk = false;
-        }
-    }
-    return { meetOk, accOk, ok: meetOk && accOk, common, mRows, nRows };
-}
-function renderCalendar(){
+function renderCalendar(force){
     if (!document.getElementById('calGrid')) return;
+    if (force === true) calCache.clear();
+    const y = calMonth.getFullYear(), m = calMonth.getMonth();
+    document.getElementById('calTitle').textContent = `${THAI_MONTHS[m]} ${y+543}`;
     if (!CAL_CATS.length || !STD_ROOMS_TOTAL){
-        document.getElementById('calGrid').innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">ยังไม่ได้รับข้อมูลห้องประชุมจาก backend — ตรวจสอบว่าโหลดข้อมูลสำเร็จ และ Deploy code.gs เวอร์ชันล่าสุด (adminGetBookings ต้องส่ง meetingRooms)</div>';
-        document.getElementById('calSummary').textContent = ''; document.getElementById('calTitle').textContent = '-'; document.getElementById('calDetail').innerHTML = '';
-        return;
+        calMsg('ยังไม่ได้รับข้อมูลห้องประชุมจาก backend — ตรวจสอบว่าโหลดข้อมูลสำเร็จ และ Deploy code.gs เวอร์ชันล่าสุด (adminGetBookings ต้องส่ง meetingRooms)'); return;
     }
     const p = calParams();
     document.getElementById('calRooms').textContent = p.useAcc ? `${p.need} ห้อง (จาก ${STD_ROOMS_TOTAL})` : 'ไม่ใช้ห้องพัก';
-    calIdx = buildAvailIndex();
+    clearTimeout(calTimer); calTimer = setTimeout(()=> loadCalendar(p), 250);
+}
+async function loadCalendar(p){
+    const y = calMonth.getFullYear(), m = calMonth.getMonth()+1, seq = ++calSeq;
+    const qs = `year=${y}&month=${m}&days=${p.days}&attendees=${p.seats}&category=${encodeURIComponent(p.cat)}&useAcc=${p.useAcc?1:0}`;
+    if (calCache.has(qs)){ calData = calCache.get(qs); drawCalendar(p); return; }
+    calMsg('<i class="fas fa-spinner fa-spin"></i> กำลังตรวจสอบห้องว่างจาก backend...');
+    try{
+        const key = sessionStorage.getItem('adminKey') || '';
+        const res = await fetch(`${GAS_WEB_APP_URL}?action=adminCalendarAvailability&adminKey=${encodeURIComponent(key)}&${qs}`);
+        const r = await res.json();
+        if (seq !== calSeq) return;
+        if (!r.success) throw new Error(r.message || 'backend error');
+        calCache.set(qs, r); calData = r; drawCalendar(p);
+    }catch(err){
+        if (seq !== calSeq) return;
+        calMsg('ไม่สามารถดึงข้อมูลปฏิทินจาก backend ได้ — ตรวจสอบว่า Deploy code.gs เวอร์ชันล่าสุดที่มี action adminCalendarAvailability แล้ว<br><span style="font-size:0.72rem;">'+esc(err.message||err)+'</span>');
+    }
+}
+function drawCalendar(p){
     const y = calMonth.getFullYear(), m = calMonth.getMonth();
-    document.getElementById('calTitle').textContent = `${THAI_MONTHS[m]} ${y+543}`;
-    const first = new Date(y,m,1), daysIn = new Date(y,m+1,0).getDate(), today = fmtKey(todayMidnight());
+    const first = new Date(y,m,1), today = fmtKey(todayMidnight());
     let html = ['อา','จ','อ','พ','พฤ','ศ','ส'].map(x=>`<div class="cal-dow">${x}</div>`).join('');
     for (let i=0;i<first.getDay();i++) html += '<div class="cal-cell empty"></div>';
-    let okCount = 0, futureCount = 0;
-    for (let day=1; day<=daysIn; day++){
-        const d = new Date(y,m,day), k = fmtKey(d);
-        if (k < today){ html += `<div class="cal-cell past"><span class="dn">${day}</span></div>`; continue; }
-        const r = evalStart(d,p); futureCount++; if (r.ok) okCount++;
-        const why = r.ok ? 'ว่าง' : [!r.meetOk?'ห้องประชุมไม่พอ':'', !r.accOk?'ห้องพักไม่พอ':''].filter(Boolean).join(' / ');
-        const names = r.meetOk ? `<span class="rn">${esc(r.common.join(', '))}</span>` : '';
-        html += `<button type="button" class="cal-cell ${r.ok?'ok':'no'} ${k===today?'today':''} ${k===calSelKey?'sel':''}" data-k="${k}"><span class="dn">${day}</span><span class="st">${why}</span>${names}</button>`;
-    }
+    let okCount = 0, future = 0;
+    calData.days.forEach(r=>{
+        const day = parseInt(r.date.slice(8,10));
+        if (r.date < today){ html += `<div class="cal-cell past"><span class="dn">${day}</span></div>`; return; }
+        future++; if (r.ok) okCount++;
+        const why = r.ok ? 'ว่าง' : [!r.meetOk?'ห้องประชุมไม่ว่าง':'', !r.accOk?'ห้องพักไม่พอ':''].filter(Boolean).join(' / ');
+        const names = r.meetOk ? `<span class="rn">${esc(r.freeRooms.join(', '))}</span>` : '';
+        html += `<button type="button" class="cal-cell ${r.ok?'ok':'no'} ${r.date===today?'today':''} ${r.date===calSelKey?'sel':''}" data-k="${r.date}"><span class="dn">${day}</span><span class="st">${why}</span>${names}</button>`;
+    });
     document.getElementById('calGrid').innerHTML = html;
-    document.getElementById('calSummary').innerHTML = futureCount ? `วันเริ่มอบรมที่ว่างเดือนนี้: <b>${okCount}</b> / ${futureCount} วัน` : 'เดือนนี้ผ่านมาแล้ว';
+    document.getElementById('calSummary').innerHTML = future ? `วันเริ่มอบรมที่ว่างเดือนนี้: <b>${okCount}</b> / ${future} วัน` : 'เดือนนี้ผ่านมาแล้ว';
     renderCalDetail(p);
 }
 function renderCalDetail(p){
     const box = document.getElementById('calDetail');
-    if (!calSelKey){ box.innerHTML = ''; return; }
-    const start = parseYMD(calSelKey), r = evalStart(start,p);
-    const end = addDays(start,p.days-1);
-    let h = `<h5>เริ่มอบรม ${fmtDateObj(start)} – ${fmtDateObj(end)} (${p.days} วัน, ${esc(p.cat)}${catSeats(p.cat)===null?` ${p.seats} คน`:''}) : <span class="${r.ok?'good':'bad'}">${r.ok?'ว่าง':'ไม่ว่าง'}</span></h5>`;
-    h += `<div class="drow"><b>ห้อง ${esc(p.cat)} ที่ว่างครบทุกวันอบรม</b>: <span class="${r.meetOk?'good':'bad'}">${r.common.length} ห้อง</span><br>${r.common.length?esc(r.common.join(', ')):'<span class="bad">ไม่มีห้องในประเภทนี้ที่ว่างครบทุกวัน</span>'}</div>`;
-    r.mRows.forEach(x=>{
-        h += `<div class="drow" style="color:var(--text-2);"><b>${fmtDateObj(x.d)}</b> ห้องว่างในวันนั้น: <span style="color:var(--muted);">${x.free.length?esc(x.free.join(', ')):'ไม่มีห้องว่าง'}</span></div>`;
-    });
-    if (p.useAcc) r.nRows.forEach(x=>{
-        const ok = x.avail >= p.need;
-        h += `<div class="drow"><b>คืนวันที่ ${fmtDateObj(x.d)}</b> ห้องพักว่าง <span class="${ok?'good':'bad'}">${x.avail} ห้อง</span> (ต้องการ ${p.need})</div>`;
-    });
+    const r = calSelKey && calData ? calData.days.find(x=>x.date===calSelKey) : null;
+    if (!r){ box.innerHTML = ''; return; }
+    let h = `<h5>เริ่มอบรม ${fmtDateObj(parseYMD(r.date))} – ${fmtDateObj(parseYMD(r.endDate))} (${p.days} วัน, ${esc(p.cat)}${catSeats(p.cat)===null?` ${p.seats} คน`:''}) : <span class="${r.ok?'good':'bad'}">${r.ok?'ว่าง':'ไม่ว่าง'}</span></h5>`;
+    h += `<div class="drow"><b>ห้องประชุม ${esc(p.cat)} ที่ว่างตลอดช่วงอบรม</b>: <span class="${r.meetOk?'good':'bad'}">${r.freeRooms.length} ห้อง</span><br>${r.freeRooms.length?esc(r.freeRooms.join(', ')):'<span class="bad">ไม่มีห้องที่ว่างตลอดช่วงอบรม</span>'}</div>`;
+    if (p.useAcc) h += `<div class="drow"><b>ห้องพัก</b> ${r.nights} คืน · ว่างน้อยสุดของทุกคืน <span class="${r.accOk?'good':'bad'}">${r.minAvailRooms} ห้อง</span> (ต้องการ ${p.need})</div>`;
     box.innerHTML = h;
 }
 document.getElementById('calGrid').addEventListener('click', e=>{
-    const c = e.target.closest('.cal-cell[data-k]'); if (!c) return;
-    calSelKey = (calSelKey === c.dataset.k) ? null : c.dataset.k; renderCalendar();
+    const c = e.target.closest('.cal-cell[data-k]'); if (!c || !calData) return;
+    calSelKey = (calSelKey === c.dataset.k) ? null : c.dataset.k; drawCalendar(calParams());
 });
 rebuildCalCats();
-['calCat','calHead','calDays'].forEach(id=>{ const el=document.getElementById(id); el.addEventListener('input', renderCalendar); el.addEventListener('change', renderCalendar); });
+['calCat','calHead','calDays'].forEach(id=>{ const el=document.getElementById(id); el.addEventListener('input', ()=>renderCalendar()); el.addEventListener('change', ()=>renderCalendar()); });
 document.querySelectorAll('#calAcc button').forEach(btn=> btn.addEventListener('click', ()=>{
     document.querySelectorAll('#calAcc button').forEach(x=>x.classList.toggle('active', x===btn)); renderCalendar();
 }));
