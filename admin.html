@@ -638,7 +638,7 @@ async function attemptLogin(key){
             return;
         }
         sessionStorage.setItem('adminKey', key);
-        allBookings = result.bookings || [];
+        allBookings = result.bookings || []; applyServerConfig(result);
         document.getElementById('syncTime').textContent = result.generatedAt || '-';
         enterApp();
     } catch (err) {
@@ -677,7 +677,7 @@ async function reloadData(){
         const res = await fetch(`${GAS_WEB_APP_URL}?action=adminGetBookings&adminKey=${encodeURIComponent(key)}`);
         const result = await res.json();
         if (result.success) {
-            allBookings = result.bookings || [];
+            allBookings = result.bookings || []; applyServerConfig(result);
             document.getElementById('syncTime').textContent = result.generatedAt || '-';
             renderAll();
         }
@@ -1167,22 +1167,31 @@ document.querySelectorAll('#trendBasisToggle button').forEach(btn=>{
 });
 
 /* ══════════════════════ TAB 5: ปฏิทินห้องว่าง ══════════════════════ */
-const SEATS_PER_ROOM = 2;      // 2 คน/ห้อง → 120 ที่นั่ง = 60 ห้อง
-const STD_ROOMS_TOTAL = 90;    // ตรงกับ TOTAL_ROOMS ใน code.gs (ห้องพัก standard)
-const CAL_ROOMS = {            // ตรงกับ MEETING_ROOMS_CONFIG ใน code.gs (capacity + category)
-    'Auditorium':{cat:'120 ที่นั่ง'}, 'A201/1-2':{cat:'120 ที่นั่ง'},
-    'A201/1':{cat:'60 ที่นั่ง'}, 'A201/2':{cat:'60 ที่นั่ง'}, 'A202':{cat:'60 ที่นั่ง'}, 'A203':{cat:'60 ที่นั่ง'},
-    'A204':{cat:'40 ที่นั่ง'}, 'A205':{cat:'40 ที่นั่ง'}, 'A206':{cat:'40 ที่นั่ง'}, 'ห้องคาราโอเกะ':{cat:'40 ที่นั่ง'},
-    'A207':{cat:'30 ที่นั่ง'}, 'Computer 1':{cat:'50 ที่นั่ง'}, 'Computer 2':{cat:'50 ที่นั่ง'},
-    'สนามฝึกกลางแจ้ง':{cat:'สนามฝึก'}, 'ห้องปฏิบัติการ SATS':{cat:'ห้องปฏิบัติการ'}, 'ห้องปฏิบัติการ DTS':{cat:'ห้องปฏิบัติการ'},
-    'อาคาร E':{cat:'เฉพาะงาน Event'}
-};
+let SEATS_PER_ROOM = 2;        // ดึงจาก backend (seatsPerRoom) · 2 คน/ห้อง → 120 ที่นั่ง = 60 ห้อง
+let STD_ROOMS_TOTAL = 0;       // ดึงจาก backend (totalRooms = TOTAL_ROOMS ใน code.gs)
+let CAL_ROOMS = {};       // ดึงจาก backend (MEETING_ROOMS_CONFIG ใน code.gs) ผ่าน adminGetBookings → meetingRooms
 /* หมวดที่ระบุจำนวนที่นั่งในชื่อ (เช่น "120 ที่นั่ง") ใช้ตัวเลขนั้นคำนวณห้องพัก; หมวดอื่นให้กรอกจำนวนผู้เข้าอบรมเอง */
 const catSeats = c => { const m = /^(\d+)\s*ที่นั่ง/.exec(c); return m ? parseInt(m[1]) : null; };
-const CAL_CATS = [...new Set(Object.values(CAL_ROOMS).map(r=>r.cat))].sort((a,b)=>{
-    const x=catSeats(a), y=catSeats(b);
-    if (x!==null && y!==null) return y-x; if (x!==null) return -1; if (y!==null) return 1; return 0;
-});
+let CAL_CATS = [];
+function rebuildCalCats(){
+    CAL_CATS = [...new Set(Object.values(CAL_ROOMS).map(r=>r.cat))].sort((a,b)=>{
+        const x=catSeats(a), y=catSeats(b);
+        if (x!==null && y!==null) return y-x; if (x!==null) return -1; if (y!==null) return 1; return 0;
+    });
+    const sel = document.getElementById('calCat'), prev = sel.value;
+    sel.innerHTML = CAL_CATS.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+    if (CAL_CATS.includes(prev)) sel.value = prev;
+}
+/* รับค่าห้อง/หมวด/จำนวนห้องพักจาก backend ทุกครั้งที่โหลดหรือรีเฟรช — แก้ใน code.gs แล้ว Deploy หน้า Admin จะเปลี่ยนตาม */
+function applyServerConfig(result){
+    if (result && Array.isArray(result.meetingRooms) && result.meetingRooms.length){
+        CAL_ROOMS = {};
+        result.meetingRooms.forEach(r=>{ CAL_ROOMS[r.name] = { cat: r.category, cap: r.capacity }; });
+    }
+    if (result && parseInt(result.totalRooms) > 0) STD_ROOMS_TOTAL = parseInt(result.totalRooms);
+    if (result && parseInt(result.seatsPerRoom) > 0) SEATS_PER_ROOM = parseInt(result.seatsPerRoom);
+    rebuildCalCats();
+}
 let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let calSelKey = null, calIdx = { busy:{}, nights:{} };
 const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
@@ -1247,6 +1256,11 @@ function evalStart(start, p){
 }
 function renderCalendar(){
     if (!document.getElementById('calGrid')) return;
+    if (!CAL_CATS.length || !STD_ROOMS_TOTAL){
+        document.getElementById('calGrid').innerHTML = '<div style="grid-column:1/-1;padding:24px;text-align:center;color:var(--muted);font-size:0.85rem;">ยังไม่ได้รับข้อมูลห้องประชุมจาก backend — ตรวจสอบว่าโหลดข้อมูลสำเร็จ และ Deploy code.gs เวอร์ชันล่าสุด (adminGetBookings ต้องส่ง meetingRooms)</div>';
+        document.getElementById('calSummary').textContent = ''; document.getElementById('calTitle').textContent = '-'; document.getElementById('calDetail').innerHTML = '';
+        return;
+    }
     const p = calParams();
     document.getElementById('calRooms').textContent = p.useAcc ? `${p.need} ห้อง (จาก ${STD_ROOMS_TOTAL})` : 'ไม่ใช้ห้องพัก';
     calIdx = buildAvailIndex();
@@ -1288,7 +1302,7 @@ document.getElementById('calGrid').addEventListener('click', e=>{
     const c = e.target.closest('.cal-cell[data-k]'); if (!c) return;
     calSelKey = (calSelKey === c.dataset.k) ? null : c.dataset.k; renderCalendar();
 });
-document.getElementById('calCat').innerHTML = CAL_CATS.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join('');
+rebuildCalCats();
 ['calCat','calHead','calDays'].forEach(id=>{ const el=document.getElementById(id); el.addEventListener('input', renderCalendar); el.addEventListener('change', renderCalendar); });
 document.querySelectorAll('#calAcc button').forEach(btn=> btn.addEventListener('click', ()=>{
     document.querySelectorAll('#calAcc button').forEach(x=>x.classList.toggle('active', x===btn)); renderCalendar();
