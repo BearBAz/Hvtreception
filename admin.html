@@ -326,6 +326,69 @@ table.formal-table td.center{ text-align:center; }
     .formal-doc, .formal-doc *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
     @page{ size:A4; margin:14mm; }
 }
+
+/* ───────── Report picker (search + cards) ───────── */
+.rp-search{ position:relative; }
+.rp-search i{ position:absolute; left:13px; top:50%; transform:translateY(-50%); color:var(--muted); }
+.rp-search input{ width:100%; padding:11px 12px 11px 36px; border-radius:10px; border:1.5px solid var(--border-strong); font-size:0.88rem; font-family:inherit; background:#fff; }
+.rp-search input:focus{ border-color:var(--primary); outline:none; box-shadow:0 0 0 3px var(--primary-soft); }
+.rp-count{ font-size:0.72rem; color:var(--muted); margin:10px 2px 8px; }
+.rp-cards{ display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:10px; max-height:340px; overflow-y:auto; padding:2px; }
+.rp-card{ text-align:left; background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:6px; transition:border-color .15s, box-shadow .15s, background .15s; }
+.rp-card:hover{ border-color:var(--primary-light); box-shadow:var(--shadow-xs); }
+.rp-card.selected{ border-color:var(--primary); background:var(--primary-xsoft); box-shadow:0 0 0 3px var(--primary-soft); }
+.rp-top{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.rp-id{ font-family:var(--mono); font-size:0.78rem; font-weight:700; color:var(--primary-dark); background:var(--primary-soft); padding:2px 8px; border-radius:6px; }
+.rp-course{ font-size:0.88rem; font-weight:600; line-height:1.35; color:var(--text); white-space:normal; word-break:break-word; }
+.rp-meta{ font-size:0.74rem; color:var(--text-2); line-height:1.4; }
+.rp-empty{ grid-column:1/-1; text-align:center; padding:22px; color:var(--muted); font-size:0.85rem; }
+
+/* ───────── Segment toggle ───────── */
+.seg-toggle{ display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:10px; padding:3px; gap:2px; }
+.seg-toggle button{ border:0; background:transparent; padding:7px 13px; border-radius:8px; font-size:0.76rem; font-weight:600; color:var(--text-2); }
+.seg-toggle button.active{ background:var(--primary); color:#fff; box-shadow:var(--shadow-xs); }
+
+/* ───────── 12-month stacked chart ───────── */
+.dash-card.wide{ grid-column:1/-1; }
+.dash-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:14px; }
+.dash-head h4{ margin:0; }
+.trend-scroll{ overflow-x:auto; }
+.trend-bars.t12{ min-width:640px; height:230px; gap:8px; align-items:flex-end; }
+.trend-col .stack{ width:100%; max-width:40px; display:flex; flex-direction:column-reverse; border-radius:6px 6px 3px 3px; overflow:hidden; background:var(--border); }
+.trend-col .stack .seg{ flex-basis:0; min-height:3px; }
+.trend-col .lbl{ text-align:center; line-height:1.2; }
+.trend-legend{ display:flex; flex-wrap:wrap; gap:14px; margin-top:12px; font-size:0.76rem; color:var(--text-2); }
+.trend-legend .sw{ display:inline-block; width:11px; height:11px; border-radius:3px; margin-right:6px; vertical-align:-1px; }
+
+/* ───────── Availability calendar ───────── */
+.cal-fields{ display:flex; gap:16px; flex-wrap:wrap; align-items:flex-end; }
+.cal-fields label{ font-size:0.76rem; font-weight:600; color:var(--text-2); display:block; margin-bottom:6px; }
+.cal-fields input[type=number]{ width:130px; padding:10px 12px; border-radius:10px; border:1.5px solid var(--border-strong); font-size:0.9rem; font-family:var(--mono); }
+.cal-calc{ padding:10px 14px; border-radius:10px; background:var(--accent-soft); color:var(--accent-dark); font-weight:700; font-size:0.9rem; min-width:150px; }
+.cal-nav{ display:flex; align-items:center; gap:10px; margin:18px 0 12px; flex-wrap:wrap; }
+.cal-nav .ttl{ font-size:1.05rem; font-weight:700; color:var(--primary-dark); min-width:170px; text-align:center; }
+.cal-nav button{ border:1px solid var(--border-strong); background:#fff; border-radius:10px; padding:8px 14px; font-size:0.8rem; font-weight:600; color:var(--text-2); }
+.cal-nav button:hover{ background:var(--primary-soft); }
+.cal-summary{ margin-left:auto; font-size:0.78rem; color:var(--text-2); }
+.cal-grid{ display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px; }
+.cal-dow{ text-align:center; font-size:0.72rem; font-weight:700; color:var(--muted); padding:4px 0; }
+.cal-cell{ min-height:74px; border-radius:10px; border:1.5px solid transparent; padding:7px 8px; text-align:left; display:flex; flex-direction:column; gap:3px; font-family:inherit; }
+.cal-cell .dn{ font-family:var(--mono); font-weight:700; font-size:0.92rem; }
+.cal-cell .st{ font-size:0.66rem; font-weight:600; line-height:1.25; }
+.cal-cell.empty{ background:transparent; border:0; }
+.cal-cell.ok{ background:#DCFCE7; border-color:#22C55E; color:#14532D; }
+.cal-cell.no{ background:#FEE2E2; border-color:#EF4444; color:#7F1D1D; }
+.cal-cell.past{ background:#F3F4F6; color:#9CA3AF; cursor:default; }
+.cal-cell.sel{ box-shadow:0 0 0 3px var(--primary); }
+.cal-cell.today .dn::after{ content:' •'; color:var(--accent); }
+.cal-legend{ display:flex; gap:16px; flex-wrap:wrap; margin-top:14px; font-size:0.76rem; color:var(--text-2); }
+.cal-legend .sw{ display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-2px; border:1.5px solid; }
+.cal-detail{ margin-top:16px; border:1px solid var(--border); border-radius:12px; padding:14px 16px; background:var(--surface-2); font-size:0.8rem; }
+.cal-detail:empty{ display:none; }
+.cal-detail h5{ margin:0 0 10px; font-size:0.88rem; color:var(--primary-dark); }
+.cal-detail .drow{ padding:7px 0; border-top:1px dashed var(--border-strong); line-height:1.5; }
+.cal-detail .good{ color:var(--success-fg); font-weight:600; } .cal-detail .bad{ color:var(--danger-fg); font-weight:600; }
+@media (max-width:640px){ .cal-cell{ min-height:58px; padding:5px; } .cal-cell .st{ font-size:0.58rem; } .cal-summary{ margin-left:0; width:100%; } }
 </style>
 </head>
 <body>
@@ -362,6 +425,7 @@ table.formal-table td.center{ text-align:center; }
             <button class="nav-item" data-tab="tab2"><i class="fas fa-stopwatch"></i> ติดตามสถานะ <span class="cnt" id="navCnt2">0</span></button>
             <button class="nav-item" data-tab="tab3"><i class="fas fa-file-lines"></i> รายงานการใช้สถานที่ </button>
             <button class="nav-item" data-tab="tab4"><i class="fas fa-chart-pie"></i> Dashboard สรุปข้อมูล </button>
+            <button class="nav-item" data-tab="tab5"><i class="fas fa-calendar-check"></i> ปฏิทินห้องว่าง </button>
         </nav>
         <div class="sidebar-foot">
             <button id="logoutBtn"><i class="fas fa-arrow-right-from-bracket"></i> ออกจากระบบ</button>
@@ -423,16 +487,51 @@ table.formal-table td.center{ text-align:center; }
             <!-- TAB 3 -->
             <section class="panel" id="tab3">
                 <div class="report-picker">
-                    <label for="reportSelect"><i class="fas fa-magnifying-glass"></i> เลือก Booking ID เพื่อดึงข้อมูลมาสรุปเป็นรายงาน</label>
+                    <label for="reportSearch"><i class="fas fa-magnifying-glass"></i> ค้นหาและเลือกรายการจองเพื่อสรุปเป็นรายงาน</label>
                     <div class="picker-row">
-                        <select id="reportSelect">
-                            <option value="">— เลือก Booking ID —</option>
-                        </select>
+                        <div class="rp-search" style="flex:1;min-width:260px;">
+                            <i class="fas fa-magnifying-glass"></i>
+                            <input type="search" id="reportSearch" placeholder="พิมพ์ Booking ID, ชื่อหลักสูตร, ชื่อผู้จอง หรือหน่วยงาน" autocomplete="off">
+                        </div>
+                        <input type="hidden" id="reportSelect" value="">
                         <button class="btn primary" id="printReportBtn"><i class="fas fa-print"></i> พิมพ์รายงาน</button>
                     </div>
+                    <div class="rp-count" id="reportCount"></div>
+                    <div class="rp-cards" id="reportCards"></div>
                     <div id="reportExtras"></div>
                 </div>
                 <div id="reportArea"></div>
+            </section>
+
+            <!-- TAB 5 -->
+            <section class="panel" id="tab5">
+                <div class="dash-card">
+                    <div class="cal-fields">
+                        <div><label for="calSeats">ความจุห้องประชุม (ที่นั่ง)</label><input type="number" id="calSeats" min="1" max="1000" value="120"></div>
+                        <div><label>ห้องพักที่ต้องใช้ (คำนวณอัตโนมัติ)</label><div class="cal-calc" id="calRooms">60 ห้อง</div></div>
+                        <div><label for="calDays">จำนวนวันที่อบรม</label><input type="number" id="calDays" min="1" max="30" value="2"></div>
+                        <div><label>ใช้ห้องพักหรือไม่</label>
+                            <div class="seg-toggle" id="calAcc"><button data-v="1" class="active">ใช้ห้องพัก</button><button data-v="0">ไม่ใช้</button></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="dash-card" style="margin-top:16px;">
+                    <div class="cal-nav">
+                        <button id="calPrev" aria-label="เดือนก่อนหน้า"><i class="fas fa-chevron-left"></i></button>
+                        <div class="ttl" id="calTitle">-</div>
+                        <button id="calNext" aria-label="เดือนถัดไป"><i class="fas fa-chevron-right"></i></button>
+                        <button id="calToday">เดือนนี้</button>
+                        <div class="cal-summary" id="calSummary"></div>
+                    </div>
+                    <div class="cal-grid" id="calGrid"></div>
+                    <div class="cal-legend">
+                        <span><span class="sw" style="background:#DCFCE7;border-color:#22C55E;"></span>ว่าง (เริ่มอบรมวันนี้ได้)</span>
+                        <span><span class="sw" style="background:#FEE2E2;border-color:#EF4444;"></span>ไม่ว่าง</span>
+                        <span><span class="sw" style="background:#F3F4F6;border-color:#E5E7EB;"></span>วันที่ผ่านมาแล้ว</span>
+                        <span style="color:var(--muted);">แต่ละวันคือ "วันเริ่มอบรม" · คลิกวันเพื่อดูรายละเอียด</span>
+                    </div>
+                    <div class="cal-detail" id="calDetail"></div>
+                </div>
             </section>
 
             <!-- TAB 4 -->
@@ -451,9 +550,16 @@ table.formal-table td.center{ text-align:center; }
                             <button class="btn ghost go" id="calloutGoBtn" style="color:var(--warning-fg);border-color:#FDE68A;">ไปที่หน้าติดตามสถานะ →</button>
                         </div>
                     </div>
-                    <div class="dash-card">
-                        <h4><i class="fas fa-chart-column"></i> จำนวนการจองที่ยื่นเข้ามา (6 เดือนล่าสุด)</h4>
-                        <div class="trend-bars" id="trendBars"></div>
+                    <div class="dash-card wide">
+                        <div class="dash-head">
+                            <h4><i class="fas fa-chart-column"></i> จำนวนการจองรายเดือน แยกตามสถานะ (12 เดือนล่าสุด)</h4>
+                            <div class="seg-toggle" id="trendBasisToggle">
+                                <button data-b="timestamp" class="active">ตามวันที่ยื่นจอง</button>
+                                <button data-b="startDate">ตามวันที่เริ่มอบรม</button>
+                            </div>
+                        </div>
+                        <div class="trend-scroll"><div class="trend-bars t12" id="trendBars"></div></div>
+                        <div class="trend-legend" id="trendLegend"></div>
                     </div>
                 </div>
             </section>
@@ -566,7 +672,8 @@ const TAB_META = {
     tab1:{ title:'ข้อมูลการจองทั้งหมด', sub:'ทุกสถานะ ทุกผู้จอง' },
     tab2:{ title:'ติดตามสถานะ (SLA)', sub:'รายการที่ Approved แล้วแต่ยังไม่ยืนยันการจอง เรียงตามวันที่จัดใกล้สุดก่อน' },
     tab3:{ title:'รายงานการใช้สถานที่', sub:'เลือก Booking ID เพื่อสรุปข้อมูลเป็นรายงาน' },
-    tab4:{ title:'Dashboard สรุปภาพรวม', sub:'สถิติการจองทั้งหมดตามสถานะจริง' }
+    tab4:{ title:'Dashboard สรุปภาพรวม', sub:'สถิติการจองทั้งหมดตามสถานะจริง' },
+    tab5:{ title:'ปฏิทินห้องว่าง', sub:'ตรวจสอบห้องประชุมและห้องพักว่างตามจำนวนที่นั่งและจำนวนวันอบรม' }
 };
 document.querySelectorAll('.nav-item').forEach(btn=>{
     btn.addEventListener('click', ()=>{
@@ -614,6 +721,7 @@ function renderAll(){
     renderSla();
     renderReportPicker();
     renderDashboard();
+    renderCalendar();
 }
 
 /* ── TAB 1 ── */
@@ -766,12 +874,27 @@ function renderSla(){
 
 /* ── TAB 3: report ── */
 function renderReportPicker(){
-    const sel = document.getElementById('reportSelect');
+    const q = (document.getElementById('reportSearch').value||'').trim().toLowerCase();
+    const cur = document.getElementById('reportSelect').value;
     const sorted = allBookings.slice().sort((a,b)=> (b.timestamp||'').localeCompare(a.timestamp||''));
-    sel.innerHTML = '<option value="">— เลือก Booking ID —</option>' +
-        sorted.map(b=>`<option value="${esc(b.bookingId)}">${esc(b.bookingId)} — ${esc(b.courseName)} (${esc(b.fullName)})</option>`).join('');
-    sel.onchange = ()=> renderReport(sel.value);
+    const list = sorted.filter(b=> !q || [b.bookingId,b.courseName,b.fullName,b.department,b.displayName].join(' ').toLowerCase().includes(q));
+    document.getElementById('reportCount').textContent = `แสดง ${list.length} จาก ${allBookings.length} รายการ`;
+    document.getElementById('reportCards').innerHTML = list.length ? list.map(b=>`
+        <button type="button" class="rp-card ${b.bookingId===cur?'selected':''}" data-id="${esc(b.bookingId)}">
+            <div class="rp-top"><span class="rp-id">${esc(b.bookingId)}</span>${statusChip(b.status)}</div>
+            <div class="rp-course">${esc(b.courseName||'(ไม่ระบุชื่อหลักสูตร)')}</div>
+            <div class="rp-meta"><i class="fas fa-user"></i> ${esc(b.fullName||'-')}${b.department?' · '+esc(b.department):''}<br><i class="fas fa-calendar-day"></i> ${fmtThaiDate(b.startDate)} - ${fmtThaiDate(b.endDate)}</div>
+        </button>`).join('') : '<div class="rp-empty">ไม่พบรายการที่ตรงกับคำค้นหา</div>';
 }
+function pickReport(id){
+    document.getElementById('reportSelect').value = id || '';
+    renderReportPicker();
+    renderReport(id || '');
+}
+document.getElementById('reportSearch').addEventListener('input', renderReportPicker);
+document.getElementById('reportCards').addEventListener('click', e=>{
+    const card = e.target.closest('.rp-card'); if (card) pickReport(card.dataset.id);
+});
 document.getElementById('printReportBtn').addEventListener('click', ()=> window.print());
 
 function renderReport(bookingId){
@@ -937,26 +1060,7 @@ function renderDashboard(){
         document.getElementById('slaCalloutN').textContent = pendingWithin;
     } else { callout.style.display = 'none'; }
 
-    /* trend bars: last 6 months by timestamp */
-    const now = new Date();
-    const buckets = [];
-    for (let i=5;i>=0;i--){
-        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-        buckets.push({ key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`, label: d.toLocaleDateString('th-TH',{month:'short'}), count:0 });
-    }
-    allBookings.forEach(b=>{
-        if (!b.timestamp) return;
-        const key = b.timestamp.slice(0,7);
-        const bucket = buckets.find(x=>x.key===key);
-        if (bucket) bucket.count++;
-    });
-    const maxCount = Math.max(1, ...buckets.map(b=>b.count));
-    document.getElementById('trendBars').innerHTML = buckets.map(b=>`
-        <div class="trend-col">
-            <span class="val">${b.count}</span>
-            <div class="bar" style="height:${Math.max(4,(b.count/maxCount)*100)}%;"></div>
-            <span class="lbl">${b.label}</span>
-        </div>`).join('');
+    renderTrend();
 }
 
 function buildDonutPaths(cx,cy,rO,rI,counts,colorMap){
@@ -988,6 +1092,167 @@ function arcPath(cx,cy,rO,rI,startA,endA,fill){
 
 document.getElementById('calloutGoBtn').addEventListener('click', ()=> goToTab('tab2'));
 
+/* ── 12-month stacked chart ── */
+let trendBasis = 'timestamp';
+const TREND_COLORS = { Approved:'#16A34A', Confirmed:'#0B4DA2', Completed:'#9CA3AF', Cancel:'#e5484d' };
+function renderTrend(){
+    const now = new Date();
+    const buckets = [];
+    for (let i=11;i>=0;i--){
+        const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+        const c = {}; STATUS_ORDER.forEach(st=> c[st]=0);
+        buckets.push({ key:`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`,
+            label:d.toLocaleDateString('th-TH',{month:'short'}), yr:d.toLocaleDateString('th-TH',{year:'2-digit'}), c, total:0 });
+    }
+    allBookings.forEach(b=>{
+        const src = trendBasis === 'startDate' ? b.startDate : b.timestamp;
+        if (!src) return;
+        const bk = buckets.find(x=>x.key===src.slice(0,7));
+        if (bk && bk.c[b.status] !== undefined){ bk.c[b.status]++; bk.total++; }
+    });
+    const AREA = 170, max = Math.max(1, ...buckets.map(b=>b.total));
+    document.getElementById('trendBars').innerHTML = buckets.map(b=>{
+        const tip = `${b.label} ${b.yr}: ` + STATUS_ORDER.map(st=>`${STATUS_META[st].label} ${b.c[st]}`).join(', ') + ` (รวม ${b.total})`;
+        const h = b.total ? Math.max(6, Math.round(b.total/max*AREA)) : 3;
+        const segs = STATUS_ORDER.filter(st=>b.c[st]>0).map(st=>`<div class="seg" style="flex-grow:${b.c[st]};background:${TREND_COLORS[st]};" title="${esc(STATUS_META[st].label)}: ${b.c[st]}"></div>`).join('');
+        return `<div class="trend-col" title="${esc(tip)}">
+            <span class="val">${b.total}</span>
+            <div class="stack" style="height:${h}px;">${segs}</div>
+            <span class="lbl">${b.label}<br>${b.yr}</span>
+        </div>`;
+    }).join('');
+    document.getElementById('trendLegend').innerHTML = STATUS_ORDER.map(st=>{
+        const n = buckets.reduce((a,b)=>a+b.c[st],0);
+        return `<span><span class="sw" style="background:${TREND_COLORS[st]};"></span>${STATUS_META[st].label} <b>${n}</b></span>`;
+    }).join('');
+}
+document.querySelectorAll('#trendBasisToggle button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+        trendBasis = btn.dataset.b;
+        document.querySelectorAll('#trendBasisToggle button').forEach(x=>x.classList.toggle('active', x===btn));
+        renderTrend();
+    });
+});
+
+/* ══════════════════════ TAB 5: ปฏิทินห้องว่าง ══════════════════════ */
+const SEATS_PER_ROOM = 2;      // 2 คน/ห้อง → 120 ที่นั่ง = 60 ห้อง
+const STD_ROOMS_TOTAL = 90;    // ตรงกับ TOTAL_ROOMS ใน code.gs (ห้องพัก standard)
+const CAL_ROOM_CAP = {         // ตรงกับ MEETING_ROOMS_CONFIG ใน code.gs
+    'Auditorium':120, 'A201/1-2':130, 'A201/1':70, 'A201/2':70, 'A202':70, 'A203':70,
+    'A204':50, 'A205':50, 'A206':50, 'A207':30, 'Computer 1':50, 'Computer 2':50,
+    'สนามฝึกกลางแจ้ง':200, 'ห้องปฏิบัติการ SATS':40, 'ห้องปฏิบัติการ DTS':40, 'อาคาร E':200, 'ห้องคาราโอเกะ':40
+};
+/* ห้องที่ไม่นับรวมความจุ: สนามกลางแจ้ง/อาคาร E (งาน Event) และ A201/1-2 (เป็นห้องรวมของ A201/1 + A201/2 กันนับซ้ำ) */
+const CAL_EXCLUDED = ['สนามฝึกกลางแจ้ง','อาคาร E','A201/1-2'];
+let calMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+let calSelKey = null, calIdx = { busy:{}, nights:{} };
+const THAI_MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+function fmtKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+
+function buildAvailIndex(){
+    const busy = {}, nights = {};
+    allBookings.forEach(b=>{
+        if (b.status !== 'Approved' && b.status !== 'Confirmed') return;
+        const segs = (Array.isArray(b.segments) && b.segments.length) ? b.segments
+                   : (b.room ? [{ room:b.room, startDate:b.startDate, endDate:b.endDate }] : []);
+        segs.forEach(sg=>{
+            const s0 = parseYMD(sg.startDate), e0 = parseYMD(sg.endDate);
+            if (!sg.room || !s0 || !e0) return;
+            const rooms = [sg.room];
+            if (sg.room === 'A201/1-2') rooms.push('A201/1','A201/2');
+            else if (sg.room === 'A201/1' || sg.room === 'A201/2') rooms.push('A201/1-2');
+            for (let d=new Date(s0); d<=e0; d.setDate(d.getDate()+1)){
+                const k = fmtKey(d); (busy[k] = busy[k] || new Set()); rooms.forEach(r=>busy[k].add(r));
+            }
+        });
+        const n = parseInt(b.numRooms)||0;
+        if (b.accommodation === 'ต้องการ' && n > 0){
+            getAccommodationWindows(b).forEach(w=>{
+                for (let d=new Date(w.checkin); d<w.checkout; d.setDate(d.getDate()+1)){
+                    const k = fmtKey(d); nights[k] = (nights[k]||0) + n;
+                }
+            });
+        }
+    });
+    return { busy, nights };
+}
+function calParams(){
+    const seats = Math.max(1, parseInt(document.getElementById('calSeats').value)||0);
+    const days  = Math.min(30, Math.max(1, parseInt(document.getElementById('calDays').value)||1));
+    const useAcc = document.querySelector('#calAcc button.active').dataset.v === '1';
+    return { seats, days, useAcc, need: Math.ceil(seats/SEATS_PER_ROOM) };
+}
+function dayMeeting(k){
+    const busy = calIdx.busy[k] || new Set();
+    const free = Object.keys(CAL_ROOM_CAP).filter(r=>!CAL_EXCLUDED.includes(r) && !busy.has(r));
+    return { free, cap: free.reduce((a,r)=>a+CAL_ROOM_CAP[r],0) };
+}
+function evalStart(start, p){
+    const mRows = [], nRows = [];
+    let meetOk = true, accOk = true;
+    for (let i=0;i<p.days;i++){
+        const d = addDays(start,i), k = fmtKey(d), m = dayMeeting(k);
+        mRows.push({ d, cap:m.cap, free:m.free }); if (m.cap < p.seats) meetOk = false;
+    }
+    if (p.useAcc){
+        for (let i=-1;i<p.days-1;i++){           // คืนแรก = วันก่อนเริ่มอบรม 1 คืน (ตรรกะเดียวกับระบบจอง)
+            const d = addDays(start,i), avail = STD_ROOMS_TOTAL - (calIdx.nights[fmtKey(d)]||0);
+            nRows.push({ d, avail }); if (avail < p.need) accOk = false;
+        }
+    }
+    return { meetOk, accOk, ok: meetOk && accOk, mRows, nRows };
+}
+function renderCalendar(){
+    if (!document.getElementById('calGrid')) return;
+    const p = calParams();
+    document.getElementById('calRooms').textContent = p.useAcc ? `${p.need} ห้อง (จาก ${STD_ROOMS_TOTAL})` : 'ไม่ใช้ห้องพัก';
+    calIdx = buildAvailIndex();
+    const y = calMonth.getFullYear(), m = calMonth.getMonth();
+    document.getElementById('calTitle').textContent = `${THAI_MONTHS[m]} ${y+543}`;
+    const first = new Date(y,m,1), daysIn = new Date(y,m+1,0).getDate(), today = fmtKey(todayMidnight());
+    let html = ['อา','จ','อ','พ','พฤ','ศ','ส'].map(x=>`<div class="cal-dow">${x}</div>`).join('');
+    for (let i=0;i<first.getDay();i++) html += '<div class="cal-cell empty"></div>';
+    let okCount = 0, futureCount = 0;
+    for (let day=1; day<=daysIn; day++){
+        const d = new Date(y,m,day), k = fmtKey(d);
+        if (k < today){ html += `<div class="cal-cell past"><span class="dn">${day}</span></div>`; continue; }
+        const r = evalStart(d,p); futureCount++; if (r.ok) okCount++;
+        const why = r.ok ? 'ว่าง' : [!r.meetOk?'ห้องประชุมไม่พอ':'', !r.accOk?'ห้องพักไม่พอ':''].filter(Boolean).join(' / ');
+        html += `<button type="button" class="cal-cell ${r.ok?'ok':'no'} ${k===today?'today':''} ${k===calSelKey?'sel':''}" data-k="${k}"><span class="dn">${day}</span><span class="st">${why}</span></button>`;
+    }
+    document.getElementById('calGrid').innerHTML = html;
+    document.getElementById('calSummary').innerHTML = futureCount ? `วันเริ่มอบรมที่ว่างเดือนนี้: <b>${okCount}</b> / ${futureCount} วัน` : 'เดือนนี้ผ่านมาแล้ว';
+    renderCalDetail(p);
+}
+function renderCalDetail(p){
+    const box = document.getElementById('calDetail');
+    if (!calSelKey){ box.innerHTML = ''; return; }
+    const start = parseYMD(calSelKey), r = evalStart(start,p);
+    const end = addDays(start,p.days-1);
+    let h = `<h5>เริ่มอบรม ${fmtDateObj(start)} – ${fmtDateObj(end)} (${p.days} วัน, ${p.seats} ที่นั่ง) : <span class="${r.ok?'good':'bad'}">${r.ok?'ว่าง':'ไม่ว่าง'}</span></h5>`;
+    r.mRows.forEach(x=>{
+        const ok = x.cap >= p.seats;
+        h += `<div class="drow"><b>${fmtDateObj(x.d)}</b> ห้องประชุมว่างรวม <span class="${ok?'good':'bad'}">${x.cap} ที่นั่ง</span> (ต้องการ ${p.seats})<br><span style="color:var(--muted);">${x.free.length?esc(x.free.join(', ')):'ไม่มีห้องว่าง'}</span></div>`;
+    });
+    if (p.useAcc) r.nRows.forEach(x=>{
+        const ok = x.avail >= p.need;
+        h += `<div class="drow"><b>คืนวันที่ ${fmtDateObj(x.d)}</b> ห้องพักว่าง <span class="${ok?'good':'bad'}">${x.avail} ห้อง</span> (ต้องการ ${p.need})</div>`;
+    });
+    box.innerHTML = h;
+}
+document.getElementById('calGrid').addEventListener('click', e=>{
+    const c = e.target.closest('.cal-cell[data-k]'); if (!c) return;
+    calSelKey = (calSelKey === c.dataset.k) ? null : c.dataset.k; renderCalendar();
+});
+['calSeats','calDays'].forEach(id=> document.getElementById(id).addEventListener('input', renderCalendar));
+document.querySelectorAll('#calAcc button').forEach(btn=> btn.addEventListener('click', ()=>{
+    document.querySelectorAll('#calAcc button').forEach(x=>x.classList.toggle('active', x===btn)); renderCalendar();
+}));
+document.getElementById('calPrev').addEventListener('click', ()=>{ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()-1, 1); renderCalendar(); });
+document.getElementById('calNext').addEventListener('click', ()=>{ calMonth = new Date(calMonth.getFullYear(), calMonth.getMonth()+1, 1); renderCalendar(); });
+document.getElementById('calToday').addEventListener('click', ()=>{ const n=new Date(); calMonth = new Date(n.getFullYear(), n.getMonth(), 1); renderCalendar(); });
+
+
 /* ══════════════════════ DETAIL DRAWER ══════════════════════ */
 const drawer = document.getElementById('drawer');
 const drawerOverlay = document.getElementById('drawerOverlay');
@@ -1017,8 +1282,7 @@ drawerOverlay.addEventListener('click', closeDrawer);
 document.getElementById('drawerReportBtn').addEventListener('click', ()=>{
     closeDrawer();
     goToTab('tab3');
-    document.getElementById('reportSelect').value = drawerBookingId;
-    renderReport(drawerBookingId);
+    pickReport(drawerBookingId);
 });
 document.addEventListener('keydown', e=>{ if (e.key === 'Escape') closeDrawer(); });
 </script>
