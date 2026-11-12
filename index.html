@@ -332,6 +332,11 @@
             .app-footer { width: 100%; max-width: none; }
         }
 
+        /* เมนู: ตรวจสอบห้องประชุมและห้องพัก */
+        .menu-icon-wrap.sun { background: var(--gradient-sun); box-shadow: 0 8px 20px rgba(255,182,72,0.42); }
+        .menu-icon-wrap.sun i { color: #4A2C00; }
+        @media (min-width:760px) { .menu-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+
     </style>
 </head>
 <body>
@@ -423,6 +428,15 @@
                 </div>
                 <div class="menu-right"><div class="menu-arrow"><i class="fas fa-chevron-right"></i></div></div>
             </a>
+
+            <a href="rooms.html" class="menu-card fade-in delay-4">
+                <div class="menu-icon-wrap sun"><i class="fas fa-calendar-check"></i></div>
+                <div class="menu-content">
+                    <div class="menu-label">ตรวจสอบห้องประชุมและห้องพัก</div>
+                    <div class="menu-desc">ดูห้องประชุมที่ว่างและห้องพักที่เหลือก่อนจอง</div>
+                </div>
+                <div class="menu-right"><div class="menu-arrow"><i class="fas fa-chevron-right"></i></div></div>
+            </a>
         </div>
 
         <!-- Footer -->
@@ -440,7 +454,7 @@
 
 <script>
 const LIFF_ID = "2007123923-K5wdmekE";
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
 
 async function init() {
     try {
