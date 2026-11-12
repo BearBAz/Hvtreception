@@ -418,6 +418,11 @@ table.formal-table td.center{ text-align:center; }
     .rc-day.rc-none .rc-count{ color:var(--danger-fg); }
     .rc-toolbar .rc-sync{ margin-left:0; }
 }
+
+.rc-acc{ margin-top:auto; align-self:flex-start; display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:700; font-family:var(--mono); color:var(--primary-dark); background:rgba(255,255,255,0.85); border:1px solid var(--border-strong); border-radius:6px; padding:1px 6px; }
+.rc-acc i{ color:var(--primary); font-size:0.62rem; }
+.rc-acc.zero{ color:var(--danger-fg); border-color:#F7B8B8; } .rc-acc.zero i{ color:var(--danger); }
+@media (max-width:700px){ .rc-acc{ font-size:0.6rem; padding:0 4px; gap:2px; } .rc-acc i{ display:none; } }
 </style>
 </head>
 <body>
@@ -574,10 +579,12 @@ table.formal-table td.center{ text-align:center; }
                             <span><i class="rc-sw some"></i> ว่างบางห้อง</span>
                             <span><i class="rc-sw none"></i> ไม่มีห้องว่าง</span>
                             <span><i class="rc-sw sel"></i> ช่วงที่เลือก</span>
+                            <span><i class="fas fa-bed" style="color:var(--primary);"></i> = ห้องพัก Standard ว่าง (คืนวันนั้น)</span>
                         </div>
                         <div class="rc-dow" id="rcDow"></div>
                         <div class="rc-days" id="rcDays"></div>
                         <div id="rcCalState"></div>
+                        <div id="rcAccState"></div>
                         <div class="rc-focus" id="rcFocus"></div>
                     </div>
 
@@ -1195,7 +1202,8 @@ const rc = {
     rangeData:null, rangeLoading:false, rangeError:'',
     needRoom:false, qty:0,
     accData:null, accLoading:false, accError:'',
-    reqId:{ cat:0, month:0, range:0, acc:0 }, ctrl:{}, accTimer:null
+    accMonth:null, accMonthError:'', accMonthLoading:false,
+    reqId:{ cat:0, month:0, range:0, acc:0, accm:0 }, ctrl:{}, accTimer:null
 };
 const rcEl = id => document.getElementById(id);
 
@@ -1276,6 +1284,21 @@ async function rcLoadMonth(){
     rcRenderCalendar();
 }
 
+/* ── load: ห้องพัก Standard ว่างรายคืนของเดือน (แสดงในปฏิทิน ไม่ขึ้นกับ Category) ── */
+async function rcLoadAccMonth(){
+    const id = ++rc.reqId.accm, y = rc.year, m = rc.month;
+    rc.accMonth = null; rc.accMonthError = ''; rc.accMonthLoading = true; rcRenderCalendar();
+    try {
+        const data = await rcApi('accm', 'adminGetStandardRoomsMonth', { year:y, month:m });
+        if (id !== rc.reqId.accm || data.year !== y || data.month !== m) return;
+        rc.accMonth = data; rc.accMonthLoading = false; rcMarkSync(data.generatedAt);
+    } catch (err) {
+        if (err.aborted || id !== rc.reqId.accm) return;
+        rc.accMonthLoading = false; rc.accMonthError = err.message;
+    }
+    rcRenderCalendar();
+}
+
 /* ── load: range (ห้องประชุมว่างตลอดช่วง) ── */
 async function rcLoadRange(){
     const id = ++rc.reqId.range;
@@ -1320,6 +1343,8 @@ function rcRenderCalendar(){
     const free = {};
     if (rc.monthData && rc.monthData.days) rc.monthData.days.forEach(d => { free[d.date] = d.availableRooms; });
     const total = rc.monthData ? rc.monthData.rooms.length : 0;
+    const accN = {};
+    if (rc.accMonth && rc.accMonth.nights) rc.accMonth.nights.forEach(n => { accN[n.date] = n.available; });
     const done = rcCompleteRanges(), pending = rc.ranges.filter(r=>r.start && !r.end);
     let html = '';
     for (let i=0; i<first; i++) html += '<div class="rc-day is-out"></div>';
@@ -1337,6 +1362,10 @@ function rcRenderCalendar(){
                 ? '<span class="rc-none-txt">ไม่มีห้องว่าง</span><span class="rc-count">เต็ม</span>'
                 : `<div class="rc-badges">${f.map(n=>`<span class="rc-badge">${esc(n)}</span>`).join('')}</div><span class="rc-count">ว่าง ${f.length}</span>`;
         }
+        if (!past && accN[ymd] !== undefined) {
+            const av = Math.max(0, accN[ymd]);
+            inner += `<span class="rc-acc ${av===0?'zero':''}" title="ห้องพัก Standard ว่างคืนวันที่ ${d}"><i class="fas fa-bed"></i>${av}</span>`;
+        }
         html += `<button type="button" class="${cls.join(' ')}" data-date="${ymd}" ${past?'disabled':''}><span class="dn">${d}</span>${inner}</button>`;
     }
     rcEl('rcDays').innerHTML = html;
@@ -1346,6 +1375,8 @@ function rcRenderCalendar(){
     else if (rc.monthLoading) st = '<div class="rc-state"><div class="spin"></div>กำลังโหลดข้อมูลห้องว่าง...</div>';
     else if (rc.monthError) st = `<div class="rc-state err"><i class="fas fa-triangle-exclamation"></i> ${esc(rc.monthError)}<br><button class="btn" data-rc-retry="month" style="margin-top:8px;">ลองใหม่</button></div>`;
     rcEl('rcCalState').innerHTML = st;
+    rcEl('rcAccState').innerHTML = rc.accMonthLoading ? '<div class="rc-state"><div class="spin"></div>กำลังโหลดจำนวนห้องพักว่าง...</div>'
+        : (rc.accMonthError ? `<div class="rc-state err"><i class="fas fa-triangle-exclamation"></i> โหลดจำนวนห้องพักว่างไม่สำเร็จ: ${esc(rc.accMonthError)}<br><button class="btn" data-rc-retry="accm" style="margin-top:8px;">ลองใหม่</button></div>` : '');
 
     const fo = rcEl('rcFocus');
     if (rc.focusDate && free[rc.focusDate]) {
@@ -1444,13 +1475,13 @@ function rcPickDate(ymd){
 function rcShiftMonth(delta){
     let m = rc.month + delta, y = rc.year;
     if (m < 1) { m = 12; y--; } else if (m > 12) { m = 1; y++; }
-    rc.year = y; rc.month = m; rcLoadMonth();
+    rc.year = y; rc.month = m; rcLoadMonth(); rcLoadAccMonth();
 }
 async function rcRefreshAll(){
     const btn = rcEl('rcRefreshBtn');
     btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> กำลังโหลด...';
     await rcLoadCategories();
-    rcLoadMonth(); rcLoadRange(); rcLoadAcc();
+    rcLoadMonth(); rcLoadAccMonth(); rcLoadRange(); rcLoadAcc();
     btn.disabled = false; btn.innerHTML = '<i class="fas fa-rotate"></i> รีเฟรช';
 }
 
@@ -1462,7 +1493,7 @@ async function rcRefreshAll(){
     });
     rcEl('rcPrev').addEventListener('click', ()=>rcShiftMonth(-1));
     rcEl('rcNext').addEventListener('click', ()=>rcShiftMonth(1));
-    rcEl('rcToday').addEventListener('click', ()=>{ const p = rcParse(rcToday()); rc.year = p.y; rc.month = p.m; rcLoadMonth(); });
+    rcEl('rcToday').addEventListener('click', ()=>{ const p = rcParse(rcToday()); rc.year = p.y; rc.month = p.m; rcLoadMonth(); rcLoadAccMonth(); });
     rcEl('rcRefreshBtn').addEventListener('click', rcRefreshAll);
     rcEl('rcDays').addEventListener('click', e => { const b = e.target.closest('.rc-day[data-date]'); if (b && !b.disabled) rcPickDate(b.dataset.date); });
     rcEl('rcAddRange').addEventListener('click', ()=>{ rc.addMode = true; rcRenderRanges(); });
@@ -1485,12 +1516,12 @@ async function rcRefreshAll(){
     rcEl('tab5').addEventListener('click', e => {
         const b = e.target.closest('[data-rc-retry]'); if (!b) return;
         const k = b.dataset.rcRetry;
-        if (k === 'cat') rcLoadCategories(); else if (k === 'month') rcLoadMonth(); else if (k === 'range') rcLoadRange(); else rcLoadAcc();
+        if (k === 'cat') rcLoadCategories(); else if (k === 'month') rcLoadMonth(); else if (k === 'accm') rcLoadAccMonth(); else if (k === 'range') rcLoadRange(); else rcLoadAcc();
     });
     document.querySelector('.nav-item[data-tab="tab5"]').addEventListener('click', () => {
         if (!rc.inited) {
             const p = rcParse(rcToday()); rc.year = p.y; rc.month = p.m; rc.inited = true;
-            rcRenderCalendar(); rcRenderSummary();
+            rcRenderCalendar(); rcRenderSummary(); rcLoadAccMonth();
         }
         if (!rc.categories) rcLoadCategories();
     });
