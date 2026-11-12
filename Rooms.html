@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ตรวจสอบห้องประชุมและห้องพัก | ระบบจองห้องประชุม ศฝฟ.</title>
+<script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&family=Sarabun:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --violet-900:#06264D; --violet-700:#0B4DA2; --violet-600:#0B4DA2; --violet-500:#2F7BE0; --violet-300:#7FB0EA; --violet-100:#EAF2FF; --violet-50:#F5F9FF;
+  --coral-600:#C15A0E; --coral-500:#FF7A1A; --coral-100:#FFF1E4;
+  --teal-600:#0E8A7A; --teal-500:#17C3B2; --teal-100:#DEFBF6;
+  --sun-500:#FFB648; --sun-100:#FFF3DE; --sun-700:#8A5A00;
+  --rose-100:#FFE3EC; --rose-700:#B4134F;
+  --ink-900:#0F1B2D; --ink-600:#47566B; --ink-400:#64748B;
+  --line:#E4EAF3; --line-strong:#CBD5E1; --surface:#FFFFFF; --bg:#F1F5FB;
+  --radius-sm:12px; --radius:18px; --radius-lg:24px;
+  --shadow-sm:0 2px 10px rgba(6,38,77,.08); --shadow-md:0 8px 28px rgba(6,38,77,.14);
+  --gradient-violet:linear-gradient(135deg,#0B4DA2 0%,#2F7BE0 100%);
+  --gradient-coral:linear-gradient(135deg,#FF7A1A 0%,#FF9640 100%);
+  --focus-ring:0 0 0 4px rgba(47,123,224,.22);
+  --ease-spring:cubic-bezier(.2,.8,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Sarabun',sans-serif;background:var(--bg);color:var(--ink-900);min-height:100vh;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4,.display{font-family:'Prompt','Sarabun',sans-serif}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:none;box-shadow:var(--focus-ring)}
+.app-wrap{max-width:480px;margin:0 auto;min-height:100vh;background:var(--bg);display:flex;flex-direction:column;padding-bottom:1.5rem}
+
+/* ── Hero ── */
+.hero{position:relative;isolation:isolate;overflow:hidden;padding:calc(1.25rem + env(safe-area-inset-top)) 1.35rem 2.6rem;
+  background:radial-gradient(circle at 90% 12%,rgba(111,185,255,.34),transparent 28%),radial-gradient(circle at 0 100%,rgba(23,195,178,.20),transparent 32%),linear-gradient(145deg,#041B38 0%,#073B76 48%,#0B5DB8 100%)}
+.hero::after{content:'';position:absolute;inset:auto -10% -60% 20%;height:300px;background:rgba(255,255,255,.08);transform:rotate(-10deg);border-radius:48%;z-index:-1}
+.hero-top{display:flex;align-items:center;justify-content:space-between;gap:.75rem;margin-bottom:1.5rem}
+.back{display:inline-flex;align-items:center;gap:.5rem;min-height:38px;padding:.35rem .85rem .35rem .65rem;border-radius:12px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;text-decoration:none;font-size:.82rem;font-weight:600}
+.back:hover{background:rgba(255,255,255,.2)}
+.sync{display:flex;align-items:center;gap:.5rem;font-size:.72rem;color:rgba(255,255,255,.8);text-align:right}
+.sync b{font-weight:600;color:#fff}
+.icon-btn{width:34px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.12);color:#fff;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:rgba(255,255,255,.22)}
+.icon-btn.spin i{animation:rot .8s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+.hero-title{font-size:clamp(1.55rem,6.4vw,2.1rem);font-weight:700;color:#fff;line-height:1.2;letter-spacing:-.03em}
+.hero-sub{margin-top:.55rem;font-size:.88rem;color:rgba(255,255,255,.78);line-height:1.55;max-width:420px}
+
+/* ── Content ── */
+.content{flex:1;margin-top:-1.25rem;padding:0 1rem;position:relative;z-index:4;display:flex;flex-direction:column;gap:1rem}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.98),rgba(250,252,255,.92));border:1px solid rgba(203,213,225,.72);border-radius:20px;box-shadow:0 8px 24px rgba(6,38,77,.07),inset 0 1px 0 #fff;padding:1.1rem}
+.notice{display:flex;gap:.75rem;align-items:flex-start;padding:.85rem 1rem;border-radius:16px;background:var(--sun-100);border:1px solid #F6DDAE;color:#5C3D00;font-size:.8rem;line-height:1.55}
+.notice i{margin-top:.2rem;color:var(--coral-500)}
+.sec-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
+.sec-head .no{width:26px;height:26px;border-radius:9px;background:var(--gradient-violet);color:#fff;font:700 .78rem 'Prompt',sans-serif;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-head h2{font-size:.98rem;font-weight:600;color:var(--ink-900)}
+.sec-head small{display:block;font-family:'Sarabun',sans-serif;font-weight:400;font-size:.74rem;color:var(--ink-400);margin-top:1px}
+
+/* Category pills */
+.pills{display:flex;flex-wrap:wrap;gap:.5rem}
+.pill{border:1.5px solid var(--line-strong);background:#fff;color:var(--ink-600);border-radius:14px;padding:.5rem .85rem;font-size:.84rem;font-weight:600;display:flex;flex-direction:column;align-items:flex-start;line-height:1.25;transition:transform .2s var(--ease-spring),border-color .2s,background .2s}
+.pill small{font-weight:400;font-size:.68rem;opacity:.8}
+.pill:hover{border-color:var(--violet-500);transform:translateY(-1px)}
+.pill[aria-pressed="true"]{background:var(--gradient-violet);border-color:transparent;color:#fff;box-shadow:0 6px 16px rgba(11,77,162,.3)}
+.pill-skel{width:96px;height:46px;border-radius:14px;background:linear-gradient(90deg,#EDF2FA,#F7FAFE,#EDF2FA);background-size:200% 100%;animation:sk 1.2s linear infinite}
+@keyframes sk{to{background-position:-200% 0}}
+
+/* Calendar */
+.layout{display:flex;flex-direction:column;gap:1rem}
+.side{display:flex;flex-direction:column;gap:1rem}
+.cal-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.85rem}
+.cal-title{flex:1;text-align:center;font:700 1.05rem 'Prompt',sans-serif;color:var(--violet-900)}
+.nav-btn{width:38px;height:38px;border-radius:12px;border:1px solid var(--line-strong);background:#fff;color:var(--violet-700);display:flex;align-items:center;justify-content:center}
+.nav-btn:hover{background:var(--violet-50)}
+.today-btn{height:38px;padding:0 .8rem;border-radius:12px;border:1px solid var(--violet-300);background:var(--violet-100);color:var(--violet-700);font-weight:700;font-size:.78rem}
+.dow,.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.dow div{text-align:center;font-size:.7rem;font-weight:700;color:var(--ink-400);padding:.15rem 0 .35rem}
+.dow div:first-child{color:var(--rose-700)}
+.day{position:relative;min-height:66px;padding:5px 4px 4px;border-radius:12px;border:1.5px solid var(--line);background:#fff;display:flex;flex-direction:column;align-items:stretch;gap:3px;color:var(--ink-900);text-align:left;overflow:hidden;transition:transform .15s var(--ease-spring),border-color .15s}
+.day.out{visibility:hidden;pointer-events:none}
+.day .dn{font:700 .8rem 'Prompt',sans-serif;line-height:1;padding:2px 3px}
+.day.today .dn{background:var(--violet-600);color:#fff;border-radius:99px;align-self:flex-start;padding:2px 7px}
+.day.past{background:#F3F5F9;color:#A3AEBF;cursor:not-allowed}
+.day:not(.past):hover{border-color:var(--violet-500)}
+.day.inrange{background:var(--violet-100);border-color:var(--violet-300)}
+.day.edge{border-color:var(--violet-600);box-shadow:inset 0 0 0 1.5px var(--violet-600)}
+.tag{display:flex;align-items:center;justify-content:center;gap:3px;border-radius:7px;padding:1px 3px;font-size:.62rem;font-weight:700;line-height:1.35;white-space:nowrap}
+.tag i{font-size:.54rem}
+.tag.all{background:var(--teal-100);color:var(--teal-600)}
+.tag.some{background:var(--sun-100);color:var(--sun-700)}
+.tag.none{background:var(--rose-100);color:var(--rose-700)}
+.tag.bed{background:#fff;border:1px solid var(--line);color:var(--violet-700)}
+.tag.bed.zero{background:var(--rose-100);border-color:transparent;color:var(--rose-700)}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.85rem;font-size:.7rem;color:var(--ink-600)}
+.legend span{display:inline-flex;align-items:center;gap:.35rem}
+.dot{width:11px;height:11px;border-radius:4px;display:inline-block}
+.dot.all{background:var(--teal-500)} .dot.some{background:var(--sun-500)} .dot.none{background:#F2557F}
+.state{text-align:center;padding:.9rem .5rem .2rem;font-size:.82rem;color:var(--ink-400)}
+.state.err{color:var(--rose-700)}
+.spinner{width:22px;height:22px;border-radius:50%;border:3px solid var(--violet-100);border-top-color:var(--violet-600);margin:0 auto .5rem;animation:rot .8s linear infinite}
+.btn{border:1.5px solid var(--line-strong);background:#fff;color:var(--violet-700);border-radius:12px;padding:.5rem .9rem;font-size:.8rem;font-weight:700;display:inline-flex;align-items:center;gap:.4rem}
+.btn:hover{background:var(--violet-50)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.ghost{border-color:transparent;color:var(--ink-400)}
+
+/* Range */
+.hint{font-size:.78rem;color:var(--ink-600);line-height:1.55;margin-bottom:.7rem}
+.range{display:flex;align-items:center;gap:.6rem;padding:.6rem .75rem;border-radius:14px;border:1.5px solid var(--line);background:var(--violet-50);margin-bottom:.5rem;font-size:.84rem;font-weight:600}
+.range .badge{width:22px;height:22px;border-radius:50%;background:var(--violet-600);color:#fff;font-size:.7rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.range.pending{border-style:dashed;border-color:var(--coral-500);background:var(--coral-100)}
+.range .x{margin-left:auto;border:none;background:none;color:var(--ink-400);font-size:.95rem;padding:.2rem .35rem}
+.range .x:hover{color:var(--rose-700)}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.2rem}
+
+/* Stay toggle + stepper */
+.switch{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.7rem .85rem;border-radius:14px;border:1.5px solid var(--line);background:#fff;cursor:pointer;font-weight:600;font-size:.88rem}
+.switch input{position:absolute;opacity:0;pointer-events:none}
+.track{width:46px;height:26px;border-radius:99px;background:var(--line-strong);position:relative;transition:background .2s;flex-shrink:0}
+.track::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.25);transition:transform .25s var(--ease-spring)}
+.switch input:checked + .track{background:var(--teal-500)}
+.switch input:checked + .track::after{transform:translateX(20px)}
+.switch:focus-within{box-shadow:var(--focus-ring)}
+.stepper{display:none;margin-top:.8rem}
+.stepper.show{display:block}
+.stepper label{display:block;font-size:.76rem;font-weight:600;color:var(--ink-600);margin-bottom:.4rem}
+.step-row{display:flex;align-items:center;gap:.5rem}
+.step-row button{width:44px;height:44px;border-radius:12px;border:1.5px solid var(--line-strong);background:#fff;font-size:1.1rem;color:var(--violet-700)}
+.step-row input{flex:1;min-width:0;height:44px;text-align:center;border-radius:12px;border:1.5px solid var(--line-strong);font:700 1.1rem 'Prompt',sans-serif;color:var(--violet-900)}
+
+/* Result */
+.res-title{display:flex;align-items:center;gap:.5rem;font:600 .9rem 'Prompt',sans-serif;color:var(--violet-900);margin:1rem 0 .6rem}
+.res-title:first-of-type{margin-top:.2rem}
+.res-title i{color:var(--coral-500)}
+.info{display:flex;gap:.6rem;padding:.8rem .9rem;border-radius:14px;background:var(--violet-50);border:1px dashed var(--violet-300);color:var(--ink-600);font-size:.82rem;line-height:1.55}
+.rr{border:1px solid var(--line);border-radius:14px;padding:.7rem .8rem;margin-bottom:.5rem;background:#fff}
+.rr .t{font-size:.78rem;font-weight:700;color:var(--ink-600);margin-bottom:.45rem}
+.rr.all{border-color:var(--violet-300);background:var(--violet-50)}
+.chips{display:flex;flex-wrap:wrap;gap:.35rem}
+.chip{padding:.28rem .65rem;border-radius:99px;background:var(--teal-100);color:var(--teal-600);font-size:.8rem;font-weight:700}
+.none-txt{font-weight:700;font-size:.84rem;color:var(--rose-700)}
+.verdict{display:flex;align-items:center;gap:.8rem;padding:.9rem 1rem;border-radius:16px;margin-bottom:.7rem}
+.verdict .ic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:#fff;flex-shrink:0}
+.verdict h3{font-size:1rem;font-weight:700}
+.verdict p{font-size:.78rem;line-height:1.5;margin-top:2px}
+.verdict.ok{background:var(--teal-100);color:#0A5F54}.verdict.ok .ic{background:var(--teal-600)}
+.verdict.bad{background:var(--rose-100);color:var(--rose-700)}.verdict.bad .ic{background:#E0356A}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;margin-bottom:.7rem}
+.kpi{border:1px solid var(--line);border-radius:14px;padding:.65rem .5rem;text-align:center;background:#fff}
+.kpi span{display:block;font-size:.66rem;color:var(--ink-400);line-height:1.3;min-height:1.7em}
+.kpi b{font:700 1.45rem 'Prompt',sans-serif;color:var(--violet-900)}
+.kpi.bad b{color:var(--rose-700)}.kpi.good b{color:var(--teal-600)}
+.win{font-size:.78rem;color:var(--ink-600);padding:.45rem .7rem;border-radius:10px;background:var(--violet-50);margin-bottom:.4rem}
+details.nights{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+details.nights summary{padding:.7rem .9rem;font-weight:700;font-size:.82rem;color:var(--violet-700);cursor:pointer;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.nights summary::-webkit-details-marker{display:none}
+details.nights[open] summary i{transform:rotate(180deg)}
+details.nights summary i{transition:transform .2s}
+.tbl-wrap{max-height:260px;overflow:auto;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.78rem}
+th{position:sticky;top:0;background:var(--violet-50);padding:.5rem .6rem;text-align:right;font-size:.68rem;color:var(--ink-400)}
+td{padding:.5rem .6rem;text-align:right;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+tr.short td{background:var(--rose-100);color:var(--rose-700);font-weight:600}
+.cta{display:flex;align-items:center;justify-content:center;gap:.6rem;min-height:54px;border-radius:18px;background:var(--gradient-coral);color:#fff;text-decoration:none;font:700 .98rem 'Prompt',sans-serif;box-shadow:0 10px 24px rgba(255,122,26,.35);transition:transform .2s var(--ease-spring)}
+.cta:hover{transform:translateY(-2px)}
+.cta:active{transform:scale(.985)}
+.footer{padding:.4rem 0 1rem}
+.contact{display:flex;align-items:center;gap:.8rem;padding:.85rem 1rem;border-radius:16px;background:#fff;border:1px solid var(--line)}
+.contact i{width:36px;height:36px;border-radius:12px;background:var(--violet-100);color:var(--violet-600);display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.contact span{display:block;font-size:.72rem;color:var(--ink-400)}
+.contact b{font-size:.86rem}
+
+@media (min-width:760px){
+  body{padding:2rem}
+  .app-wrap{max-width:1040px;min-height:calc(100vh - 4rem);border-radius:28px;overflow:hidden}
+  .hero{padding:2rem 3rem 3.4rem}
+  .content{padding:0 2rem}
+  .layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(300px,1fr);align-items:start}
+  .day{min-height:84px;padding:7px 6px 6px}
+  .tag{font-size:.7rem;padding:2px 5px}
+  .kpi b{font-size:1.7rem}
+}
+@media (max-width:360px){ .content{padding:0 .7rem} .day{min-height:60px} .tag{font-size:.56rem} }
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="app-wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <a class="back" href="index.html"><i class="fas fa-chevron-left"></i> หน้าหลัก</a>
+      <div class="sync">
+        <div>อัปเดตล่าสุด<br><b id="syncText">-</b></div>
+        <button class="icon-btn" id="refreshBtn" aria-label="รีเฟรชข้อมูล"><i class="fas fa-rotate"></i></button>
+      </div>
+    </div>
+    <h1 class="hero-title">ตรวจสอบห้องประชุมและห้องพัก</h1>
+    <p class="hero-sub">ดูว่าห้องประชุมว่างวันไหน และห้องพักเหลือพอสำหรับผู้เข้าร่วมหรือไม่ ก่อนกรอกใบจอง</p>
+  </header>
+
+  <main class="content">
+    <div class="notice"><i class="fas fa-circle-info"></i>
+      <div>ข้อมูลนี้เป็นการตรวจสอบเบื้องต้น <b>ยังไม่ใช่การจอง</b> ระบบนับเฉพาะรายการที่ได้รับอนุมัติหรือยืนยันแล้ว รายการที่รออนุมัติอาจทำให้ห้องไม่ว่างตอนยืนยัน</div>
+    </div>
+
+    <section class="card" aria-labelledby="h-cat">
+      <div class="sec-head"><span class="no">1</span><h2 id="h-cat">เลือกประเภทห้องประชุม<small>ตามจำนวนที่นั่ง</small></h2></div>
+      <div class="pills" id="pills"><div class="pill-skel"></div><div class="pill-skel"></div><div class="pill-skel"></div></div>
+      <div id="catState"></div>
+    </section>
+
+    <div class="layout">
+      <section class="card" aria-labelledby="h-cal">
+        <div class="sec-head"><span class="no">2</span><h2 id="h-cal">เลือกวันที่ใช้งาน<small>แตะวันเริ่มต้น แล้วแตะวันสิ้นสุด</small></h2></div>
+        <div class="cal-head">
+          <button class="nav-btn" id="prev" aria-label="เดือนก่อนหน้า"><i class="fas fa-chevron-left"></i></button>
+          <div class="cal-title" id="title" aria-live="polite">-</div>
+          <button class="nav-btn" id="next" aria-label="เดือนถัดไป"><i class="fas fa-chevron-right"></i></button>
+          <button class="today-btn" id="todayBtn">วันนี้</button>
+        </div>
+        <div class="dow" id="dow"></div>
+        <div class="days" id="days"></div>
+        <div id="calState"></div>
+        <div class="legend">
+          <span><i class="dot all"></i> ห้องประชุมว่างทุกห้อง</span>
+          <span><i class="dot some"></i> ว่างบางห้อง</span>
+          <span><i class="dot none"></i> เต็ม</span>
+          <span><i class="fas fa-bed" style="color:var(--violet-600)"></i> ห้องพักที่เหลือ (คืนนั้น)</span>
+        </div>
+      </section>
+
+      <aside class="side">
+        <section class="card" aria-labelledby="h-range">
+          <div class="sec-head"><span class="no"><i class="fas fa-calendar-days" style="font-size:.72rem"></i></span><h2 id="h-range">ช่วงวันที่ที่เลือก</h2></div>
+          <p class="hint" id="rangeHint"></p>
+          <div id="rangeList"></div>
+          <div class="row">
+            <button class="btn" id="addRange"><i class="fas fa-plus"></i> เพิ่มอีกช่วง</button>
+            <button class="btn ghost" id="clearRange"><i class="fas fa-eraser"></i> ล้าง</button>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="h-stay">
+          <div class="sec-head"><span class="no">3</span><h2 id="h-stay">ห้องพัก Standard<small>ต้องการให้ตรวจสอบห้องพักด้วยหรือไม่</small></h2></div>
+          <label class="switch"><span>ต้องการห้องพัก</span>
+            <input type="checkbox" id="needStay"><span class="track" aria-hidden="true"></span></label>
+          <div class="stepper" id="stepper">
+            <label for="qty">จำนวนห้อง Standard ที่ต้องการ</label>
+            <div class="step-row">
+              <button id="qMinus" aria-label="ลดจำนวนห้อง"><i class="fas fa-minus"></i></button>
+              <input type="number" id="qty" min="1" step="1" inputmode="numeric" value="1">
+              <button id="qPlus" aria-label="เพิ่มจำนวนห้อง"><i class="fas fa-plus"></i></button>
+            </div>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <section class="card" id="result" aria-live="polite"></section>
+
+    <a class="cta" href="booking.html"><i class="fas fa-calendar-plus"></i> ไปจองห้องประชุม</a>
+
+    <div class="footer"><div class="contact"><i class="fas fa-phone-alt"></i>
+      <div><span>ติดต่อสอบถาม</span><b>034-339-224 และ (33)15619</b></div></div></div>
+  </main>
+</div>
+
+<script>
+const LIFF_ID = "2007123923-K5wdmekE";
+const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
+
+/* ── LIFF: ใช้ session เดิมจากหน้าหลัก (เหมือนหน้า booking) ── */
+(async function(){
+  try{
+    if (sessionStorage.getItem('liffReady') && sessionStorage.getItem('userId')) return;
+    await liff.init({ liffId: LIFF_ID });
+    if (!liff.isLoggedIn()) { liff.login(); return; }
+    const p = await liff.getProfile();
+    sessionStorage.setItem('userId', p.userId);
+    sessionStorage.setItem('displayName', p.displayName);
+    sessionStorage.setItem('liffReady', 'true');
+  }catch(e){ console.error('LIFF error:', e); }
+})();
+
+const TIMEOUT_MS = 30000, MAX_RANGES = 5;
+const MONTHS = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const MONTHS_S = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const DOW = ['อา','จ','อ','พ','พฤ','ศ','ส'];
+
+const S = { cats:null, catErr:'', category:'', totalStd:90, year:0, month:0,
+  mon:null, monLoad:false, monErr:'', accM:null, accMLoad:false, accMErr:'',
+  ranges:[], addMode:false, lastPayload:'',
+  rng:null, rngLoad:false, rngErr:'', needStay:false, qty:1, acc:null, accLoad:false, accErr:'',
+  req:{cat:0,mon:0,accm:0,rng:0,acc:0}, ctrl:{}, timer:null };
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* วันที่เป็นสตริง YYYY-MM-DD ล้วน ไม่ผ่าน UTC/Local → ไม่คลาดเคลื่อน 1 วัน */
+const pad = n => String(n).padStart(2,'0');
+const ymd = (y,m,d) => `${y}-${pad(m)}-${pad(d)}`;
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return {y,m,d}; };
+const fmt = s => { const p = parse(s); return `${p.d} ${MONTHS_S[p.m-1]} ${p.y+543}`; };
+const fmtR = (a,b) => a === b ? fmt(a) : `${fmt(a)} – ${fmt(b)}`;
+const dim = (y,m) => new Date(Date.UTC(y,m,0)).getUTCDate();
+const todayStr = () => new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Bangkok',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date());
+/* ช่วงที่ใช้ตรวจจริง: ช่วงที่ยังเลือกวันสิ้นสุดไม่ครบ ถือเป็นวันเดียวไปก่อน */
+const eff = () => S.ranges.filter(r => r.start).map(r => ({startDate:r.start, endDate:r.end || r.start}));
+const payload = () => JSON.stringify(eff());
+
+async function api(slot, action, params){
+  if (S.ctrl[slot]) S.ctrl[slot].abort();
+  const ctrl = new AbortController(); S.ctrl[slot] = ctrl;
+  let timedOut = false; const t = setTimeout(() => { timedOut = true; ctrl.abort(); }, TIMEOUT_MS);
+  try{
+    const res = await fetch(`${GAS_WEB_APP_URL}?${new URLSearchParams(Object.assign({action}, params||{}))}`, {signal:ctrl.signal});
+    if (!res.ok) throw new Error('เชื่อมต่อระบบไม่สำเร็จ (HTTP ' + res.status + ')');
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message || 'ไม่สามารถดึงข้อมูลได้');
+    return data;
+  }catch(err){
+    if (err && err.name === 'AbortError'){
+      if (timedOut) throw new Error('ระบบตอบสนองช้าเกินไป กรุณาลองใหม่อีกครั้ง');
+      const e = new Error('aborted'); e.aborted = true; throw e;
+    }
+    if (err && err.name === 'TypeError') throw new Error('เชื่อมต่อระบบไม่สำเร็จ กรุณาตรวจสอบอินเทอร์เน็ต');
+    throw err;
+  }finally{ clearTimeout(t); }
+}
+const mark = s => { if (s) $('syncText').textContent = s; };
+
+/* ── loaders (กันข้อมูลเก่า: abort + reqId + ตรวจพารามิเตอร์ใน response) ── */
+async function loadCats(){
+  const id = ++S.req.cat; S.catErr = ''; renderPills();
+  try{
+    const d = await api('cat','publicGetRoomCategories');
+    if (id !== S.req.cat) return;
+    S.cats = d.categories || []; S.totalStd = d.totalStandardRooms || S.totalStd; mark(d.generatedAt);
+    if (S.category && !S.cats.some(c => c.category === S.category)) { S.category = ''; S.mon = null; S.rng = null; }
+  }catch(e){ if (e.aborted || id !== S.req.cat) return; S.catErr = e.message; }
+  renderPills(); renderCal(); renderResult();
+}
+async function loadMonth(){
+  const id = ++S.req.mon;
+  if (!S.category){ if (S.ctrl.mon) S.ctrl.mon.abort(); S.mon = null; S.monLoad = false; S.monErr = ''; renderCal(); return; }
+  const cat = S.category, y = S.year, m = S.month;
+  S.mon = null; S.monErr = ''; S.monLoad = true; renderCal();
+  try{
+    const d = await api('mon','publicCheckMeetingRooms',{category:cat, year:y, month:m});
+    if (id !== S.req.mon || d.category !== cat || d.year !== y || d.month !== m) return;
+    S.mon = d; S.monLoad = false; mark(d.generatedAt);
+  }catch(e){ if (e.aborted || id !== S.req.mon) return; S.monLoad = false; S.monErr = e.message; }
+  renderCal();
+}
+async function loadAccMonth(){
+  const id = ++S.req.accm, y = S.year, m = S.month;
+  S.accM = null; S.accMErr = ''; S.accMLoad = true; renderCal();
+  try{
+    const d = await api('accm','publicGetStandardRoomsMonth',{year:y, month:m});
+    if (id !== S.req.accm || d.year !== y || d.month !== m) return;
+    S.accM = d; S.accMLoad = false; mark(d.generatedAt);
+  }catch(e){ if (e.aborted || id !== S.req.accm) return; S.accMLoad = false; S.accMErr = e.message; }
+  renderCal();
+}
+async function loadRange(){
+  const id = ++S.req.rng, p = payload();
+  if (!S.category || !eff().length){ if (S.ctrl.rng) S.ctrl.rng.abort(); S.rng = null; S.rngLoad = false; S.rngErr = ''; renderResult(); return; }
+  const cat = S.category; S.rng = null; S.rngErr = ''; S.rngLoad = true; renderResult();
+  try{
+    const d = await api('rng','publicCheckMeetingRooms',{category:cat, ranges:p});
+    if (id !== S.req.rng || d.category !== cat) return;
+    S.rng = d; S.rngLoad = false; mark(d.generatedAt);
+  }catch(e){ if (e.aborted || id !== S.req.rng) return; S.rngLoad = false; S.rngErr = e.message; }
+  renderResult();
+}
+async function loadAcc(){
+  const id = ++S.req.acc, p = payload();
+  if (!S.needStay || !(S.qty > 0) || !eff().length){ if (S.ctrl.acc) S.ctrl.acc.abort(); S.acc = null; S.accLoad = false; S.accErr = ''; renderResult(); return; }
+  const q = S.qty; S.acc = null; S.accErr = ''; S.accLoad = true; renderResult();
+  try{
+    const d = await api('acc','publicCheckStandardRooms',{ranges:p, requested:q});
+    if (id !== S.req.acc || d.requested !== q) return;
+    S.acc = d; S.accLoad = false; mark(d.generatedAt);
+  }catch(e){ if (e.aborted || id !== S.req.acc) return; S.accLoad = false; S.accErr = e.message; }
+  renderResult();
+}
+
+/* ── render ── */
+function renderPills(){
+  const box = $('pills');
+  if (!S.cats && !S.catErr){ box.innerHTML = '<div class="pill-skel"></div><div class="pill-skel"></div><div class="pill-skel"></div>'; $('catState').innerHTML = ''; return; }
+  box.innerHTML = (S.cats || []).map(c => `<button class="pill" data-cat="${esc(c.category)}" aria-pressed="${c.category === S.category}">${esc(c.category)}<small>${c.rooms.length} ห้อง</small></button>`).join('');
+  $('catState').innerHTML = S.catErr ? `<div class="state err"><i class="fas fa-triangle-exclamation"></i> โหลดประเภทห้องไม่สำเร็จ: ${esc(S.catErr)}<br><button class="btn" data-retry="cat" style="margin-top:.5rem">ลองใหม่</button></div>` : '';
+}
+function renderCal(){
+  const y = S.year, m = S.month, today = todayStr();
+  $('title').textContent = `${MONTHS[m-1]} ${y+543}`;
+  const first = new Date(Date.UTC(y,m-1,1)).getUTCDay(), n = dim(y,m);
+  const free = {}; if (S.mon && S.mon.days) S.mon.days.forEach(d => free[d.date] = d.availableRooms);
+  const total = S.mon ? S.mon.rooms.length : 0;
+  const bed = {}; if (S.accM && S.accM.nights) S.accM.nights.forEach(x => bed[x.date] = x.available);
+  const rs = eff();
+  let h = '';
+  for (let i = 0; i < first; i++) h += '<div class="day out"></div>';
+  for (let d = 1; d <= n; d++){
+    const k = ymd(y,m,d), past = k < today, c = ['day'];
+    if (past) c.push('past'); if (k === today) c.push('today');
+    rs.forEach(r => { if (k >= r.startDate && k <= r.endDate) c.push('inrange'); if (k === r.startDate || k === r.endDate) c.push('edge'); });
+    let inner = '';
+    if (!past){
+      const f = free[k];
+      if (f) inner += f.length === 0 ? '<span class="tag none">เต็ม</span>'
+        : `<span class="tag ${f.length === total ? 'all' : 'some'}"><i class="fas fa-door-open"></i>${f.length}</span>`;
+      if (bed[k] !== undefined){ const a = Math.max(0, bed[k]); inner += `<span class="tag bed ${a === 0 ? 'zero' : ''}"><i class="fas fa-bed"></i>${a}</span>`; }
+    }
+    h += `<button type="button" class="${c.join(' ')}" data-date="${k}" ${past ? 'disabled' : ''} aria-label="${d} ${MONTHS[m-1]}"><span class="dn">${d}</span>${inner}</button>`;
+  }
+  $('days').innerHTML = h;
+  let st = '';
+  if (S.monLoad || S.accMLoad) st = '<div class="state"><div class="spinner"></div>กำลังโหลดข้อมูลห้องว่าง...</div>';
+  else if (S.monErr) st = `<div class="state err"><i class="fas fa-triangle-exclamation"></i> ${esc(S.monErr)}<br><button class="btn" data-retry="mon" style="margin-top:.5rem">ลองใหม่</button></div>`;
+  else if (S.accMErr) st = `<div class="state err"><i class="fas fa-triangle-exclamation"></i> โหลดจำนวนห้องพักไม่สำเร็จ: ${esc(S.accMErr)}<br><button class="btn" data-retry="accm" style="margin-top:.5rem">ลองใหม่</button></div>`;
+  else if (!S.category) st = '<div class="state"><i class="fas fa-hand-pointer"></i> เลือกประเภทห้องประชุมด้านบน เพื่อดูห้องที่ว่างในแต่ละวัน</div>';
+  $('calState').innerHTML = st;
+  renderRanges();
+}
+function renderRanges(){
+  const last = S.ranges[S.ranges.length-1];
+  $('rangeList').innerHTML = S.ranges.map((r,i) => `<div class="range ${r.end ? '' : 'pending'}"><span class="badge">${i+1}</span>
+    <span>${r.end ? fmtR(r.start, r.end) : fmt(r.start) + ' · แตะวันสิ้นสุด'}</span>
+    <button class="x" data-del="${i}" aria-label="ลบช่วงที่ ${i+1}"><i class="fas fa-xmark"></i></button></div>`).join('');
+  let hint = 'แตะวันเริ่มต้นบนปฏิทิน แล้วแตะวันสิ้นสุด (ใช้วันเดียว แตะวันเดิมซ้ำ)';
+  if (S.addMode) hint = 'แตะวันเริ่มต้นของช่วงถัดไปบนปฏิทิน';
+  else if (last && !last.end) hint = 'ตอนนี้ตรวจสอบเป็นวันเดียวไปก่อน แตะวันสิ้นสุดเพื่อขยายเป็นช่วง';
+  else if (last) hint = 'แตะวันใหม่เพื่อเปลี่ยนช่วงล่าสุด หรือกด "เพิ่มอีกช่วง" หากกิจกรรมแบ่งหลายช่วง';
+  $('rangeHint').textContent = hint;
+  $('addRange').disabled = !(last && last.end) || S.addMode || S.ranges.length >= MAX_RANGES;
+  $('clearRange').disabled = !S.ranges.length;
+}
+const chips = a => a.length ? `<div class="chips">${a.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div>` : '<span class="none-txt">ไม่มีห้องว่าง</span>';
+const spin = t => `<div class="state"><div class="spinner"></div>${t}</div>`;
+const info = t => `<div class="info"><i class="fas fa-circle-info" style="margin-top:.2rem"></i><div>${t}</div></div>`;
+const errBox = (t,k) => `<div class="state err"><i class="fas fa-triangle-exclamation"></i> ${esc(t)}<br><button class="btn" data-retry="${k}" style="margin-top:.5rem">ลองใหม่</button></div>`;
+
+function meetingHtml(){
+  if (!S.category) return info('เลือกประเภทห้องประชุมในขั้นตอนที่ 1');
+  if (!eff().length) return info('เลือกวันที่บนปฏิทิน ระบบจะแสดงห้องที่ว่างตลอดช่วงที่เลือก');
+  if (S.rngLoad) return spin('กำลังตรวจสอบห้องประชุม...');
+  if (S.rngErr) return errBox(S.rngErr,'rng');
+  const d = S.rng; if (!d) return '';
+  let h = d.ranges.map((r,i) => `<div class="rr"><div class="t">${d.ranges.length > 1 ? `ช่วงที่ ${i+1} · ` : ''}${fmtR(r.startDate, r.endDate)} ห้องที่ว่างตลอดช่วง</div>${chips(r.availableRooms)}</div>`).join('');
+  if (d.ranges.length > 1) h += `<div class="rr all"><div class="t">ห้องที่ว่างตลอดทุกช่วง</div>${chips(d.availableAllRanges)}</div>`;
+  return h;
+}
+function stayHtml(){
+  if (!S.needStay) return info('ไม่ได้เลือกตรวจสอบห้องพัก หากต้องการให้เปิด "ต้องการห้องพัก" ในขั้นตอนที่ 3');
+  if (!eff().length) return info('เลือกวันที่บนปฏิทินก่อน ระบบคำนวณเข้าพักก่อนวันกิจกรรม 1 วัน และออกในวันสิ้นสุดกิจกรรมให้อัตโนมัติ');
+  if (!(S.qty > 0)) return info('ระบุจำนวนห้อง Standard ที่ต้องการ');
+  if (S.accLoad) return spin('กำลังตรวจสอบห้องพัก...');
+  if (S.accErr) return errBox(S.accErr,'acc');
+  const a = S.acc; if (!a) return '';
+  const avail = Math.max(0, a.minAvailable);
+  let h = a.sufficient
+    ? `<div class="verdict ok"><div class="ic"><i class="fas fa-check"></i></div><div><h3>ห้องพักเพียงพอ</h3><p>ต้องการ ${a.requested} ห้อง เหลือว่างอย่างน้อย ${avail} ห้องทุกคืน</p></div></div>`
+    : `<div class="verdict bad"><div class="ic"><i class="fas fa-xmark"></i></div><div><h3>ห้องพักไม่เพียงพอ</h3><p>ขาดสูงสุด ${a.maxShortage} ห้อง<br>${a.shortNights.map(n => `คืน ${fmt(n.date)}: ว่าง ${Math.max(0,n.available)} ขาด ${n.shortage}`).join('<br>')}</p></div></div>`;
+  h += `<div class="kpis">
+    <div class="kpi good"><span>ห้องว่าง<br>(ต่ำสุดทุกคืน)</span><b>${avail}</b></div>
+    <div class="kpi"><span>ต้องการ<br>จองเพิ่ม</span><b>${a.requested}</b></div>
+    <div class="kpi ${a.remainingAfter < 0 ? 'bad' : ''}"><span>เหลือ<br>หลังจอง</span><b>${a.remainingAfter}</b></div></div>`;
+  h += a.windows.map(w => `<div class="win"><i class="fas fa-moon"></i> เข้าพัก ${fmt(w.checkin)} → ออก ${fmt(w.checkout)} <b>(${w.nights} คืน)</b></div>`).join('');
+  if (a.windows.length > 1) h += '<p class="hint" style="margin-top:.3rem">ไม่นับคืนในช่วงว่างระหว่างกิจกรรม</p>';
+  h += `<details class="nights"><summary>ดูรายละเอียดรายคืน <i class="fas fa-chevron-down"></i></summary><div class="tbl-wrap"><table>
+    <thead><tr><th>คืนวันที่</th><th>ห้องว่าง</th><th>เหลือหลังจอง</th></tr></thead><tbody>${
+      a.nights.map(n => `<tr class="${n.shortage > 0 ? 'short' : ''}"><td>${fmt(n.date)}</td><td>${Math.max(0,n.available)}</td><td>${n.available - a.requested}</td></tr>`).join('')
+    }</tbody></table></div></details>`;
+  return h;
+}
+function renderResult(){
+  const open = $('result').querySelector('details.nights')?.open;
+  $('result').innerHTML = `<div class="sec-head"><span class="no"><i class="fas fa-clipboard-check" style="font-size:.72rem"></i></span><h2>ผลการตรวจสอบ</h2></div>
+    <div class="res-title"><i class="fas fa-door-open"></i> ห้องประชุม${S.category ? ' · ' + esc(S.category) : ''}</div>${meetingHtml()}
+    <div class="res-title"><i class="fas fa-bed"></i> ห้องพัก Standard</div>${stayHtml()}`;
+  if (open){ const d = $('result').querySelector('details.nights'); if (d) d.open = true; }
+}
+
+/* ── interactions ── */
+function changed(){
+  renderCal(); renderResult();
+  const p = payload(); if (p === S.lastPayload) return;
+  S.lastPayload = p; S.rng = null; S.acc = null; loadRange(); loadAcc();
+}
+function pick(k){
+  if (k < todayStr()) return;
+  const last = S.ranges[S.ranges.length-1];
+  if (S.addMode || !last){ if (S.ranges.length >= MAX_RANGES) return; S.ranges.push({start:k, end:null}); S.addMode = false; }
+  else if (!last.end){ if (k < last.start){ last.end = last.start; last.start = k; } else last.end = k; }
+  else S.ranges[S.ranges.length-1] = {start:k, end:null};
+  changed();
+}
+function shift(dlt){
+  let m = S.month + dlt, y = S.year;
+  if (m < 1){ m = 12; y--; } else if (m > 12){ m = 1; y++; }
+  S.year = y; S.month = m; loadMonth(); loadAccMonth();
+}
+function setQty(v){ v = Math.max(1, Math.min(S.totalStd || 999, parseInt(v,10) || 1)); S.qty = v; $('qty').value = v; S.acc = null; renderResult(); clearTimeout(S.timer); S.timer = setTimeout(loadAcc, 400); }
+async function refresh(){
+  const b = $('refreshBtn'); b.classList.add('spin'); b.disabled = true;
+  await loadCats(); loadMonth(); loadAccMonth(); loadRange(); loadAcc();
+  setTimeout(() => { b.classList.remove('spin'); b.disabled = false; }, 600);
+}
+
+$('dow').innerHTML = DOW.map(d => `<div>${d}</div>`).join('');
+$('pills').addEventListener('click', e => {
+  const b = e.target.closest('[data-cat]'); if (!b) return;
+  S.category = b.dataset.cat === S.category ? '' : b.dataset.cat;   /* แตะซ้ำ = ยกเลิกการเลือก */
+  S.mon = null; S.rng = null; renderPills(); loadMonth(); loadRange();
+});
+$('days').addEventListener('click', e => { const b = e.target.closest('.day[data-date]'); if (b && !b.disabled) pick(b.dataset.date); });
+$('prev').addEventListener('click', () => shift(-1));
+$('next').addEventListener('click', () => shift(1));
+$('todayBtn').addEventListener('click', () => { const p = parse(todayStr()); S.year = p.y; S.month = p.m; loadMonth(); loadAccMonth(); });
+$('refreshBtn').addEventListener('click', refresh);
+$('addRange').addEventListener('click', () => { S.addMode = true; renderRanges(); });
+$('clearRange').addEventListener('click', () => { S.ranges = []; S.addMode = false; changed(); });
+$('rangeList').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; S.ranges.splice(+b.dataset.del, 1); S.addMode = false; changed(); });
+$('needStay').addEventListener('change', e => { S.needStay = e.target.checked; $('stepper').classList.toggle('show', S.needStay); loadAcc(); });
+$('qMinus').addEventListener('click', () => setQty(S.qty - 1));
+$('qPlus').addEventListener('click', () => setQty(S.qty + 1));
+$('qty').addEventListener('input', e => { const v = parseInt(e.target.value,10); if (v > 0) setQty(v); });
+$('qty').addEventListener('blur', () => { $('qty').value = S.qty; });
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-retry]'); if (!b) return;
+  ({cat:loadCats, mon:loadMonth, accm:loadAccMonth, rng:loadRange, acc:loadAcc})[b.dataset.retry]();
+});
+
+(function start(){
+  const p = parse(todayStr()); S.year = p.y; S.month = p.m;
+  renderCal(); renderResult(); loadCats(); loadAccMonth();
+})();
+</script>
+</body>
+</html>
