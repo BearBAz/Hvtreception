@@ -332,11 +332,12 @@ table.formal-table td.center{ text-align:center; }
 .rc-card h4{ margin:0 0 10px; font-size:0.92rem; color:var(--primary-dark); display:flex; align-items:center; gap:8px; }
 .rc-card h4 i{ color:var(--accent); }
 .rc-toolbar{ display:flex; align-items:flex-end; gap:16px; flex-wrap:wrap; }
-.rc-field{ flex:1; min-width:240px; max-width:420px; }
+.rc-field{ width:100%; }
 .rc-field label, .rc-qty label{ display:block; font-size:0.76rem; font-weight:600; color:var(--text-2); margin-bottom:6px; }
 .rc-field label i{ color:var(--accent); margin-right:4px; }
 .rc-field select, .rc-qty input{ width:100%; padding:11px 12px; border-radius:10px; border:1.5px solid var(--border-strong); background:#fff; font-family:inherit; font-size:0.86rem; color:var(--text); }
 .rc-field select:focus, .rc-qty input:focus{ border-color:var(--primary); }
+.rc-toolbar{ justify-content:flex-end; }
 .rc-sync{ margin-left:auto; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 .rc-sync-text{ font-size:0.72rem; color:var(--muted); }
 .rc-sync-text b{ font-family:var(--mono); font-weight:600; color:var(--text-2); }
@@ -401,7 +402,13 @@ table.formal-table td.center{ text-align:center; }
 .rc-night-tbl th:first-child, .rc-night-tbl td:first-child{ text-align:left; }
 .rc-night-tbl td{ text-align:right; padding:8px 10px; border-top:1px solid var(--border); font-family:var(--mono); }
 .rc-night-tbl tr.short td{ background:var(--danger-soft); color:var(--danger-fg); }
-@media (max-width:1100px){ .rc-layout{ grid-template-columns:1fr; } }
+@media (max-width:1100px){
+    .rc-layout{ grid-template-columns:1fr; }
+    .rc-side{ display:contents; }
+    .rc-side > .rc-card{ order:2; }
+    .rc-side > .rc-cat-card{ order:0; }
+    .rc-cal-card{ order:1; }
+}
 @media (max-width:700px){
     .rc-card{ padding:14px 12px; }
     .rc-dow, .rc-days{ gap:3px; }
@@ -547,10 +554,6 @@ table.formal-table td.center{ text-align:center; }
             <!-- TAB 5: ตรวจสอบห้องประชุมและห้องพัก -->
             <section class="panel" id="tab5">
                 <div class="rc-card rc-toolbar">
-                    <div class="rc-field">
-                        <label for="rcCategory"><i class="fas fa-layer-group"></i> Category ห้องประชุม</label>
-                        <select id="rcCategory"><option value="">กรุณาเลือก Category</option></select>
-                    </div>
                     <div class="rc-sync">
                         <span class="rc-sync-text"><i class="fas fa-clock"></i> ซิงก์ล่าสุด <b id="rcSyncText">-</b></span>
                         <button class="btn" id="rcRefreshBtn"><i class="fas fa-rotate"></i> รีเฟรช</button>
@@ -579,6 +582,12 @@ table.formal-table td.center{ text-align:center; }
                     </div>
 
                     <div class="rc-side">
+                        <div class="rc-card rc-cat-card">
+                            <div class="rc-field">
+                                <label for="rcCategory"><i class="fas fa-layer-group"></i> Category ห้องประชุม</label>
+                                <select id="rcCategory"><option value="">กรุณาเลือก Category</option></select>
+                            </div>
+                        </div>
                         <div class="rc-card">
                             <h4><i class="fas fa-calendar-days"></i> ช่วงวันที่ที่ต้องการใช้งาน</h4>
                             <p class="rc-hint" id="rcRangeHint"></p>
