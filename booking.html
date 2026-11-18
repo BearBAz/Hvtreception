@@ -1849,10 +1849,13 @@
                 const available = result.availableRooms;
                 maxAvailableRooms = available;
                 const suggested   = Math.ceil(attendees/2);
+                // ห้องว่างมีบ้างแต่ไม่พอ (< จำนวนคน/2): ยังจองได้ แต่ต้องลดจำนวนห้องพักให้ไม่เกินจำนวนห้องที่ว่าง
+                const isShort     = available > 0 && available < suggested;
 
-                if (available > 0 && available >= suggested) {
+                if (available > 0) {
                     accommodationAvailable = true;
                     const quota = suggested + 5;
+                    const defaultRooms = isShort ? available : suggested;
                     container.innerHTML = `
                         <div class="acc-result-box">
                             <div class="acc-result-head">
@@ -1861,6 +1864,13 @@
                             </div>
                             <div class="acc-result-body">
                                 ${ciCoHtml}
+                                ${isShort ? `
+                                <div class="inline-alert warning" id="roomShortAlert" style="margin-bottom:0.75rem;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span><b>ห้องพักไม่เพียงพอตามจำนวนที่ต้องการ</b><br>
+                                    ผู้เข้าร่วม ${attendees} ท่าน ต้องการ ${suggested} ห้อง แต่ห้องพักว่างเหลือเพียง <b>${available} ห้อง</b><br>
+                                    ท่านยังสามารถจองห้องประชุมได้ โดยกรุณาลดจำนวนห้องพักให้ไม่เกิน <b>${available} ห้อง</b> (ระบบตั้งค่าให้แล้ว)</span>
+                                </div>` : ''}
                                 <div class="rooms-avail-strip">
                                     <div class="rooms-avail-lbl"><i class="fas fa-check-circle"></i> ห้องพักว่าง</div>
                                     <span class="rooms-count-badge">${available} ห้อง</span>
@@ -1872,10 +1882,12 @@
                                     <div class="room-qty-row">
                                         <div class="room-qty-input-wrap">
                                             <input type="number" class="field-input" id="numRooms" name="numRooms"
-                                                   min="1" max="${available}" value="${suggested}" required>
+                                                   min="1" max="${available}" value="${defaultRooms}" required>
                                         </div>
                                         <div class="room-hints">
-                                            <div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง ${attendees} สำหรับท่าน (สามารถแก้ไขได้)</div>
+                                            ${isShort
+                                                ? `<div class="room-hint-item green"><i class="fas fa-user-friends"></i> ห้องว่างเหลือ ${available} ห้อง (แนะนำเดิม ${suggested} ห้อง) จองได้ไม่เกิน ${available} ห้อง</div>`
+                                                : `<div class="room-hint-item green"><i class="fas fa-user-friends"></i> แนะนำ ${suggested} ห้อง ${attendees} สำหรับท่าน (สามารถแก้ไขได้)</div>`}
                                             <div class="room-hint-item"><i class="fas fa-info-circle"></i> ห้อง standard พัก 2 ท่าน/ห้อง</div>
                                         </div>
                                     </div>
@@ -1892,14 +1904,14 @@
                     numRoomsInput.addEventListener('input', function() {
                         const val = parseInt(this.value);
                         if (isNaN(val)||val<=0)              { roomAlert.style.display='flex'; roomAlertMsg.textContent='กรุณาระบุอย่างน้อย 1 ห้อง'; }
-                        else if (val > maxAvailableRooms)    { roomAlert.style.display='flex'; roomAlertMsg.textContent=`ห้องว่างเหลือเพียง ${maxAvailableRooms} ห้อง`; }
+                        else if (val > maxAvailableRooms)    { roomAlert.style.display='flex'; roomAlertMsg.textContent=`ห้องว่างเหลือเพียง ${maxAvailableRooms} ห้อง กรุณาลดจำนวนห้องพักให้ไม่เกิน ${maxAvailableRooms} ห้อง`; }
                         else if (val > quota)                { roomAlert.style.display='flex'; roomAlertMsg.textContent='เกินโควต้า โปรดติดต่อ admin ผ่าน Line OA'; }
                         else                                 { roomAlert.style.display='none'; }
                     });
                 } else {
                     accommodationAvailable = false;
-                    const title = available === 0 ? 'ไม่มีห้องพักว่าง' : `ห้องพักไม่เพียงพอ`;
-                    const desc  = available === 0 ? 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว' : `ต้องการ ${suggested} ห้อง แต่มีว่างเพียง ${available} ห้อง`;
+                    const title = 'ไม่มีห้องพักว่าง';
+                    const desc  = 'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว';
                     const rangeSummary = windows.map(w => `${w.checkin.toLocaleDateString('th-TH', opt)} – ${w.checkout.toLocaleDateString('th-TH', opt)}`).join(', ');
                     container.innerHTML = `
                         <div class="unavail-alert-box">
@@ -1907,7 +1919,7 @@
                             <div class="unavail-text-wrap">
                                 <div class="t">${title}</div>
                                 <div class="s">${rangeSummary} (${nights} คืน)</div>
-                                <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} กรุณาเลือกวันที่อื่น หรือติดต่อ admin ผ่าน Line OA</div>
+                                <div style="font-size:0.8rem;color:var(--danger);margin-top:0.3rem;">${desc} กรุณาเลือกวันที่อื่น เลือก "ไม่ต้องการที่พัก" เพื่อจองเฉพาะห้องประชุม หรือติดต่อ admin ผ่าน Line OA</div>
                             </div>
                         </div>`;
                 }
@@ -1975,7 +1987,7 @@
                 const suggested = Math.ceil(currentAttendees/2);
                 const quotaLimit = suggested + 5;
                 if (numRoomsValue > maxAvailableRooms) {
-                    await Swal.fire({ title:'ห้องพักไม่เพียงพอ!', html:`ห้องพักว่างเพียง <b>${maxAvailableRooms}</b> ห้อง`, icon:'warning', confirmButtonText:'แก้ไขข้อมูล' });
+                    await Swal.fire({ title:'ห้องพักไม่เพียงพอ!', html:`ห้องพักว่างเพียง <b>${maxAvailableRooms}</b> ห้อง<br>กรุณาลดจำนวนห้องพักให้ไม่เกิน <b>${maxAvailableRooms}</b> ห้อง`, icon:'warning', confirmButtonText:'แก้ไขข้อมูล' });
                     numRoomsInput.focus(); return;
                 }
                 if (numRoomsValue > quotaLimit) {
@@ -1983,6 +1995,14 @@
                     numRoomsInput.focus(); return;
                 }
                 if (numRoomsValue <= 0) { await Swal.fire({ title:'ข้อมูลไม่ถูกต้อง', text:'กรุณาระบุจำนวนห้องพักอย่างน้อย 1 ห้อง', icon:'warning', confirmButtonText:'ตกลง' }); return; }
+                // ห้องว่างไม่พอสำหรับ จำนวนคน/2 → ให้ผู้จองรับทราบก่อนยืนยัน
+                if (maxAvailableRooms < suggested && numRoomsValue < suggested) {
+                    const ok = await Swal.fire({
+                        title:'ยืนยันจองด้วยจำนวนห้องพักที่ลดลง?',
+                        html:`ผู้เข้าร่วม <b>${currentAttendees}</b> ท่าน ควรใช้ <b>${suggested}</b> ห้อง<br>แต่ห้องพักว่างเหลือ <b>${maxAvailableRooms}</b> ห้อง<br>ท่านจะจองห้องพักได้ <b>${numRoomsValue}</b> ห้อง`,
+                        icon:'question', showCancelButton:true, confirmButtonText:'ยืนยันการจอง', cancelButtonText:'กลับไปแก้ไข' });
+                    if (!ok.isConfirmed) return;
+                }
             } else if (!accommodationAvailable) {
                 await Swal.fire({ title:'ที่พักไม่เพียงพอ!', text:'ไม่มีห้องพักว่างในช่วงเวลาดังกล่าว', icon:'error', confirmButtonText:'ตกลง' }); return;
             }
