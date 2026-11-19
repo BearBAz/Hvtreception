@@ -1440,16 +1440,18 @@
                 </div>
         `).join('');
 
+        const availJobs = [];
         segments.forEach(seg => {
             if (seg.room && seg.roomData && seg.roomData.length > 0) {
                 // มีห้องที่เลือกไว้แล้วและมีข้อมูลแคชอยู่ -> แสดงผลจากแคชทันที ไม่ต้องยิง fetch ใหม่ (กันบั๊ก label ค้าง/กระพริบ)
                 renderRoomOptions(seg.id, seg.roomData);
             } else if (seg.startDate && seg.endDate) {
-                checkMeetingRoomAvailability(seg.id);
+                availJobs.push(checkMeetingRoomAvailability(seg.id));
             } else {
                 renderRoomOptions(seg.id, []);
             }
         });
+        return Promise.all(availJobs);
     }
 
     function toggleRoomDropdown(segId) {
@@ -1760,6 +1762,7 @@
 
     /* ─── Accommodation check ─── */
     let maxAvailableRooms = 0;
+    let prefillRooms = 0; // จำนวนห้องพักที่ส่งมาจากหน้า rooms (ใช้ครั้งเดียวตอน render ช่องจำนวนห้อง)
 
     // ที่พักนับเฉพาะคืนในแต่ละช่วงจริง (เหมือน backend) ไม่รวมคืนในช่วงว่างระหว่างช่วงประชุม
     // 1 segment -> 1 window (checkin = 1 วันก่อนเริ่ม, checkout = วันสิ้นสุด) แล้วรวมช่วงที่ติด/ทับกันเพื่อแสดงผล
@@ -1855,7 +1858,13 @@
                 if (available > 0) {
                     accommodationAvailable = true;
                     const quota = suggested + 5;
-                    const defaultRooms = isShort ? available : suggested;
+                    let defaultRooms = isShort ? available : suggested;
+                    let prefillNote = '';
+                    if (prefillRooms > 0) {
+                        const wanted = prefillRooms; prefillRooms = 0;
+                        defaultRooms = Math.max(1, Math.min(wanted, available, quota));
+                        if (defaultRooms < wanted) prefillNote = `ปรับจำนวนห้องพักจาก ${wanted} เหลือ ${defaultRooms} ห้อง ตามห้องว่างปัจจุบัน`;
+                    }
                     container.innerHTML = `
                         <div class="acc-result-box">
                             <div class="acc-result-head">
@@ -1901,6 +1910,7 @@
                     const numRoomsInput = document.getElementById('numRooms');
                     const roomAlert     = document.getElementById('roomAlert');
                     const roomAlertMsg  = document.getElementById('roomAlertMsg');
+                    if (prefillNote) { roomAlert.style.display = 'flex'; roomAlertMsg.textContent = prefillNote; }
                     numRoomsInput.addEventListener('input', function() {
                         const val = parseInt(this.value);
                         if (isNaN(val)||val<=0)              { roomAlert.style.display='flex'; roomAlertMsg.textContent='กรุณาระบุอย่างน้อย 1 ห้อง'; }
@@ -2067,10 +2077,67 @@
         }
     });
 
+    /* ─── Prefill จากหน้า rooms.html (ตรวจสอบห้องประชุมและห้องพัก) ───
+       อ่านจาก sessionStorage 'bookingPrefill' (อายุ 30 นาที ใช้ครั้งเดียว) แล้วกรอกให้
+       วันที่/ห้องจะผ่านการตรวจห้องว่างจาก backend ใหม่ทุกครั้ง ถ้าห้องไม่ว่างแล้วจะไม่เลือกให้และแจ้งเตือน */
+    async function applyRoomsPrefill() {
+        let p = null;
+        try {
+            const raw = sessionStorage.getItem('bookingPrefill');
+            sessionStorage.removeItem('bookingPrefill');
+            p = raw ? JSON.parse(raw) : null;
+        } catch (e) { p = null; }
+        if (!p || p.v !== 1 || !Array.isArray(p.segments) || Date.now() - (Number(p.savedAt) || 0) > 30 * 60 * 1000) return;
+
+        const ymdRe = /^\d{4}-\d{2}-\d{2}$/, today = todayStr();
+        const valid = p.segments.slice(0, 5).filter(s => s && ymdRe.test(s.startDate) && ymdRe.test(s.endDate) && s.startDate <= s.endDate && s.startDate >= today);
+        if (valid.length === 0) return;
+
+        segments = valid.map(s => { const g = createSegment(s.startDate, s.endDate); g.room = typeof s.room === 'string' ? s.room : ''; return g; });
+        const wanted = segments.map(s => s.room);
+        const jobs = renderSegments();
+
+        const att = parseInt(p.attendees, 10) || 0;
+        if (att > 0) {
+            const attEl = document.getElementById('attendees');
+            attEl.value = att;
+            attEl.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        if (p.accommodation === 'ต้องการ') {
+            prefillRooms = parseInt(p.numRooms, 10) || 0;
+            const card = document.querySelector('.acc-toggle-card[data-value="ต้องการ"]');
+            if (card) card.click();
+        }
+
+        await jobs;
+        const notes = [];
+        segments.forEach((seg, i) => {
+            if (!wanted[i]) return;
+            const verified = seg.roomData && seg.roomData.length > 0;
+            if (!verified && seg.room) { // ตรวจห้องว่างไม่สำเร็จ → ไม่ยืนยันห้องให้
+                seg.room = '';
+                const lb = document.getElementById(`seg-${seg.id}-roomLabel`);
+                if (lb) { lb.textContent = 'กรุณาเลือกห้องประชุม'; lb.className = 'room-select-text'; }
+                notes.push(`ช่วงที่ ${i + 1}: ตรวจสอบห้อง ${wanted[i]} ไม่สำเร็จ กรุณาเลือกห้องอีกครั้ง`);
+            } else if (seg.room !== wanted[i]) {
+                notes.push(`ช่วงที่ ${i + 1}: ห้อง ${wanted[i]} ไม่ว่างแล้ว กรุณาเลือกห้องอื่น`);
+            }
+        });
+        const box = document.createElement('div');
+        box.className = 'inline-alert ' + (notes.length ? 'warning' : 'info');
+        box.style.cssText = 'margin-bottom:0.9rem;';
+        box.innerHTML = `<i class="fas ${notes.length ? 'fa-exclamation-triangle' : 'fa-wand-magic-sparkles'}"></i><span>
+            <b>นำข้อมูลจากหน้าตรวจสอบห้องมากรอกให้แล้ว</b> กรุณาตรวจสอบความถูกต้องและกรอกข้อมูลส่วนที่เหลือ
+            ${notes.length ? '<br>' + notes.join('<br>') : ''}</span>`;
+        segmentsContainer.insertAdjacentElement('beforebegin', box);
+        updateProgressSteps();
+    }
+
     /* ─── Init ─── */
     document.addEventListener('DOMContentLoaded', function() {
         renderSegments();
         updateProgressSteps();
+        applyRoomsPrefill();
     });
 
     function showPDPADetail(e) {
