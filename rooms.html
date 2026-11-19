@@ -171,6 +171,17 @@ tr.short td{background:var(--rose-100);color:var(--rose-700);font-weight:600}
 .contact span{display:block;font-size:.72rem;color:var(--ink-400)}
 .contact b{font-size:.86rem}
 
+button.chip{border:1.5px solid transparent;font-family:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:.35rem}
+button.chip:hover{border-color:var(--teal-500)}
+button.chip[aria-pressed="true"]{background:var(--gradient-violet);color:#fff;box-shadow:0 4px 12px rgba(11,77,162,.3)}
+button.chip:disabled{opacity:.45;cursor:not-allowed;text-decoration:line-through}
+.pick-hint{font-size:.72rem;color:var(--ink-400);margin:.1rem 0 .5rem}
+.field{margin-bottom:.9rem}
+.field label{display:block;font-size:.76rem;font-weight:600;color:var(--ink-600);margin-bottom:.4rem}
+.field small{display:block;font-size:.7rem;color:var(--ink-400);margin-top:.3rem}
+.field input{width:100%;height:44px;border-radius:12px;border:1.5px solid var(--line-strong);padding:0 .8rem;font:600 1rem 'Prompt',sans-serif;color:var(--violet-900)}
+.cta-sum{font-size:.78rem;color:var(--ink-600);text-align:center;line-height:1.6;margin-top:-.4rem}
+.cta-sum b{color:var(--violet-700)}
 @media (min-width:760px){
   body{padding:2rem}
   .app-wrap{max-width:1040px;min-height:calc(100vh - 4rem);border-radius:28px;overflow:hidden}
@@ -242,8 +253,13 @@ tr.short td{background:var(--rose-100);color:var(--rose-700);font-weight:600}
         </section>
 
         <section class="card" aria-labelledby="h-stay">
-          <div class="sec-head"><span class="no">3</span><h2 id="h-stay">ห้องพัก Standard<small>ต้องการให้ตรวจสอบห้องพักด้วยหรือไม่</small></h2></div>
-          <label class="switch"><span>ต้องการห้องพัก</span>
+          <div class="sec-head"><span class="no">3</span><h2 id="h-stay">ผู้เข้าร่วมและห้องพัก<small>ไม่บังคับ แต่ช่วยให้กรอกใบจองได้เร็วขึ้น</small></h2></div>
+          <div class="field">
+            <label for="att">จำนวนผู้เข้าร่วม (คน)</label>
+            <input type="number" id="att" min="1" step="1" inputmode="numeric" placeholder="เช่น 40">
+            <small>ใช้คำนวณจำนวนห้องพัก (2 คน/ห้อง) และตรวจความจุห้องประชุม</small>
+          </div>
+          <label class="switch"><span>ต้องการห้องพัก Standard</span>
             <input type="checkbox" id="needStay"><span class="track" aria-hidden="true"></span></label>
           <div class="stepper" id="stepper">
             <label for="qty">จำนวนห้อง Standard ที่ต้องการ</label>
@@ -259,7 +275,8 @@ tr.short td{background:var(--rose-100);color:var(--rose-700);font-weight:600}
 
     <section class="card" id="result" aria-live="polite"></section>
 
-    <a class="cta" href="booking.html"><i class="fas fa-calendar-plus"></i> ไปจองห้องประชุม</a>
+    <a class="cta" id="cta" href="booking.html"><i class="fas fa-calendar-plus"></i> <span id="ctaText">ไปจองห้องประชุม</span></a>
+    <div class="cta-sum" id="ctaSum"></div>
 
     <div class="footer"><div class="contact"><i class="fas fa-phone-alt"></i>
       <div><span>ติดต่อสอบถาม</span><b>034-339-224 และ (33)15619</b></div></div></div>
@@ -267,8 +284,8 @@ tr.short td{background:var(--rose-100);color:var(--rose-700);font-weight:600}
 </div>
 
 <script>
-const LIFF_ID = "2007123923-K5wdmekE";
-const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
+  const LIFF_ID = "2007123923-K5wdmekE";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyCDvtVXxH4vNynGMJAEKEa1hR0zHdft0s6Zbk1nf_Mn9KXoZNl_ObL9UAYHRm9n62vmg/exec";
 
 /* ── LIFF: ใช้ session เดิมจากหน้าหลัก (เหมือนหน้า booking) ── */
 (async function(){
@@ -290,7 +307,7 @@ const DOW = ['อา','จ','อ','พ','พฤ','ศ','ส'];
 
 const S = { cats:null, catErr:'', category:'', totalStd:90, year:0, month:0,
   mon:null, monLoad:false, monErr:'', accM:null, accMLoad:false, accMErr:'',
-  ranges:[], addMode:false, lastPayload:'',
+  ranges:[], addMode:false, lastPayload:'', picks:{}, att:0,
   rng:null, rngLoad:false, rngErr:'', needStay:false, qty:1, acc:null, accLoad:false, accErr:'',
   req:{cat:0,mon:0,accm:0,rng:0,acc:0}, ctrl:{}, timer:null };
 const $ = id => document.getElementById(id);
@@ -370,6 +387,7 @@ async function loadRange(){
     const d = await api('rng','publicCheckMeetingRooms',{category:cat, ranges:p});
     if (id !== S.req.rng || d.category !== cat) return;
     S.rng = d; S.rngLoad = false; mark(d.generatedAt);
+    d.ranges.forEach(r => { const k = r.startDate + '|' + r.endDate; if (S.picks[k] && !r.availableRooms.includes(S.picks[k])) delete S.picks[k]; });
   }catch(e){ if (e.aborted || id !== S.req.rng) return; S.rngLoad = false; S.rngErr = e.message; }
   renderResult();
 }
@@ -448,7 +466,13 @@ function meetingHtml(){
   if (S.rngLoad) return spin('กำลังตรวจสอบห้องประชุม...');
   if (S.rngErr) return errBox(S.rngErr,'rng');
   const d = S.rng; if (!d) return '';
-  let h = d.ranges.map((r,i) => `<div class="rr"><div class="t">${d.ranges.length > 1 ? `ช่วงที่ ${i+1} · ` : ''}${fmtR(r.startDate, r.endDate)} ห้องที่ว่างตลอดช่วง</div>${chips(r.availableRooms)}</div>`).join('');
+  const cap = {}; (d.rooms || []).forEach(x => cap[x.name] = x.capacity);
+  const pickChips = (r, key) => r.availableRooms.length ? `<div class="chips">${r.availableRooms.map(n => {
+      const small = S.att > 0 && cap[n] && cap[n] < S.att;
+      return `<button type="button" class="chip" data-pick="${key}" data-room="${esc(n)}" aria-pressed="${S.picks[key] === n}" ${small ? `disabled title="รองรับ ${cap[n]} คน น้อยกว่าผู้เข้าร่วม"` : ''}>${S.picks[key] === n ? '<i class="fas fa-check"></i>' : ''}${esc(n)}</button>`; }).join('')}</div>` : '<span class="none-txt">ไม่มีห้องว่าง</span>';
+  let h = '<p class="pick-hint">แตะชื่อห้องเพื่อเลือก ระบบจะนำไปกรอกในใบจองให้</p>' + d.ranges.map((r,i) => {
+      const key = r.startDate + '|' + r.endDate;
+      return `<div class="rr"><div class="t">${d.ranges.length > 1 ? `ช่วงที่ ${i+1} · ` : ''}${fmtR(r.startDate, r.endDate)} ห้องที่ว่างตลอดช่วง</div>${pickChips(r, key)}</div>`; }).join('');
   if (d.ranges.length > 1) h += `<div class="rr all"><div class="t">ห้องที่ว่างตลอดทุกช่วง</div>${chips(d.availableAllRanges)}</div>`;
   return h;
 }
@@ -481,6 +505,17 @@ function renderResult(){
     <div class="res-title"><i class="fas fa-door-open"></i> ห้องประชุม${S.category ? ' · ' + esc(S.category) : ''}</div>${meetingHtml()}
     <div class="res-title"><i class="fas fa-bed"></i> ห้องพัก Standard</div>${stayHtml()}`;
   if (open){ const d = $('result').querySelector('details.nights'); if (d) d.open = true; }
+  renderCta();
+}
+function renderCta(){
+  const rs = eff(), picked = rs.map(r => S.picks[r.startDate + '|' + r.endDate]).filter(Boolean);
+  const parts = [];
+  if (rs.length) parts.push(`${rs.length} ช่วงวันที่`);
+  if (picked.length) parts.push(`ห้อง ${picked.map(esc).join(', ')}`);
+  if (S.att > 0) parts.push(`${S.att} คน`);
+  if (S.needStay && S.qty > 0 && rs.length) parts.push(`ห้องพัก ${S.qty} ห้อง`);
+  $('ctaText').textContent = rs.length ? 'จองห้องประชุมด้วยข้อมูลนี้' : 'ไปจองห้องประชุม';
+  $('ctaSum').innerHTML = rs.length ? `จะนำไปกรอกในใบจองให้: <b>${parts.join(' · ')}</b><br>ระบบจะตรวจห้องว่างอีกครั้งตอนเปิดใบจอง` : '';
 }
 
 /* ── interactions ── */
@@ -513,7 +548,7 @@ $('dow').innerHTML = DOW.map(d => `<div>${d}</div>`).join('');
 $('pills').addEventListener('click', e => {
   const b = e.target.closest('[data-cat]'); if (!b) return;
   S.category = b.dataset.cat === S.category ? '' : b.dataset.cat;   /* แตะซ้ำ = ยกเลิกการเลือก */
-  S.mon = null; S.rng = null; renderPills(); loadMonth(); loadRange();
+  S.picks = {}; S.mon = null; S.rng = null; renderPills(); loadMonth(); loadRange();
 });
 $('days').addEventListener('click', e => { const b = e.target.closest('.day[data-date]'); if (b && !b.disabled) pick(b.dataset.date); });
 $('prev').addEventListener('click', () => shift(-1));
@@ -523,7 +558,7 @@ $('refreshBtn').addEventListener('click', refresh);
 $('addRange').addEventListener('click', () => { S.addMode = true; renderRanges(); });
 $('clearRange').addEventListener('click', () => { S.ranges = []; S.addMode = false; changed(); });
 $('rangeList').addEventListener('click', e => { const b = e.target.closest('[data-del]'); if (!b) return; S.ranges.splice(+b.dataset.del, 1); S.addMode = false; changed(); });
-$('needStay').addEventListener('change', e => { S.needStay = e.target.checked; $('stepper').classList.toggle('show', S.needStay); loadAcc(); });
+$('needStay').addEventListener('change', e => { S.needStay = e.target.checked; $('stepper').classList.toggle('show', S.needStay); if (S.needStay && S.att > 0) setQty(Math.ceil(S.att / 2)); else loadAcc(); });
 $('qMinus').addEventListener('click', () => setQty(S.qty - 1));
 $('qPlus').addEventListener('click', () => setQty(S.qty + 1));
 $('qty').addEventListener('input', e => { const v = parseInt(e.target.value,10); if (v > 0) setQty(v); });
@@ -533,6 +568,28 @@ document.addEventListener('click', e => {
   ({cat:loadCats, mon:loadMonth, accm:loadAccMonth, rng:loadRange, acc:loadAcc})[b.dataset.retry]();
 });
 
+$('att').addEventListener('input', e => {
+  const v = parseInt(e.target.value, 10); S.att = v > 0 ? v : 0;
+  if (S.needStay && S.att > 0) setQty(Math.ceil(S.att / 2)); else renderResult();
+});
+$('result').addEventListener('click', e => {
+  const b = e.target.closest('[data-pick]'); if (!b || b.disabled) return;
+  const k = b.dataset.pick; if (S.picks[k] === b.dataset.room) delete S.picks[k]; else S.picks[k] = b.dataset.room;
+  renderResult();
+});
+/* ส่งข้อมูลไปกรอกใบจองอัตโนมัติ (booking.html อ่านจาก sessionStorage 'bookingPrefill' แล้วลบทิ้ง, อายุ 30 นาที) */
+$('cta').addEventListener('click', e => {
+  const rs = eff(); if (!rs.length) return;
+  try {
+    sessionStorage.setItem('bookingPrefill', JSON.stringify({
+      v:1, savedAt:Date.now(), category:S.category,
+      segments: rs.map(r => ({ startDate:r.startDate, endDate:r.endDate, room:S.picks[r.startDate + '|' + r.endDate] || '' })),
+      attendees: S.att || 0,
+      accommodation: S.needStay ? 'ต้องการ' : '',
+      numRooms: S.needStay ? S.qty : 0
+    }));
+  } catch (err) { console.error('prefill save error:', err); }
+});
 (function start(){
   const p = parse(todayStr()); S.year = p.y; S.month = p.m;
   renderCal(); renderResult(); loadCats(); loadAccMonth();
